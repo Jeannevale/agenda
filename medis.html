@@ -1,0 +1,949 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>HZV Kitteltasche</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: sticky control bar (peso + filtro GFR) → indice a tessere → una pagina per scenario, blocchi farmaco compatti */
+:root{
+  --bg:#F3F5F8; --surface:#FFFFFF; --ink:#141C26; --muted:#58657A; --line:#DDE2EA;
+  --accent:#B0222B; --accent-bg:#FBE9EA;
+  --renal:#5B34B8; --renal-bg:#EFE9FB;
+  --warn:#8A5200; --warn-bg:#FFF1D6;
+  --add:#1D5CA6; --add-bg:#E6EFFA;
+  --haus:#0B6B5F; --haus-bg:#E0F3EF;
+  --f-disp:"IBM Plex Sans Condensed","Arial Narrow",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0E1319; --surface:#161D26; --ink:#E5EAF1; --muted:#98A5B6; --line:#28323F;
+  --accent:#FF7A7F; --accent-bg:#3A1A1D; --renal:#BCA2FF; --renal-bg:#261E3C;
+  --warn:#F4B657; --warn-bg:#33260F; --add:#86B6F2; --add-bg:#13253B; --haus:#62D0BF; --haus-bg:#0F2A27; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0E1319; --surface:#161D26; --ink:#E5EAF1; --muted:#98A5B6; --line:#28323F;
+  --accent:#FF7A7F; --accent-bg:#3A1A1D; --renal:#BCA2FF; --renal-bg:#261E3C;
+  --warn:#F4B657; --warn-bg:#33260F; --add:#86B6F2; --add-bg:#13253B; --haus:#62D0BF; --haus-bg:#0F2A27; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.42;padding-inline:16px}
+.wrap{max-width:980px;margin:0 auto;padding-block:0 56px}
+b,strong{font-weight:600}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);margin-inline:-16px;padding:8px 16px;border-bottom:1px solid var(--line)}
+.bar{max-width:980px;margin:0 auto;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.brand{font-family:var(--f-disp);font-weight:700;font-size:20px;letter-spacing:.01em;color:var(--accent);margin-right:auto;display:flex;align-items:center;gap:8px;min-width:0}
+.brand small{font-family:var(--f-body);font-weight:500;font-size:12px;color:var(--muted);letter-spacing:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+button{font:inherit;color:inherit;cursor:pointer}
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:6px 10px;font-weight:600;font-size:14px}
+.btn:focus-visible,.tile:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+#home-btn[hidden]{display:none}
+.wt{display:flex;align-items:center;gap:4px;border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:2px 8px}
+.wt label{font-size:12px;color:var(--muted)}
+.wt input{width:3.2em;border:0;background:transparent;font-family:var(--f-mono);font-weight:600;font-size:15px;color:var(--ink);text-align:right;padding:4px 0}
+#renal-btn[aria-pressed="true"]{background:var(--renal);border-color:var(--renal);color:var(--surface)}
+#renal-btn{color:var(--renal)}
+.rbanner{display:none;max-width:980px;margin:6px auto 0;font-size:13px;color:var(--renal);font-weight:500}
+body.renal .rbanner{display:block}
+
+h1,h2{font-family:var(--f-disp);font-weight:700;text-wrap:balance;margin:0}
+h2{font-size:24px;line-height:1.15}
+.ph{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin:16px 0 10px}
+.ph .cat{font-size:12px;text-transform:uppercase;letter-spacing:.06em;font-weight:600;color:var(--muted)}
+h3{font-size:12px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin:0 0 6px;font-weight:600;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr));gap:10px;align-items:start}
+.blk{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:11px 13px;min-width:0}
+.blk.alert{border-color:var(--accent)}
+.blk p{margin:0 0 6px}.blk p:last-child{margin-bottom:0}
+ul.l{margin:0;padding-left:18px}ul.l li{margin:2px 0}
+.rx{padding:8px 0;border-top:1px solid var(--line);min-width:0}
+.rx:first-of-type{border-top:0;padding-top:2px}
+.nm{font-weight:600}
+.dose{font-family:var(--f-mono);font-weight:600;font-size:14px}
+.c{font-family:var(--f-mono);font-weight:600;font-size:13.5px;background:var(--accent-bg);color:var(--accent);padding:0 5px;border-radius:4px;white-space:nowrap}
+.prep{color:var(--muted);font-size:13.5px;margin-top:2px}
+.ren{display:none;margin-top:5px;font-size:13.5px;padding:5px 8px;border-radius:6px;background:var(--renal-bg);color:var(--renal)}
+.ren::before{content:"GFR < 30 · ";font-weight:700}
+.ren.same{background:transparent;color:var(--muted);padding:2px 0}
+body.renal .ren{display:block}
+body.renal .std{text-decoration:line-through;text-decoration-thickness:1px;opacity:.6}
+.tag{display:inline-block;font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;font-weight:700;padding:1px 6px;border-radius:4px;vertical-align:1px;white-space:nowrap}
+.tag.add{background:var(--add-bg);color:var(--add)}
+.tag.fix{background:var(--warn-bg);color:var(--warn)}
+.tag.haus{background:var(--haus-bg);color:var(--haus)}
+.tag.r{background:var(--renal-bg);color:var(--renal)}
+.tag.miss{background:var(--accent-bg);color:var(--accent)}
+.q{font-family:var(--f-mono);font-size:12px;color:var(--muted);font-weight:500}
+.fixbox{background:var(--warn-bg);color:var(--warn);border-radius:6px;padding:5px 8px;font-size:13.5px;margin-top:5px}
+.big{font-family:var(--f-disp);font-weight:700;font-size:18px}
+ol.steps{list-style:none;counter-reset:s;margin:0;padding:0}
+ol.steps>li{counter-increment:s;position:relative;padding:8px 0 8px 34px;border-top:1px solid var(--line)}
+ol.steps>li:first-child{border-top:0;padding-top:2px}
+ol.steps>li::before{content:counter(s);position:absolute;left:0;top:6px;width:24px;height:24px;border-radius:50%;background:var(--accent);color:var(--surface);font-family:var(--f-disp);font-weight:700;display:grid;place-items:center;font-size:14px}
+ol.steps>li:first-child::before{top:0}
+.kv{display:grid;grid-template-columns:auto minmax(0,1fr);gap:3px 12px;font-size:14px}
+.kv dt{color:var(--muted)}.kv dd{margin:0;font-family:var(--f-mono);font-weight:600;font-size:13.5px}
+a.x{color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid currentColor}
+
+/* home */
+.search{display:flex;gap:8px;margin:14px 0 10px}
+.search input{flex:1;min-width:0;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:10px 12px;font:inherit;color:var(--ink)}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(158px,100%),1fr));gap:8px}
+.tile{text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:3px;min-height:88px}
+.tile:hover{border-color:var(--accent)}
+.tile .k{font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;font-weight:700}
+.tile .t{font-family:var(--f-disp);font-weight:700;font-size:17px;line-height:1.15}
+.tile .s{font-size:12.5px;color:var(--muted);line-height:1.3}
+.k.emo{color:var(--accent)}.k.rit{color:#C0561B}.k.inf{color:var(--haus)}.k.neu{color:var(--add)}.k.met{color:var(--warn)}.k.pro{color:var(--muted)}.k.ref{color:var(--renal)}
+.rlink{display:none;margin:0 0 10px;width:100%;text-align:left;background:var(--renal-bg);color:var(--renal);border:1px solid var(--renal);border-radius:10px;padding:10px 12px;font-weight:600}
+body.renal .rlink{display:block}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12.5px;color:var(--muted);margin-top:14px;align-items:center}
+@media (max-width:440px){.brand small{display:none}.btn{padding:6px 8px}}
+.page{display:none}.page.on{display:block}
+
+/* A–Z */
+.tbl{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th,td{text-align:left;padding:7px 10px;border-top:1px solid var(--line);vertical-align:top}
+th{border-top:0;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600}
+td.d{font-family:var(--f-mono);font-size:12.5px;font-weight:500}
+.rc{display:none}
+body.renal .rc{display:table-cell}
+tr.chg td.rc{color:var(--renal);font-weight:600;background:var(--renal-bg)}
+td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dotted var(--muted)}
+.calc{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:6px;font-size:14px}
+.calc input{width:4em;border:1px solid var(--line);border-radius:6px;padding:4px 6px;background:var(--bg);color:var(--ink);font-family:var(--f-mono);font-weight:600}
+@media (prefers-reduced-motion:no-preference){.page.on{animation:f .12s ease-out}@keyframes f{from{opacity:.4}to{opacity:1}}}
+</style>
+
+<header class="top">
+  <div class="bar">
+    <button class="btn" id="home-btn" type="button" hidden>‹ Indice</button>
+    <div class="brand">HZV <small id="crumb">Kitteltasche</small></div>
+    <div class="wt"><label for="w">Peso</label><input id="w" type="number" inputmode="decimal" min="30" max="250" value="75"><label for="w">kg</label></div>
+    <button class="btn" id="renal-btn" type="button" aria-pressed="false">GFR &lt; 30</button>
+  </div>
+  <div class="rbanner">Filtro rene attivo: dosi per GFR &lt; 30 ml/min in viola, dose standard barrata dove cambia.</div>
+</header>
+
+<main class="wrap">
+
+<!-- ============ HOME ============ -->
+<section class="page" id="home" data-t="Kitteltasche">
+  <div class="search"><input id="q" type="search" placeholder="Cerca: vanco, SAM, K+, adrenalina…" autocomplete="off" aria-label="Cerca scenario o farmaco"></div>
+  <button class="rlink" type="button" data-go="az">Tutte le dosi per GFR &lt; 30 → Farmaci A–Z</button>
+  <div class="tiles" id="tiles">
+    <button class="tile" data-go="nk" data-k="notfallkoffer valigetta emergenza rianimazione intubazione rsi adrenalina atropina akrinor suxametonio rocuronio sugammadex bridion esketamina adenosina nitro ass"><span class="k emo">Emergenza</span><span class="t">Notfallkoffer</span><span class="s">Tutti i farmaci · cosa manca</span></button>
+    <button class="tile" data-go="hzv" data-k="low output lattato diurese vti noradrenalina dobutamina perfusor"><span class="k emo">Emodinamica</span><span class="t">Low Output</span><span class="s">Lattato · diurese · VTI · perfusori</span></button>
+    <button class="tile" data-go="sam" data-k="mitrale insufficienza lvot fenilefrina esmolol volume"><span class="k emo">Emodinamica</span><span class="t">SAM · Insuff. mitralica</span><span class="s">Volume · fenilefrina · stop dobu</span></button>
+    <button class="tile" data-go="rr" data-k="ipertensione pressione urapidil ebrantil clonidina metoprololo"><span class="k emo">Emodinamica</span><span class="t">Ipertensione</span><span class="s">Urapidil · clonidina · metoprololo</span></button>
+    <button class="tile" data-go="vhf" data-k="fibrillazione atriale vorhofflimmern amiodarone cordarex anticoagulazione cardioversione"><span class="k rit">Ritmo</span><span class="t">Fibrillazione atriale</span><span class="s">Amiodarone · schema anticoag.</span></button>
+    <button class="tile" data-go="endo" data-k="endocardite vancomicina emocolture tdm livello"><span class="k inf">Infezione</span><span class="t">Endocardite</span><span class="s">Emocolture · vancomicina + livelli</span></button>
+    <button class="tile" data-go="dia" data-k="diarrea clostridium difficile vancomicina loperamide fidaxomicina"><span class="k inf">Infezione</span><span class="t">Diarrea · C. diff</span><span class="s">Vanco p.o. · loperamide</span></button>
+    <button class="tile" data-go="neuro" data-k="ictus stroke schlaganfall neuro check vorhalteversuch epilessia crisi midazolam levetiracetam lipid"><span class="k neu">Neuro</span><span class="t">Ictus · Crisi epilettica</span><span class="s">Neuro-check · midazolam</span></button>
+    <button class="tile" data-go="ana" data-k="anafilassi allergia adrenalina salbutamolo ipratropio cortisone broncospasmo bpco inalatori spiolto trelegy trimbow"><span class="k emo">Emergenza</span><span class="t">Anafilassi · Bronchi</span><span class="s">Adrenalina · salbutamolo · inalatori</span></button>
+    <button class="tile" data-go="sed" data-k="analgosedazione sedazione etomidato propofol midazolam noradrenalina bolo cardioversione digiuno nüchtern tee"><span class="k pro">Procedura</span><span class="t">Analgosedazione</span><span class="s">Digiuno · etomidato · propofol</span></button>
+    <button class="tile" data-go="ak" data-k="anticoagulazione clexane enoxaparina eparina pausa pre operatoria intervento"><span class="k pro">Procedura</span><span class="t">Anticoag. pre-OP</span><span class="s">Pause Clexane · eparina</span></button>
+    <button class="tile" data-go="ms" data-k="magensonde sondino naso gastrico"><span class="k pro">Procedura</span><span class="t">Sondino gastrico</span><span class="s">Controindicazioni</span></button>
+    <button class="tile" data-go="el" data-k="potassio ipokaliemia iperkaliemia ipercaliemia kcl magnesio elettroliti calcio gluconato cloruro bicarbonato insulina glucosio salbutamolo lokelma dialisi"><span class="k met">Metabolico</span><span class="t">Potassio · Magnesio</span><span class="s">Ipo- e iperkaliemia · calcio · bicarbonato</span></button>
+    <button class="tile" data-go="glu" data-k="ipoglicemia iperglicemia glicemia zucchero glucosio glucagone glucagen insulina actrapid lantus glargin correzione schema chetoacidosi sglt2 metformin"><span class="k met">Metabolico</span><span class="t">Glicemia</span><span class="s">Ipo · iper · Actrapid · Lantus</span></button>
+    <button class="tile" data-go="az" data-k="farmaci elenco a-z dosi renale gfr insufficienza"><span class="k ref">Riferimento</span><span class="t">Farmaci A–Z</span><span class="s">Tutte le dosi · GFR &lt; 30</span></button>
+  </div>
+  <div class="legend">
+    <span><span class="tag haus">reparto</span> standard KHC dalle tue note</span>
+    <span><span class="c">375 mg</span> calcolato sul peso</span>
+  </div>
+</section>
+
+<!-- ============ NOTFALLKOFFER ============ -->
+<section class="page" id="nk" data-t="Notfallkoffer">
+  <div class="ph"><h2>Notfallkoffer</h2><span class="cat">Valigetta emergenza adulti · UMR</span></div>
+  <div class="grid">
+    <div class="blk alert">
+      <h3>Rianimazione</h3>
+      <div class="rx"><div class="nm">Adrenalina 1 mg/1 ml <span class="q">×4</span></div>
+        <div class="dose">1 mg e.v. ogni 2 cicli (~4 min)</div>
+        <div class="prep">non diluito, poi flush 20 ml NaCl · ritmo defibrillabile: dopo il 3° shock</div>
+        <div class="ren same">invariata</div></div>
+      <div class="rx"><div class="nm">Amiodarone 150 mg/3 ml <span class="q">×2</span></div>
+        <div class="dose">300 mg dopo il 3° shock · 150 mg dopo il 5°</div>
+        <div class="prep">300 mg = 6 ml, ad 20 ml G5 %. Nel koffer solo 300 mg in tutto.</div>
+        <div class="ren same">invariato</div></div>
+    </div>
+    <div class="blk">
+      <h3>Circolazione</h3>
+      <div class="rx"><div class="nm">Noradrenalina 1 mg/1 ml <span class="q">×1</span></div>
+        <div class="dose">bolo 5 µg ogni 2 min</div>
+        <div class="prep">1 mg in NaCl 100 ml del koffer = 10 µg/ml → 0,5 ml</div>
+        <div class="ren same">invariata</div></div>
+      <div class="rx"><div class="nm">Akrinor 2 ml <span class="q">×1</span></div>
+        <div class="dose">1 ml della diluizione, ripeti</div>
+        <div class="prep">1 fiala ad 10 ml NaCl</div>
+        <div class="ren same">invariato</div></div>
+      <div class="rx"><div class="nm">Atropina 0,5 mg/1 ml <span class="q">×2</span></div>
+        <div class="dose">0,5 mg e.v. ogni 3–5 min, max 3 mg</div>
+        <div class="prep">bradicardia · nel koffer solo 1 mg</div>
+        <div class="ren same">invariata</div></div>
+      <div class="rx"><div class="nm">Adrenalina Fertigspritze 0,1 mg/ml <span class="q">×1</span></div>
+        <div class="dose">anafilassi e.v.: 50 µg = 0,5 ml ogni 2 min</div>
+        <div class="ren same">invariata</div></div>
+      <div class="rx"><div class="nm">Sterofundin 500 ml <span class="q">×2</span> · NaCl 0,9 % 100 ml <span class="q">×2</span></div>
+        <div class="prep">volume: 500 ml rapido · NaCl 100 ml per diluire</div></div>
+    </div>
+    <div class="blk">
+      <h3>Intubazione (RSI)</h3>
+      <div class="rx"><div class="nm">Etomidato 2 mg/ml (Hypnomidate 20 mg/10 ml) <span class="q">×1</span></div>
+        <div class="dose">0,3 mg/kg = <span class="c" data-c="eto03"></span></div>
+        <div class="prep">nel koffer 1 fiala = 20 mg</div>
+        <div class="ren same">invariato</div></div>
+      <div class="rx"><div class="nm">Propofol 200 mg/20 ml <span class="q">×1</span></div>
+        <div class="dose">2 mg/kg = <span class="c" data-c="prop2"></span></div>
+        <div class="prep">in shock 1 mg/kg = <span data-c="prop1"></span></div>
+        <div class="ren same">invariato</div></div>
+      <div class="rx"><div class="nm">Midazolam 15 mg/3 ml (5 mg/ml) <span class="q">×1</span></div>
+        <div class="dose">0,1 mg/kg = <span class="c" data-c="mid01"></span></div>
+        <div class="ren">dose singola ok · ripetute −50 %</div></div>
+      <div class="rx"><div class="nm">Suxametonio 100 mg/5 ml (Lysthenon 2 %) <span class="q">×1</span></div>
+        <div class="dose">1 mg/kg = <span class="c" data-c="sux"></span></div>
+        <div class="prep">No se K⁺ &gt; 5,5, ustioni/immobilità &gt; 24 h, malattie neuromuscolari, ipertermia maligna. Frigo.</div>
+        <div class="ren">dose invariata · K⁺ sale di ~0,5–1 mmol/l: controlla K⁺ prima</div></div>
+      <p class="prep" style="margin-top:6px">Rocuronio, Sugammadex, Esketamina, Fentanyl: <b>mancano</b> ↓</p>
+    </div>
+    <div class="blk">
+      <h3>Coronarie · Embolia</h3>
+      <div class="rx"><div class="nm">ASS i.v. 500 mg (Aspirin) <span class="q">×1</span></div>
+        <div class="dose">SCA: 250 mg e.v.</div>
+        <div class="prep">sciogli in 5 ml di acqua (100 mg/ml) → 2,5 ml</div>
+        <div class="ren">dose singola ok</div></div>
+      <div class="rx"><div class="nm">Eparina 5000 IE <span class="q">×1</span></div>
+        <div class="dose">SCA: 5000 IE e.v. · Embolia polmonare: 80 IE/kg = <span class="c" data-c="hepLAE"></span></div>
+        <div class="prep">post-OP: prima parla col chirurgo (sanguinamento)</div>
+        <div class="ren same">invariata</div></div>
+      <div class="rx"><div class="nm">Nitrolingual akut Spray 0,4 mg/puff <span class="q">×1</span></div>
+        <div class="dose">2 puff s.l., ripeti dopo 5 min</div>
+        <div class="prep">solo se PA sist. &gt; 100 · no con infarto destro, stenosi aortica grave, sildenafil &lt; 24 h / tadalafil &lt; 48 h</div>
+        <div class="ren same">invariato</div></div>
+    </div>
+    <div class="blk">
+      <h3>Crisi epilettica</h3>
+      <div class="rx"><div class="nm">Midazolam 15 mg/3 ml</div>
+        <div class="dose">10 mg e.v./i.m. = 2 ml</div>
+        <div class="prep">senza accesso: nasale con MAD 0,2 mg/kg (max 10 mg) = <span class="c" data-c="midN"></span>, metà per narice</div></div>
+      <div class="rx"><div class="nm">Clonazepam 1 mg/1 ml (Rivotril) <span class="q">×1</span></div>
+        <div class="dose">1 mg e.v. lento, ripetibile 1×</div>
+        <div class="prep">con il solvente da 1 ml → 2 ml</div>
+        <div class="ren same">invariato</div></div>
+      <div class="rx"><div class="nm">Diazepam 10 mg/2 ml <span class="q">×1</span></div>
+        <div class="dose">10 mg e.v., max 5 mg/min</div>
+        <div class="ren">dose singola ok · ripetute: metaboliti accumulano</div></div>
+    </div>
+    <div class="blk">
+      <h3>Allergia · Bronchi</h3>
+      <div class="rx"><div class="nm">Adrenalina 1 mg/1 ml</div><div class="dose">i.m. 0,5 mg = 0,5 ml</div></div>
+      <div class="rx"><div class="nm">Prednisolon 250 mg <span class="q">×1</span></div><div class="dose">250 mg e.v.</div><div class="ren same">invariato</div></div>
+      <div class="rx"><div class="nm">Dimetinden 4 mg/4 ml (Fenistil) <span class="q">×1</span></div><div class="dose">0,1 mg/kg e.v. lento = <span class="c" data-c="dimet"></span></div><div class="ren same">invariato</div></div>
+      <div class="rx"><div class="nm">Cimetidina 200 mg/2 ml <span class="q">×1</span></div><div class="dose">200 mg e.v. in 5 min</div><div class="prep">ad 20 ml NaCl · veloce = aritmie, ipotensione</div>
+        <div class="ren">dose singola ok · ripetute: dimezza</div></div>
+      <div class="rx"><div class="nm">Fenoterolo spray (Berotec N 100 µg) <span class="q">×1</span></div><div class="dose">2 puff, ripeti dopo 5 min</div><div class="ren same">invariato</div></div>
+      <div class="rx"><div class="nm">Teofillina 200 mg/5 ml <span class="q">×1</span></div><div class="dose">5 mg/kg in 20 min = <span class="c" data-c="theo"></span></div>
+        <div class="prep">in 100 ml NaCl · già in terapia con teofillina: metà dose · koffer: 200 mg</div>
+        <div class="ren same">invariata</div></div>
+    </div>
+    <div class="blk">
+      <h3>Pressione · Glicemia</h3>
+      <div class="rx"><div class="nm">Urapidil 50 mg/10 ml (Ebrantil) <span class="q">×1</span></div><div class="dose">10–25 mg e.v. lento, ogni 5 min</div><div class="prep">non diluito → 2–5 ml</div><div class="ren same">invariato</div></div>
+      <div class="rx"><div class="nm">Nifedipina 10 mg capsule <span class="q">×2</span></div>
+        <div class="fixbox"><b>Evita:</b> Nifedipina sublinguale è obsoleta: la PA crolla senza controllo (ictus, infarto). Usa Urapidil.</div></div>
+      <div class="rx"><div class="nm">Glucosio 40 % 10 ml <span class="q">×2</span></div><div class="dose">20 ml e.v. (= 8 g), poi flush NaCl</div><div class="ren same">invariato</div></div>
+    </div>
+    <div class="blk alert">
+      <h3>Mancano nel koffer <span class="tag miss">da chiedere</span></h3>
+      <p class="prep"><b>Per intubare</b></p>
+      <div class="rx"><div class="nm">Rocuronio (Esmeron 50 mg/5 ml)</div><div class="dose">RSI 1,2 mg/kg = <span class="c" data-c="roc"></span></div><div class="prep">frigo (fuori 12 settimane)</div><div class="ren same">invariato (dura più a lungo)</div></div>
+      <div class="rx"><div class="nm">Sugammadex (Bridion 200 mg/2 ml)</div><div class="dose">dopo RSI: 16 mg/kg = <span class="c" data-c="sug16"></span></div><div class="prep">blocco profondo 4 mg/kg · moderato 2 mg/kg</div><div class="ren">sconsigliato, ma se non intubi e non ventili: dallo comunque</div></div>
+      <div class="rx"><div class="nm">Esketamina (Ketanest S 25 mg/ml)</div><div class="dose">1 mg/kg = <span class="c" data-c="eske"></span></div><div class="prep">in shock 0,5 mg/kg: induzione più stabile per la PA</div><div class="ren same">invariata</div></div>
+      <div class="rx"><div class="nm">Fentanyl 0,1 mg/2 ml</div><div class="dose">2 µg/kg = <span class="c" data-c="fent"></span></div><div class="prep">stupefacente (BtM): di solito in cassaforte, non nel koffer</div><div class="ren same">dose singola invariata</div></div>
+      <p class="prep" style="margin-top:6px"><b>Per ALS e antidoti</b></p>
+      <div class="rx"><div class="nm">Adenosina 6 mg/2 ml</div><div class="dose">6 → 12 → 12 mg bolo rapido + 20 ml NaCl</div><div class="prep">cuore trapiantato: inizia con 3 mg</div><div class="ren same">invariata</div></div>
+      <div class="rx"><div class="nm">Calcio gluconato 10 %</div><div class="dose">30 ml e.v. in 5 min</div><div class="prep">iperkaliemia → <a class="x" href="#el">piano</a>, calcio-antagonisti</div><div class="ren same">invariato</div></div>
+      <div class="rx"><div class="nm">Bicarbonato di sodio 8,4 %</div><div class="dose">50 ml (50 mmol) e.v.</div><div class="prep">iperkaliemia (solo con acidosi) → <a class="x" href="#el">piano</a>, antidepressivi triciclici</div><div class="ren same">invariato</div></div>
+      <div class="rx"><div class="nm">Magnesio solfato</div><div class="dose">torsade: 2 g in 10 min</div><div class="ren">stessa dose in emergenza, poi livello</div></div>
+      <div class="rx"><div class="nm">Naloxone 0,4 mg/ml</div><div class="dose">0,1 mg e.v., ripeti ogni 2 min</div><div class="prep">1 ml ad 4 ml NaCl → 1 ml = 0,1 mg</div><div class="ren same">invariato</div></div>
+      <div class="rx"><div class="nm">Flumazenil 0,5 mg/5 ml</div><div class="dose">0,2 mg, poi 0,1 mg/min, max 1 mg</div><div class="ren same">invariato</div></div>
+      <div class="rx"><div class="nm">Furosemide 20 mg/2 ml</div><div class="dose std">edema polmonare: 40 mg e.v.</div><div class="ren">80 mg e.v. (serve dose più alta)</div></div>
+      <p class="prep" style="margin-top:6px">Non farmaci, ma nella lista mancano anche maschera laringea / i-gel e capnografia.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ LOW OUTPUT ============ -->
+<section class="page" id="hzv" data-t="Low Output">
+  <div class="ph"><h2>Low Output (HZV)</h2><span class="cat">Emodinamica</span></div>
+  <div class="grid">
+    <div class="blk alert">
+      <h3>Ogni 15 min</h3>
+      <p class="big">Lattato · Diurese · Coscienza</p>
+      <p><b>VTI:</b> valuta subito ogni variazione.</p>
+      <p><b>Pressione</b> serve solo a evitare l'ictus → neuro-check anche se il paziente è sveglio: stringe le mani? Vorhalteversuch? linguaggio? volto simmetrico? <a class="x" href="#neuro">Neuro</a></p>
+    </div>
+    <div class="blk">
+      <h3>Target</h3>
+      <dl class="kv">
+        <dt>Lattato</dt><dd>&lt; 2 mmol/l, in calo</dd>
+        <dt>Diurese</dt><dd>&gt; 0,5 ml/kg/h = <span class="c" data-c="diur"></span></dd>
+        <dt>SvO₂</dt><dd>&gt; 60–65 %</dd>
+        <dt>CI</dt><dd>&gt; 2,2 l/min/m²</dd>
+        <dt>LVOT-VTI</dt><dd>18–22 cm · &lt; 15 = basso</dd>
+      </dl>
+    </div>
+    <div class="blk">
+      <h3>Perfusori</h3>
+      <div class="rx"><div class="nm">Noradrenalina</div>
+        <div class="dose">0,1 µg/kg/min = <span class="c" data-c="nor01"></span></div>
+        <div class="prep">Perfusor 5 mg/50 ml NaCl (100 µg/ml). Bolo: 1 mg in 200 ml NaCl = 5 µg/ml → 1 ml = 5 µg.</div>
+        <div class="ren same">invariato</div></div>
+      <div class="rx"><div class="nm">Dobutamina</div>
+        <div class="dose">2,5–10 µg/kg/min</div>
+        <div class="prep">Perfusor 250 mg/50 ml (5 mg/ml): <span class="c" data-c="dobu"></span>. t½ 2 min.</div>
+        <div class="ren same">invariato</div></div>
+      <p class="prep">Concentrazioni tipiche: verifica quelle della siringa in reparto. Fenilefrina → <a class="x" href="#sam">SAM</a></p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SAM ============ -->
+<section class="page" id="sam" data-t="SAM">
+  <div class="ph"><h2>SAM → Insufficienza mitralica</h2><span class="cat">Ostruzione LVOT</span></div>
+  <div class="grid">
+    <div class="blk alert">
+      <ol class="steps">
+        <li><b>Volume:</b> <span class="dose">500 ml in 10 min</span>, poi rivaluta con TEE.</li>
+        <li><b>Fenilefrina</b> bolo <span class="dose">50–100 µg</span> (fino a 200 µg) ogni 2 min → infusione <span class="dose">0,15–0,5 µg/kg/min</span> = <span class="c" data-c="phenUg"></span>
+          <div class="prep">Bolo: 100 µg/ml (10 mg in 100 ml NaCl) → 0,5–1 ml. Perfusor 10 mg/50 ml (200 µg/ml) → <span class="c" data-c="phenMl"></span></div>
+          <div class="prep"><b>oppure Noradrenalina</b> bolo 5 µg (1 ml di 1 mg/200 ml), poi Perfusor ↑ di 0,03 µg/kg/min ogni 3 min = <span class="c" data-c="norStep"></span> ogni step (5 mg/50 ml).</div></li>
+        <li><b>Dobutamina subito a metà</b> (t½ 2 min). Meglio stop di tutti gli inotropi se possibile.</li>
+        <li><b>Controllo:</b> gradiente LVOT (TEE).</li>
+      </ol>
+    </div>
+    <div class="blk">
+      <h3>Inoltre</h3>
+      <ul class="l"><li>Evita tachicardia, nitrati, diuretici, inotropi.</li><li>Persiste → cardiochirurgo (revisione).</li></ul>
+      <div class="rx" style="margin-top:6px"><div class="nm">Esmololo (se tachicardico)</div>
+        <div class="dose">bolo 0,5 mg/kg in 1 min = <span class="c" data-c="esmB"></span></div>
+        <div class="prep">poi 50–300 µg/kg/min · Brevibloc 2500 mg/250 ml (10 mg/ml) → <span class="c" data-c="esmInf"></span></div>
+        <div class="ren same">invariato (fenilefrina, Nor, dobutamina: invariati)</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ENDOCARDITE ============ -->
+<section class="page" id="endo" data-t="Endocardite">
+  <div class="ph"><h2>Endocardite</h2><span class="cat">Infezione</span></div>
+  <div class="grid">
+    <div class="blk">
+      <h3>Emocolture</h3>
+      <p class="big">3 set</p>
+      <p>Arteria conta come 1 + <b>2 vene periferiche</b> (meglio che dal ZVK).</p>
+    </div>
+    <div class="blk alert">
+      <h3>Vancomicina e.v.</h3>
+      <div class="rx"><div class="nm">Bolo 30 mg/kg (max 3 g)</div>
+        <div class="dose"><span class="c" data-c="vLoad"></span> a 10 mg/min → ≥ <span class="c" data-c="vLoadMin"></span></div>
+        <div class="prep">Diluisci ≤ 5 mg/ml → in <span data-c="vLoadVol"></span> NaCl 0,9 %. Mai ridurre il bolo, neanche con reni pessimi o dialisi.</div>
+        <div class="ren same">bolo invariato</div></div>
+      <div class="rx"><div class="nm">Mantenimento continuo, appena finisce il bolo</div>
+        <div class="dose std">30 mg/kg/24 h = <span class="c" data-c="vMaint"></span></div>
+        <div class="prep">Perfusor 1 g/50 ml (20 mg/ml) solo via ZVK → <span class="c" data-c="vMaintMl"></span></div>
+        <div class="ren">≈ 10 mg/kg/24 h = <b data-c="vRen"></b> (<span data-c="vRenMl"></span>), poi secondo livello. Emodialisi: niente continua, 500–1000 mg dopo ogni dialisi secondo livello pre-HD (target 15–20 mg/l). CRRT: 1–1,5 g/24 h + TDM.</div></div>
+    </div>
+    <div class="blk">
+      <h3>Livello (TDM)</h3>
+      <dl class="kv">
+        <dt>Quando</dt><dd>dopo 24 h, poi ogni 24 h</dd>
+        <dt>Target</dt><dd>20–25 mg/l</dd>
+        <dt>Livello 15</dt><dd>+50 %</dd>
+        <dt>Formula</dt><dd>nuova dose = dose × 22,5 / livello</dd>
+      </dl>
+      <p class="prep" style="margin-top:6px">Funzione renale ridotta: steady state solo dopo ~2 giorni.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ VHF ============ -->
+<section class="page" id="vhf" data-t="Fibrillazione atriale">
+  <div class="ph"><h2>Fibrillazione atriale improvvisa</h2><span class="cat">Ritmo</span></div>
+  <div class="grid">
+    <div class="blk">
+      <h3>Schema anticoagulazione</h3>
+      <div class="rx"><b>1° episodio e &lt; 24 h</b> → niente anticoagulazione. Antiaritmico solo se molto sintomatico (evita recidive nei primi giorni).</div>
+      <div class="rx"><b>Ripetuto o &gt; 24 h</b> → anticoagulazione per 1 mese, poi rivaluta.</div>
+      <div class="rx"><span class="tag haus">reparto</span> Eparina Perfusor, pTT target <b>40–50 s</b> (bioprotesi 50–60 s) → <a class="x" href="#ak">dosi</a>. Mg e.v. + betabloccante per frequenza.</div>
+      <div class="rx">VHF ≥ 24 h prima di cardioversione: TEE o ≥ 3 settimane di anticoagulazione.</div>
+    </div>
+    <div class="blk alert">
+      <h3>Amiodarone (Cordarex 150 mg/3 ml)</h3>
+      <div class="rx"><div class="nm">Bolo 5 mg/kg</div>
+        <div class="dose"><span class="c" data-c="amioB"></span> in 250 ml Glucosio 5 % in ≥ 30 min</div>
+        <div class="prep">Solo Glucosio 5 %, mai NaCl.</div></div>
+      <div class="rx"><div class="nm">Mantenimento</div>
+        <div class="dose">900 mg/24 h</div>
+        <div class="prep">Perfusor 900 mg ad 50 ml G5 % via ZVK = <b>2,1 ml/h</b> · periferica: 900 mg in 500 ml G5 % = <b>21 ml/h</b></div></div>
+      <div class="rx"><div class="nm">Poi orale</div>
+        <div class="dose">200 mg 1-1-1 × 10 gg o 1-0-1 × 20 gg → poi 200 mg 1-0-0</div></div>
+      <div class="rx"><div class="nm">Recidiva</div>
+        <div class="prep" style="color:var(--ink)">Il bolo copre 24 h. Recidiva &lt; 24 h e mantenimento interrotto → mini-bolo (metà = <span class="c" data-c="amioHalf"></span>). Recidiva &gt; 24 h → bolo intero.</div>
+        <div class="ren same">amiodarone invariato</div></div>
+    </div>
+    <div class="blk">
+      <h3>Inoltre</h3>
+      <ul class="l">
+        <li><b>Instabile</b> → cardioversione elettrica sincronizzata 150–200 J bifasico. <span class="tag haus">reparto</span> chiama l'Anestesia.</li>
+        <li>K⁺ 4,5–5,0 mmol/l · Mg ≥ 1,0 mmol/l → <a class="x" href="#el">elettroliti</a></li>
+      </ul>
+      <div class="rx" style="margin-top:6px"><div class="nm">Nebivolol p.o.</div><div class="dose std">2,5–5 mg 1-0-0</div>
+        <div class="ren">inizia con 2,5 mg, pochi dati: titola con cautela</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ANTICOAG ============ -->
+<section class="page" id="ak" data-t="Anticoagulazione">
+  <div class="ph"><h2>Anticoagulazione prima di un intervento</h2><span class="cat">Pausa</span></div>
+  <div class="grid">
+    <div class="blk alert">
+      <h3>Clexane (enoxaparina) s.c.</h3>
+      <div class="rx"><div class="nm">Profilattica: 40 mg 1×/d <span class="tag haus">reparto</span></div>
+        <div class="dose std">pausa 12 h</div>
+        <div class="ren">20 mg 1×/d · pausa ≥ 24 h</div></div>
+      <div class="rx"><div class="nm">Terapeutica: 1 mg/kg 2×/d = <span class="c" data-c="enox"></span></div>
+        <div class="dose std">pausa 24 h</div>
+        <div class="ren">1 mg/kg <b>1×/d</b> · pausa ≥ 48 h, meglio anti-Xa. GFR &lt; 15: evita → eparina non frazionata.</div></div>
+    </div>
+    <div class="blk">
+      <h3>Eparina non frazionata</h3>
+      <div class="rx"><div class="nm">s.c. 5000 IE 2–3×/d</div><div class="dose">pausa 6 h</div>
+        <div class="prep"><span class="tag haus">reparto</span> in Normalstation non c'è eparina s.c.</div>
+        <div class="ren same">invariata</div></div>
+      <div class="rx"><div class="nm">Perfusor e.v.</div><div class="dose">stop 4–6 h prima, controlla pTT</div>
+        <div class="prep">10.000 IE/50 ml NaCl (200 IE/ml). Profilassi PIT: 2 ml/h = 400 IE/h <span class="tag haus">reparto</span></div>
+        <div class="prep">Terapeutica: inizio 12–18 IE/kg/h = <span class="c" data-c="hepT"></span>, senza bolo nei primi giorni post-OP; pTT ogni 6 h.</div>
+        <div class="ren same">invariata: scelta preferita con GFR &lt; 30</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SEDAZIONE ============ -->
+<section class="page" id="sed" data-t="Analgosedazione">
+  <div class="ph"><h2>Analgosedazione</h2><span class="cat">Due strade</span></div>
+  <div class="grid">
+    <div class="blk alert">
+      <h3>Digiuno (TEE, sedazione)</h3>
+      <dl class="kv">
+        <dt>Cibo, latte, Sondenkost</dt><dd>stop 6 h prima</dd>
+        <dt>Liquidi chiari</dt><dd>ok fino a 2 h prima</dd>
+        <dt>Farmaci</dt><dd>sì, con un sorso d'acqua</dd>
+      </dl>
+    </div>
+    <div class="blk">
+      <h3>1 · Etomidato</h3>
+      <div class="rx"><div class="nm">Prima Midazolam 1 mg</div><div class="prep">riduce le mioclonie · Dormicum 5 mg/5 ml → 1 ml (fiala 5 mg/1 ml: diluisci ad 5 ml)</div>
+        <div class="ren">dose singola ok · dosi ripetute: −50 % (metabolita attivo accumula)</div></div>
+      <div class="rx"><div class="nm">Etomidato 0,1 mg/kg</div>
+        <div class="dose"><span class="c" data-c="eto"></span> in 30 s</div>
+        <div class="prep">Etomidat-Lipuro 20 mg/10 ml (2 mg/ml), non diluito. Più lento (fino a 1 min) = meno mioclonie.</div>
+        <div class="ren same">invariato</div></div>
+      <div class="fixbox">Per cardioversione: le mioclonie danno artefatti ECG (sincronizzazione)!</div>
+    </div>
+    <div class="blk">
+      <h3>2 · Propofol</h3>
+      <div class="rx"><div class="nm">Boli 10–20 mg ogni 60 s</div><div class="prep">Propofol 1 % (10 mg/ml) → 1–2 ml. Anche qui puoi partire con Midazolam 1 mg.</div>
+        <div class="ren same">invariato</div></div>
+      <p class="prep" style="margin-top:4px"><b>Tieni pronta la Noradrenalina.</b></p>
+    </div>
+    <div class="blk alert">
+      <h3>Sempre: Noradrenalina a boli</h3>
+      <p class="big">5 µg ogni 2 min</p>
+      <p>1 mg Nor in 200 ml NaCl → <b>5 µg/ml</b> → 1 ml = 5 µg.</p>
+      <p class="prep">Tutte queste concentrazioni, anche la Nor, vanno bene in periferia: controlla che la vena scorra bene. Minimo un <b>VERDE (18 G)</b>.</p>
+      <div class="ren same">Nor invariata</div>
+      <p class="prep" style="margin-top:6px"><span class="tag haus">reparto</span> Per cardioversione elettrica in casa si chiama l'Anestesia.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ NEURO ============ -->
+<section class="page" id="neuro" data-t="Ictus · Epilessia">
+  <div class="ph"><h2>Ictus · Crisi epilettica</h2><span class="cat">Neuro</span></div>
+  <div class="grid">
+    <div class="blk alert">
+      <h3>Neuro-check (anche se sveglio)</h3>
+      <ul class="l"><li>Stringe le mani?</li><li>Vorhalteversuch (braccia tese 10 s)?</li><li>Linguaggio?</li><li>Volto simmetrico?</li></ul>
+      <p class="prep" style="margin-top:6px">La pressione serve a evitare l'ictus.</p>
+    </div>
+    <div class="blk">
+      <h3>Sospetto ictus</h3>
+      <ul class="l">
+        <li>Ora dell'ultima volta visto bene · glicemia</li>
+        <li>CCT + CTA subito · Neurologia / Stroke-Team</li>
+        <li>Lisi di norma controindicata (&lt; 14 gg da sternotomia) → trombectomia se occlusione di grande vaso</li>
+        <li>Niente ipotensione · prima di trombectomia ≤ 185/110, dopo ≤ 180/105</li>
+      </ul>
+    </div>
+    <div class="blk">
+      <h3>Crisi epilettica</h3>
+      <p><b>Causa?</b> Anestetico locale? Elettroliti? Glicemia, Na, Ca, Mg</p>
+      <div class="rx"><div class="nm">Midazolam 10 mg</div><div class="prep">e.v. / i.m. / nasale. Senza accesso: <b>Diazepam 10 mg rettale</b>.</div>
+        <div class="ren">dose singola invariata · ripetute: accumulo, riduci</div></div>
+      <div class="rx"><div class="nm">Levetiracetam</div>
+        <div class="dose">60 mg/kg (max 4,5 g) = <span class="c" data-c="leve"></span></div>
+        <div class="prep">in 100 ml NaCl in 10 min, se persiste dopo 2ª benzodiazepina</div>
+        <div class="ren">carico invariato · mantenimento 250–500 mg 2×/d</div></div>
+      <div class="rx"><div class="nm">Tossicità da anestetico locale</div>
+        <div class="dose">Lipid 20 % 1,5 ml/kg in 1 min = <span class="c" data-c="lipB"></span></div>
+        <div class="prep">stop anestetico · poi 0,25 ml/kg/min = <span class="c" data-c="lipInf"></span> · max 12 ml/kg = <span data-c="lipMax"></span></div>
+        <div class="ren same">invariato</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ANAFILASSI ============ -->
+<section class="page" id="ana" data-t="Anafilassi">
+  <div class="ph"><h2>Anafilassi · Broncospasmo</h2><span class="cat">Emergenza</span></div>
+  <div class="grid">
+    <div class="blk alert">
+      <h3>Adrenalina</h3>
+      <div class="rx"><div class="nm">Fuori / senza accesso ("al parchetto")</div>
+        <div class="dose">0,5 mg i.m.</div>
+        <div class="prep">0,5 ml di 1 mg/ml non diluito, coscia laterale. · ripeti dopo 5 min</div></div>
+      <div class="rx"><div class="nm">In ospedale e.v.</div>
+        <div class="dose">50 µg ogni 2 min</div>
+        <div class="prep">1 mg in 20 ml NaCl (50 µg/ml) → 1 ml</div>
+        <div class="ren same">invariata</div></div>
+    </div>
+    <div class="blk">
+      <h3>+ Bronchi</h3>
+      <div class="rx"><div class="nm">Salbutamolo 2,5–5 mg + Ipratropio 0,5 mg</div><div class="prep">nebulizzati insieme, con O₂ 6–8 l/min</div></div>
+      <div class="rx"><div class="nm">Salbutamolo spray (100 µg/puff)</div><div class="dose">4–10 puff se instabile · 2 se stabile</div>
+        <div class="ren same">invariati</div></div>
+      <h3 style="margin-top:8px">+ Cortisone</h3>
+      <div class="rx"><div class="dose">Prednisolon 250 mg e.v. (fino a 1 g) o Hydrocortison 200 mg e.v.</div>
+        <div class="ren same">invariato</div></div>
+    </div>
+    <div class="blk">
+      <h3>Inoltre</h3>
+      <div class="rx"><div class="nm">Dimetinden (Fenistil 4 mg/4 ml)</div><div class="dose">0,1 mg/kg e.v. lento = <span class="c" data-c="dimet"></span></div>
+        <div class="ren same">invariato</div></div>
+      <div class="rx">Cristalloide 500–1000 ml rapido · O₂ · gambe su</div>
+    </div>
+    <div class="blk">
+      <h3>BPCO: terapia a lungo termine</h3>
+      <div class="rx"><div class="nm">LAMA + LABA</div><div class="dose">Spiolto Respimat 2 puff 1×/d</div>
+        <div class="ren">tiotropio: GFR ≤ 50 → monitora (accumulo)</div></div>
+      <div class="rx"><div class="nm">Eosinofili &gt; 300/µl → + ICS</div><div class="dose">Trelegy 1 inal. 1×/d · Trimbow 2 puff 2×/d</div>
+        <div class="prep">Sciacquare la bocca dopo.</div><div class="ren same">invariati</div></div>
+      <div class="rx"><div class="nm">Tecnica</div><div class="prep" style="color:var(--ink)">Come quando fumano: inspirare lento mentre inalano, trattenere 10 s, espirare. Leggi le istruzioni: alcuni (polvere) vanno inalati veloci; con distanziatore prima spruzzi, poi inspiri.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ IPERTENSIONE ============ -->
+<section class="page" id="rr" data-t="Ipertensione">
+  <div class="ph"><h2>Pressione alta</h2><span class="cat">Emodinamica</span></div>
+  <div class="grid">
+    <div class="blk alert">
+      <div class="rx"><div class="nm">Urapidil (Ebrantil 25 mg/5 ml)</div>
+        <div class="dose">10–25 mg e.v. lento, ogni 5 min</div>
+        <div class="prep">non diluito → 2–5 ml</div>
+        <div class="ren same">invariato</div></div>
+      <div class="rx"><div class="nm">Clonidina (anche per tranquillizzare)</div>
+        <div class="dose">75 µg in 5 min</div>
+        <div class="prep">1 fiala 0,15 mg/1 ml ad 10 ml NaCl (15 µg/ml) → 5 ml in 5 min</div>
+        <div class="ren">dose singola ok · ripetute: dimezza (bradicardia, sedazione)</div></div>
+      <div class="rx"><div class="nm">Metoprololo (se tachicardia)</div>
+        <div class="dose">2,5–5 mg e.v., fino a max 15 mg</div>
+        <div class="prep">Beloc 5 mg/5 ml → 2,5–5 ml, ripeti ogni 5 min</div>
+        <div class="ren same">invariato</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ELETTROLITI ============ -->
+<section class="page" id="el" data-t="Potassio · Magnesio">
+  <div class="ph"><h2>Potassio · Magnesio</h2><span class="cat">Ipo · Iper · Metabolico</span></div>
+  <div class="grid">
+    <div class="blk alert">
+      <h3>Ipokaliemia</h3>
+      <p class="big">10 mmol alzano K⁺ di ~0,1 mmol/l</p>
+      <div class="rx"><div class="nm">Periferia</div><div class="dose std">max 40 mmol/l · max 10 mmol/h</div><div class="prep">es. 40 mmol KCl in 1000 ml NaCl a 250 ml/h</div></div>
+      <div class="rx"><div class="nm">ZVK</div><div class="dose std">10 mmol/h di KCl puro</div><div class="prep">KCl 7,45 % = 1 mmol/ml · Perfusor 50 ml a 10 ml/h. Fino a 20 mmol/h solo con monitor ECG</div>
+        <div class="ren">metà dose e velocità, ricontrolla K⁺ dopo ogni 20 mmol (rischio iperkaliemia)</div></div>
+      <div class="calc">
+        <label for="k0">K⁺ attuale</label><input id="k0" type="number" step="0.1" value="3.4">
+        <label for="k1">target</label><input id="k1" type="number" step="0.1" value="4.5">
+        <span>→ <span class="c" id="kout"></span></span>
+      </div>
+      <p class="prep" style="margin-top:4px">Esempio precompilato. Target cardiochirurgia 4,5–5,0.</p>
+    </div>
+    <div class="blk">
+      <h3>Magnesio</h3>
+      <div class="rx"><div class="dose std">2 g MgSO₄ (≈ 8 mmol) in 100 ml NaCl in 20–30 min</div>
+        <div class="ren">1 g, solo con Mg basso misurato · controlla livello</div></div>
+      <p class="prep">Target Mg ≥ 1,0 mmol/l (profilassi VHF)</p>
+    </div>
+    <div class="blk alert" id="iperk">
+      <h3>Iperkaliemia</h3>
+      <p class="big">K⁺ ≥ 6,5 o ECG alterato = emergenza</p>
+      <p class="prep">ECG + monitor subito. Sospetta emolisi? Ripeti il prelievo, ma con ECG alterato tratta senza aspettare.</p>
+      <ol class="steps">
+        <li><b>Proteggi il cuore</b> <span class="prep">(ECG alterato o K⁺ ≥ 6,5)</span>
+          <div class="rx"><div class="nm">Calcio gluconato 10 %</div>
+            <div class="dose">30 ml e.v. in 10 min</div>
+            <div class="prep">non diluito, va bene in periferia · effetto in 3 min, dura 30–60 min · ECG ancora alterato dopo 5 min → altri 30 ml</div>
+            <div class="ren same">invariato</div></div></li>
+        <li><b>Sposta K⁺ nelle cellule</b> <span class="prep">(K⁺ ≥ 6,0)</span>
+          <div class="rx"><div class="nm">Insulina + glucosio</div>
+            <div class="dose">Actrapid 10 IE e.v. + Glucosio 10 % 250 ml in 15 min</div>
+            <div class="prep">glicemia prima · se glicemia &lt; 7 mmol/l → poi G10 % 50 ml/h per 5 h · glicemia a 15, 30, 60 min, poi ogni ora per 6 h · K⁺ scende ~0,8 mmol/l, dura 4–6 h</div>
+            <div class="ren">stessa dose · ipoglicemia più frequente e tardiva: glicemia ogni ora per 6 h</div></div>
+          <div class="rx"><div class="nm">Salbutamolo (in aggiunta, mai da solo)</div>
+            <div class="dose">10 mg nebulizzato</div>
+            <div class="prep">4 fiale da 2,5 mg · no con FA, tachicardia o ischemia</div>
+            <div class="ren same">invariato</div></div>
+          <div class="rx"><div class="nm">Bicarbonato di sodio 8,4 % (solo con acidosi metabolica, HCO₃⁻ &lt; 22)</div>
+            <div class="dose">50 ml (50 mmol) e.v. in 5 min</div>
+            <div class="prep">meglio ZVK · <b>mai nella stessa linea del calcio</b> (precipita) · carico di sodio e volume</div>
+            <div class="ren same">invariato</div></div></li>
+        <li><b>Elimina K⁺</b>
+          <div class="rx"><div class="prep" style="color:var(--ink)">Stop: KCl, Kalinor, spironolattone, ACE-inibitori, sartani, Entresto, FANS, trimetoprim.</div></div>
+          <div class="rx"><div class="nm">Furosemide (se urina e non ipovolemico)</div>
+            <div class="dose std">40 mg e.v.</div>
+            <div class="ren">80 mg e.v.</div></div>
+          <div class="rx"><div class="nm">Lokelma (sodio zirconio ciclosilicato)</div>
+            <div class="dose">10 g p.o. 1-1-1, max 72 h</div>
+            <div class="prep">bustina in 45 ml d'acqua · effetto da 1 h</div>
+            <div class="ren same">invariato</div></div>
+          <div class="rx"><b>Dialisi → Nefrologia:</b> K⁺ ≥ 6,5 che non scende, anuria, acidosi grave.</div></li>
+        <li><b>Controllo:</b> K⁺ + glicemia dopo 1 h, poi a 4 h e 6 h.</li>
+      </ol>
+    </div>
+    <div class="blk">
+      <h3>Calcio: gluconato o cloruro?</h3>
+      <p>Stessa dose di calcio: <b>6,8 mmol</b>.</p>
+      <div class="rx"><div class="nm">Calcio gluconato 10 % → 30 ml</div>
+        <div class="prep"><b>Di routine.</b> Va bene in periferia.</div></div>
+      <div class="rx"><div class="nm">Calcio cloruro 10 % → 10 ml</div>
+        <div class="prep"><b>Arresto o peri-arresto</b>, con ZVK: 3× più concentrato, agisce subito. In periferia necrosi se stravasa.</div>
+        <div class="prep">Fiala da 0,5 mmol/ml → 14 ml. Controlla la concentrazione della fiala.</div></div>
+      <div class="rx"><div class="nm">Arresto cardiaco da iperkaliemia</div>
+        <div class="prep" style="color:var(--ink)">Calcio cloruro 10 % 10 ml bolo rapido + bicarbonato 8,4 % 50 ml rapido (altra linea) + insulina/glucosio · dialisi durante RCP.</div></div>
+      <div class="rx"><div class="nm">Digitale</div>
+        <div class="prep" style="color:var(--ink)">Calcio in 30 min, non a bolo.</div></div>
+    </div>
+    <div class="blk">
+      <h3>In cardiochirurgia</h3>
+      <ul class="l">
+        <li><b>Pacemaker</b> (epicardico o dipendente): l'iperkaliemia alza la soglia → perde il capture. Alza l'output, pads pronti.</li>
+        <li><b>ECG:</b> T alte e appuntite → P piatta, PR lungo → QRS largo → sinusoide, bradicardia → arresto.</li>
+        <li><b>Cause post-OP:</b> AKI, emolisi (HLM, ECMO), trasfusioni, KCl in eccesso, acidosi, rabdomiolisi.</li>
+        <li>Suxametonio vietato con K⁺ &gt; 5,5.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ GLICEMIA ============ -->
+<section class="page" id="glu" data-t="Glicemia">
+  <div class="ph"><h2>Glicemia: ipo · iper</h2><span class="cat">Metabolico · 1 mmol/l = 18 mg/dl</span></div>
+  <div class="grid">
+    <div class="blk alert">
+      <h3>Ipoglicemia (&lt; 4 mmol/l = 70 mg/dl)</h3>
+      <div class="rx"><div class="nm">Glucosio 40 %</div><div class="dose">20–40 ml e.v. (8–16 g)</div><div class="prep">poi lava la vena con NaCl (iperosmolare)</div></div>
+      <div class="rx"><div class="nm">oppure Glucosio 20 %</div><div class="dose">100 ml (20 g)</div></div>
+      <div class="rx"><div class="nm">Causa insulina o sulfonilurea</div><div class="dose">Glucosio 10 % a 100 ml/h</div><div class="prep">glicemia ogni ora</div></div>
+      <div class="rx"><div class="nm">Senza accesso venoso</div><div class="dose">GlucaGen (glucagone) 1 mg i.m.</div>
+        <div class="prep">Inefficace se glicogeno esaurito (alcol, cirrosi, digiuno)</div>
+        <div class="ren">dosi invariate · insulina e sulfoniluree durano di più: monitora più a lungo (sulfoniluree ≥ 24 h)</div></div>
+    </div>
+
+    <div class="blk alert">
+      <h3>Iperglicemia: correzione con Actrapid s.c.</h3>
+      <p class="prep">Target in reparto: <b>7,8–10 mmol/l</b> (140–180 mg/dl). Actrapid s.c. prima dei pasti o, se digiuno, ogni 4 h. <b>Mai ripetere prima di 4 h</b> (le dosi si sommano).</p>
+      <div class="tbl" style="margin-top:6px"><table>
+        <thead><tr><th>Glicemia mmol/l</th><th>mg/dl</th><th>Actrapid s.c.</th></tr></thead>
+        <tbody>
+          <tr><td class="d">&lt; 10,0</td><td class="d">&lt; 180</td><td class="d">0</td></tr>
+          <tr><td class="d">10,0–11,9</td><td class="d">180–214</td><td class="d">2 IE</td></tr>
+          <tr><td class="d">12,0–13,9</td><td class="d">215–250</td><td class="d">4 IE</td></tr>
+          <tr><td class="d">14,0–16,9</td><td class="d">251–304</td><td class="d">6 IE</td></tr>
+          <tr><td class="d">17,0–19,9</td><td class="d">305–359</td><td class="d">8 IE</td></tr>
+          <tr><td class="d">≥ 20,0</td><td class="d">≥ 360</td><td class="d">10 IE + chetoni/BGA + Hintergrund</td></tr>
+        </tbody>
+      </table></div>
+      <ul class="l" style="margin-top:6px">
+        <li><b>Di notte (22–6 h):</b> metà dose.</li>
+        <li><b>Cortisone, infezione, &gt; 100 kg:</b> +2 IE per riga.</li>
+        <li>Ricontrolla la glicemia dopo 2 h.</li>
+      </ul>
+      <div class="ren">metà dose in ogni riga · l'insulina dura di più: glicemia anche di notte</div>
+    </div>
+
+    <div class="blk">
+      <h3>Lantus (glargin): la base</h3>
+      <div class="rx"><div class="nm">Dose di partenza</div>
+        <div class="dose std">0,2 IE/kg/d = <span class="c" data-c="lanS"></span> s.c. la sera</div>
+        <div class="prep">&gt; 70 anni o digiuno: 0,1 IE/kg = <span class="c" data-c="lanR"></span></div>
+        <div class="ren">0,1 IE/kg/d = <b data-c="lanR"></b></div></div>
+      <div class="rx"><div class="nm">Digiuno (OP, esame)</div>
+        <div class="dose">75 % della dose abituale</div>
+        <div class="prep">mai sospendere del tutto in diabete tipo 1</div></div>
+      <div class="rx"><div class="nm">Aggiusta ogni giorno secondo la glicemia a digiuno del mattino</div></div>
+      <div class="tbl"><table>
+        <thead><tr><th>Glicemia a digiuno mmol/l</th><th>mg/dl</th><th>Lantus</th></tr></thead>
+        <tbody>
+          <tr><td class="d">&lt; 4,0</td><td class="d">&lt; 70</td><td class="d">−20 %</td></tr>
+          <tr><td class="d">4,0–5,5</td><td class="d">70–99</td><td class="d">−10 %</td></tr>
+          <tr><td class="d">5,6–7,7</td><td class="d">100–139</td><td class="d">invariata</td></tr>
+          <tr><td class="d">7,8–10,0</td><td class="d">140–180</td><td class="d">+10 %</td></tr>
+          <tr><td class="d">&gt; 10,0</td><td class="d">&gt; 180</td><td class="d">+20 %</td></tr>
+        </tbody>
+      </table></div>
+      <p class="prep" style="margin-top:6px">Servono spesso correzioni con Actrapid? Somma le IE del giorno e aggiungi metà di quel totale alla Lantus.</p>
+    </div>
+
+    <div class="blk">
+      <h3>Actrapid e Lantus: differenza</h3>
+      <dl class="kv">
+        <dt>Actrapid</dt><dd>insulina rapida (umana): s.c. inizio 30 min, picco 2–4 h, dura 6–8 h · e.v. agisce subito, dura minuti</dd>
+        <dt>Lantus</dt><dd>basale (glargin): inizio 2 h, senza picco, dura 24 h · solo s.c., 1×/d</dd>
+        <dt>Per cosa</dt><dd>Actrapid = correzione, pasti, Perfusor, iperkaliemia · Lantus = fabbisogno di base</dd>
+      </dl>
+      <p class="prep" style="margin-top:6px">Lantus mai e.v., mai nel Perfusor, mai mescolata con altre insuline.</p>
+    </div>
+
+    <div class="blk alert">
+      <h3>Emergenza iperglicemica</h3>
+      <p><b>Glicemia &gt; 14 mmol/l, o paziente con SGLT2</b> (Forxiga, Jardiance) che sta male → <b>BGA + chetoni</b>. Con SGLT2 la chetoacidosi arriva anche con glicemia normale: sospendi l'SGLT2.</p>
+      <p class="prep"><b>Chetoacidosi:</b> pH &lt; 7,3 + chetoni + glicemia &gt; 14 (o SGLT2). <b>Iperosmolare:</b> glicemia &gt; 33 mmol/l (600 mg/dl), senza acidosi. Entrambe → IMC/PIT.</p>
+      <ol class="steps">
+        <li><b>Volume:</b> NaCl 0,9 % 1000 ml nella 1ª ora · cardiopatico o LVEF ridotta: 500 ml, poi rivaluta.</li>
+        <li><b>K⁺ prima dell'insulina:</b> K⁺ &lt; 3,5 → prima KCl, niente insulina · K⁺ 3,5–5,0 → 20 mmol KCl in ogni litro di liquido.</li>
+        <li><b>Insulina Perfusor</b> Actrapid 50 IE/50 ml NaCl (1 IE/ml), senza bolo: <span class="dose">0,1 IE/kg/h = <span class="c" data-c="insP"></span></span>
+          <div class="prep">iperosmolare: 0,05 IE/kg/h = <span class="c" data-c="insP05"></span> · glicemia ogni ora, deve scendere di 3 mmol/l/h</div></li>
+        <li><b>Glicemia &lt; 14 mmol/l:</b> aggiungi Glucosio 10 % 125 ml/h e continua l'insulina finché i chetoni si negativizzano.</li>
+      </ol>
+      <div class="ren same">dosi invariate · attenzione al volume e al K⁺ (sale)</div>
+    </div>
+
+    <div class="blk">
+      <h3>Antidiabetici orali in reparto</h3>
+      <div class="rx"><div class="nm">Metformin</div><div class="prep" style="color:var(--ink)">Stop il giorno dell'OP, riprendi dopo 48 h con creatinina stabile. Mezzo di contrasto: stop solo con GFR &lt; 30 o AKI.</div>
+        <div class="ren">GFR 30–44: max 1000 mg/d · GFR &lt; 30: controindicato</div></div>
+      <div class="rx"><div class="nm">SGLT2 (Forxiga, Jardiance)</div><div class="prep" style="color:var(--ink)">Stop 3 giorni prima dell'OP e se digiuno o malato.</div>
+        <div class="ren">non iniziare: Forxiga con GFR &lt; 25 · Jardiance con GFR &lt; 20</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DIARREA ============ -->
+<section class="page" id="dia" data-t="Diarrea">
+  <div class="ph"><h2>Diarrea</h2><span class="cat">Infezione</span></div>
+  <div class="grid">
+    <div class="blk alert">
+      <h3>Prendeva antibiotici → sospetta C. diff</h3>
+      <p>Test (risultato in poche ore) e inizia subito:</p>
+      <div class="rx"><div class="nm">Vancomicina p.o.</div><div class="dose">125 mg 4×/d × 10 gg</div><div class="ren same">invariata (non assorbita)</div></div>
+      <div class="rx"><div class="nm">Alternativa: Fidaxomicina</div><div class="dose">200 mg 1-0-1 × 10 gg</div><div class="prep">1ª scelta ESCMID · isolamento da contatto · sospendi l'antibiotico se possibile</div><div class="ren same">invariata</div></div>
+    </div>
+    <div class="blk">
+      <div class="rx"><div class="nm">Loperamide</div><div class="dose">4 mg, poi 2 mg dopo ogni scarica · max 12–16 mg/d</div>
+        <div class="fixbox">Non dare se sospetto C. diff, febbre o sangue nelle feci.</div>
+        <div class="ren same">invariata</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SONDINO ============ -->
+<section class="page" id="ms" data-t="Sondino gastrico">
+  <div class="ph"><h2>Sondino gastrico (Magensonde)</h2><span class="cat">Procedura</span></div>
+  <div class="grid">
+    <div class="blk alert"><p class="big">MAI con frattura della base cranica o varici esofagee</p></div>
+    <div class="blk"><p>Papi comunque non la sostiene: va bene per svuotare lo stomaco, ma <b>non protegge dall'aspirazione</b>.</p></div>
+  </div>
+</section>
+
+<!-- ============ A–Z ============ -->
+<section class="page" id="az" data-t="Farmaci A–Z">
+  <div class="ph"><h2>Farmaci A–Z</h2><span class="cat">Attiva "GFR &lt; 30" in alto per la colonna rene</span></div>
+  <div class="tbl"><table>
+    <thead><tr><th>Farmaco</th><th>Dose</th><th class="rc">GFR &lt; 30 ml/min</th></tr></thead>
+    <tbody id="aztb"></tbody>
+  </table></div>
+</section>
+
+</main>
+
+<script>
+(function(){
+  var W = 75;
+  function n(x,d){return Number(x).toLocaleString('it-IT',{maximumFractionDigits:d||0,minimumFractionDigits:0});}
+  function r(x,s){return Math.round(x/s)*s;}
+  var C = {
+    diur:function(w){return n(0.5*w)+' ml/h';},
+    nor01:function(w){return n(0.1*w*60/100,1)+' ml/h';},
+    norStep:function(w){return '+'+n(0.03*w*60/100,1)+' ml/h';},
+    dobu:function(w){return '2,5 → '+n(2.5*w*60/5000,1)+' · 5 → '+n(5*w*60/5000,1)+' · 10 → '+n(10*w*60/5000,1)+' ml/h';},
+    phenUg:function(w){return n(0.15*w)+'–'+n(0.5*w)+' µg/min';},
+    phenMl:function(w){return n(0.15*w*60/200,1)+'–'+n(0.5*w*60/200,1)+' ml/h';},
+    esmB:function(w){return n(0.5*w)+' mg = '+n(0.05*w,1)+' ml';},
+    esmInf:function(w){return n(0.3*w,1)+'–'+n(1.8*w)+' ml/h';},
+    vLoad:function(w){return n(vl(w))+' mg';},
+    vLoadMin:function(w){return n(vl(w)/10)+' min';},
+    vLoadVol:function(w){return n(Math.ceil(vl(w)/5/250)*250)+' ml';},
+    vMaint:function(w){return n(r(30*w,250))+' mg/24 h';},
+    vMaintMl:function(w){return n(r(30*w,250)/20/24,1)+' ml/h';},
+    vRen:function(w){return n(r(10*w,50))+' mg/24 h';},
+    vRenMl:function(w){return n(r(10*w,50)/20/24,1)+' ml/h a 20 mg/ml';},
+    amioB:function(w){var d=r(5*w,25);return n(d)+' mg = '+n(d/50,1)+' ml';},
+    amioHalf:function(w){return n(r(2.5*w,5))+' mg';},
+    eto:function(w){return n(0.1*w,1)+' mg = '+n(0.05*w,1)+' ml';},
+    enox:function(w){return n(r(w,10))+' mg';},
+    hepT:function(w){return n(r(12*w,50))+'–'+n(r(18*w,50))+' IE/h = '+n(12*w/200,1)+'–'+n(18*w/200,1)+' ml/h';},
+    dimet:function(w){return n(0.1*w,1)+' mg = '+n(0.1*w,1)+' ml';},
+    leve:function(w){return n(Math.min(r(60*w,250),4500))+' mg';},
+    lipB:function(w){return n(1.5*w)+' ml';},
+    lipInf:function(w){return n(15*w)+' ml/h';},
+    lipMax:function(w){return n(12*w)+' ml';},
+    eto03:function(w){return n(0.3*w,1)+' mg = '+n(0.15*w,1)+' ml';},
+    prop2:function(w){return n(r(2*w,10))+' mg = '+n(r(2*w,10)/10)+' ml';},
+    prop1:function(w){return n(r(w,10))+' mg = '+n(r(w,10)/10)+' ml';},
+    mid01:function(w){return n(0.1*w,1)+' mg = '+n(0.02*w,1)+' ml';},
+    sux:function(w){var d=Math.min(r(w,5),100);return n(d)+' mg = '+n(d/20,1)+' ml'+(w>100?' (koffer max 100 mg)':'');},
+    hepLAE:function(w){return n(r(80*w,500))+' IE';},
+    midN:function(w){var d=Math.min(0.2*w,10);return n(d,1)+' mg = '+n(d/5,1)+' ml';},
+    theo:function(w){return n(r(5*w,25))+' mg = '+n(r(5*w,25)/40,1)+' ml';},
+    roc:function(w){return n(r(1.2*w,5))+' mg = '+n(r(1.2*w,5)/10,1)+' ml';},
+    sug16:function(w){return n(r(16*w,50))+' mg = '+n(r(16*w,50)/100,1)+' ml';},
+    eske:function(w){return n(r(w,5))+' mg = '+n(r(w,5)/25,1)+' ml';},
+    fent:function(w){return n(r(2*w,10))+' µg = '+n(r(2*w,10)/50,1)+' ml';},
+    lanS:function(w){return n(r(0.2*w,2))+' IE';},
+    lanR:function(w){return n(r(0.1*w,1))+' IE';},
+    insP:function(w){return n(0.1*w,1)+' IE/h = '+n(0.1*w,1)+' ml/h';},
+    insP05:function(w){return n(0.05*w,1)+' ml/h';}
+  };
+  function vl(w){return Math.min(r(30*w,250),3000);}
+
+  // A–Z data: [nome, dose, rene, cambia?, pagina]
+  var AZ = [
+    ['Adrenalina','i.m. 0,5 mg · e.v. 50 µg ogni 2 min (1 mg/20 ml)','invariata',0,'ana'],
+    ['Amiodarone','bolo 5 mg/kg in 250 ml G5 % ≥ 30 min · 900 mg/24 h · poi 200 mg 1-1-1','invariato',0,'vhf'],
+    ['Clexane (enoxaparina)','profil. 40 mg 1×/d · terap. 1 mg/kg 2×/d · pausa 12 h / 24 h','profil. 20 mg 1×/d · terap. 1 mg/kg 1×/d · pausa ≥ 24 h / ≥ 48 h · GFR < 15 evita',1,'ak'],
+    ['Clonidina','75 µg e.v. in 5 min (0,15 mg ad 10 ml → 5 ml)','singola ok · ripetute dimezza',1,'rr'],
+    ['Diazepam rettale','10 mg','invariato',0,'neuro'],
+    ['Dimetinden','0,1 mg/kg e.v. lento','invariato',0,'ana'],
+    ['Dobutamina','2,5–10 µg/kg/min (250 mg/50 ml)','invariata',0,'hzv'],
+    ['Eparina e.v.','terap. 12–18 IE/kg/h, pTT · stop 4–6 h pre-OP','invariata (preferita)',0,'ak'],
+    ['Eparina s.c.','5000 IE 2–3×/d · pausa 6 h','invariata',0,'ak'],
+    ['Esmololo','bolo 0,5 mg/kg · 50–300 µg/kg/min','invariato',0,'sam'],
+    ['Etomidato','sedazione 0,1 mg/kg · RSI 0,3 mg/kg (2 mg/ml)','invariato',0,'sed'],
+    ['Fenilefrina','bolo 50–100 (–200) µg ogni 2 min · 0,15–0,5 µg/kg/min','invariata',0,'sam'],
+    ['Fidaxomicina','200 mg 1-0-1 × 10 gg','invariata',0,'dia'],
+    ['Glucagone (GlucaGen)','1 mg i.m.','invariato',0,'glu'],
+    ['Glucosio 40 % / 20 %','20–40 ml / 100 ml · poi G10 % 100 ml/h','invariato · monitora più a lungo',0,'glu'],
+    ['Actrapid s.c. (correzione)','10–11,9 → 2 IE · 12–13,9 → 4 · 14–16,9 → 6 · 17–19,9 → 8 · ≥ 20 → 10 IE','metà dose',1,'glu'],
+    ['Actrapid Perfusor','50 IE/50 ml · chetoacidosi 0,1 IE/kg/h','invariato',0,'glu'],
+    ['Lantus (glargin)','0,2 IE/kg/d s.c. sera · digiuno 75 %','0,1 IE/kg/d',1,'glu'],
+    ['Ipratropio','0,5 mg nebulizzato','invariato',0,'ana'],
+    ['KCl','perif. max 40 mmol/l, 10 mmol/h · ZVK 10 (–20) mmol/h','metà dose/velocità · K⁺ ogni 20 mmol',1,'el'],
+    ['Levetiracetam','60 mg/kg (max 4,5 g) in 10 min','carico invariato · poi 250–500 mg 2×/d',1,'neuro'],
+    ['Lipid 20 %','1,5 ml/kg in 1 min · 0,25 ml/kg/min · max 12 ml/kg','invariato',0,'neuro'],
+    ['Loperamide','4 mg, poi 2 mg · max 12–16 mg/d','invariata',0,'dia'],
+    ['Magnesio solfato','2 g in 100 ml in 20–30 min','1 g, solo con Mg basso misurato',1,'el'],
+    ['Metoprololo','2,5–5 mg e.v., max 15 mg','invariato',0,'rr'],
+    ['Midazolam','1 mg (sedazione) · 10 mg (crisi)','singola ok · ripetute −50 %',1,'sed'],
+    ['Nebivolol','2,5–5 mg 1-0-0','inizia 2,5 mg',1,'vhf'],
+    ['Noradrenalina','bolo 5 µg (1 mg/200 ml) · Perfusor 5 mg/50 ml','invariata',0,'hzv'],
+    ['Prednisolon / Hydrocortison','250 mg (–1 g) / 200 mg e.v.','invariati',0,'ana'],
+    ['Propofol','sedazione 10–20 mg ogni 60 s · RSI 2 mg/kg','invariato',0,'sed'],
+    ['Salbutamolo','2,5–5 mg neb · spray 4–10 puff (instabile) · iperK 10 mg neb','invariato',0,'ana'],
+    ['Spiolto Respimat','2 puff 1×/d','GFR ≤ 50: monitora',1,'ana'],
+    ['Trelegy / Trimbow','1 inal. 1×/d / 2 puff 2×/d','invariati',0,'ana'],
+    ['Urapidil','10–25 mg e.v. lento ogni 5 min','invariato',0,'rr'],
+    ['Vancomicina e.v.','bolo 30 mg/kg (max 3 g) a 10 mg/min · 30 mg/kg/24 h · target 20–25 mg/l','bolo invariato · ≈ 10 mg/kg/24 h + livelli · HD: 500–1000 mg dopo dialisi',1,'endo'],
+    ['Vancomicina p.o.','125 mg 4×/d × 10 gg','invariata',0,'dia'],
+    ['Akrinor','1 fiala ad 10 ml → 1 ml boli','invariato',0,'nk'],
+    ['ASS i.v.','SCA 250 mg e.v.','dose singola ok',0,'nk'],
+    ['Atropina','0,5 mg ogni 3–5 min, max 3 mg','invariata',0,'nk'],
+    ['Cimetidina','200 mg e.v. in 5 min','ripetute dimezza',1,'nk'],
+    ['Clonazepam','1 mg e.v. lento, ripetibile 1×','invariato',0,'nk'],
+    ['Fenoterolo (Berotec N)','2 puff, ripeti dopo 5 min','invariato',0,'nk'],
+    ['Nifedipina s.l.','evita: obsoleta','—',0,'nk'],
+    ['Nitroglicerina spray','2 puff s.l. se PA sist. > 100','invariata',0,'nk'],
+    ['Suxametonio','RSI 1 mg/kg','invariato · controlla K⁺',1,'nk'],
+    ['Teofillina','5 mg/kg in 20 min','invariata',0,'nk'],
+    ['Rocuronio (manca)','RSI 1,2 mg/kg','invariato',0,'nk'],
+    ['Sugammadex (manca)','16 mg/kg dopo RSI','sconsigliato, in emergenza sì',1,'nk'],
+    ['Esketamina (manca)','1 mg/kg (shock 0,5)','invariata',0,'nk'],
+    ['Fentanyl (manca)','2 µg/kg','invariato',0,'nk'],
+    ['Adenosina (manca)','6 → 12 → 12 mg rapido','invariata',0,'nk'],
+    ['Calcio gluconato 10 % (manca)','iperK: 30 ml e.v. in 10 min (6,8 mmol)','invariato',0,'el'],
+    ['Calcio cloruro 10 %','arresto/ZVK: 10 ml (6,8 mmol)','invariato',0,'el'],
+    ['Insulina + glucosio (iperK)','Actrapid 10 IE + G10 % 250 ml in 15 min','stessa dose · glicemia ogni ora per 6 h',1,'el'],
+    ['Lokelma','10 g p.o. 1-1-1, max 72 h','invariato',0,'el'],
+    ['Bicarbonato 8,4 % (manca)','iperK + acidosi: 50 ml in 5 min','invariato',0,'el'],
+    ['Naloxone (manca)','0,1 mg ogni 2 min','invariato',0,'nk'],
+    ['Flumazenil (manca)','0,2 mg, poi 0,1 mg/min, max 1 mg','invariato',0,'nk'],
+    ['Furosemide (manca)','40 mg e.v.','80 mg e.v.',1,'nk']
+  ];
+  var tb=document.getElementById('aztb');
+  AZ.sort(function(a,b){return a[0].localeCompare(b[0],'it');});
+  tb.innerHTML = AZ.map(function(a){
+    return '<tr'+(a[3]?' class="chg"':'')+'><td><a href="#'+a[4]+'">'+a[0]+'</a></td><td class="d">'+a[1]+'</td><td class="rc">'+a[2]+'</td></tr>';
+  }).join('');
+
+  function calc(){
+    document.querySelectorAll('[data-c]').forEach(function(el){
+      var f=C[el.getAttribute('data-c')]; if(f) el.textContent=f(W);
+    });
+    kcalc();
+  }
+  function kcalc(){
+    var a=parseFloat(document.getElementById('k0').value), b=parseFloat(document.getElementById('k1').value), o=document.getElementById('kout');
+    if(isNaN(a)||isNaN(b)||b<=a){o.textContent='—';return;}
+    var mm=Math.round((b-a)*100);
+    var renal=document.body.classList.contains('renal');
+    o.textContent = renal ? ('~'+mm+' mmol · dai metà ('+Math.round(mm/2)+'), poi ricontrolla') : ('~'+mm+' mmol · ≥ '+n(mm/10,1)+' h a 10 mmol/h');
+  }
+  var wi=document.getElementById('w');
+  function setW(v){ v=parseFloat(String(v).replace(',','.')); if(!isNaN(v)&&v>=30&&v<=250){W=v; calc(); try{localStorage.setItem('hzv_w',String(v));}catch(e){}} }
+  wi.addEventListener('input',function(){setW(wi.value);});
+  document.getElementById('k0').addEventListener('input',kcalc);
+  document.getElementById('k1').addEventListener('input',kcalc);
+
+  var rb=document.getElementById('renal-btn');
+  function setRenal(on){ document.body.classList.toggle('renal',on); rb.setAttribute('aria-pressed',on?'true':'false'); kcalc(); try{localStorage.setItem('hzv_r',on?'1':'0');}catch(e){} }
+  rb.addEventListener('click',function(){setRenal(!document.body.classList.contains('renal'));});
+
+  var pages=[].slice.call(document.querySelectorAll('.page'));
+  var hb=document.getElementById('home-btn'), crumb=document.getElementById('crumb');
+  function show(){
+    var id=(location.hash||'#home').slice(1);
+    if(!document.getElementById(id)||!document.getElementById(id).classList.contains('page')) id='home';
+    pages.forEach(function(p){p.classList.toggle('on',p.id===id);});
+    hb.hidden = id==='home';
+    crumb.textContent = document.getElementById(id).getAttribute('data-t');
+    window.scrollTo(0,0);
+  }
+  window.addEventListener('hashchange',show);
+  hb.addEventListener('click',function(){location.hash='home';});
+  document.querySelectorAll('[data-go]').forEach(function(b){b.addEventListener('click',function(){location.hash=b.getAttribute('data-go');});});
+
+  var q=document.getElementById('q'), tiles=[].slice.call(document.querySelectorAll('#tiles .tile'));
+  q.addEventListener('input',function(){
+    var s=q.value.trim().toLowerCase();
+    tiles.forEach(function(t){ t.hidden = s && (t.textContent+' '+t.getAttribute('data-k')).toLowerCase().indexOf(s)<0; });
+  });
+  q.addEventListener('keydown',function(e){ if(e.key==='Enter'){ var f=tiles.filter(function(t){return !t.hidden;})[0]; if(f) f.click(); } });
+
+  try{ var sw=localStorage.getItem('hzv_w'); if(sw){wi.value=sw; W=parseFloat(sw)||75;} if(localStorage.getItem('hzv_r')==='1') setRenal(true);}catch(e){}
+  calc(); show();
+})();
+</script>
+
+</body></html>

@@ -793,6 +793,17 @@ table.labtab td.pname .namebtn:hover{text-decoration-color:var(--accent); color:
 @media (max-width:350px){
   .modeseg button{font-size:10.5px; padding:7px 2px}
 }
+/* sei sezioni: i tasti restano larghi come prima (un quinto della barra),
+   e la barra scorre per arrivare all'ultimo */
+.modeseg{--mg:4px; gap:var(--mg); overflow-x:auto; scrollbar-width:none;
+  -ms-overflow-style:none; scroll-snap-type:x proximity}
+.modeseg::-webkit-scrollbar{display:none}
+.modeseg button{flex:0 0 calc((100% - 4 * var(--mg)) / 5); scroll-snap-align:start}
+@media (max-width:400px){ .modeseg{--mg:3px} }
+/* Medis: la tua scheda dei farmaci, a tutto schermo sotto la barra */
+#medShell{padding:0}
+#medFrame{position:fixed; top:var(--mb); left:0; right:0; bottom:0; width:100%;
+  height:calc(100dvh - var(--mb)); border:0; background:var(--bg); display:block}
 
 </style>
 
@@ -802,6 +813,7 @@ table.labtab td.pname .namebtn:hover{text-decoration-color:var(--accent); color:
     <button id="modePat" data-mode="pat"><span id="modePatName">Pazienti</span><span class="mcount" id="modePatCount"></span></button>
     <button id="modeNote" data-mode="note"><span id="modeNoteName">Note</span></button>
     <button id="modeCol" data-mode="col"><span id="modeColName">Colleghi</span></button>
+    <button id="modeMed" data-mode="med"><span id="modeMedName">Medis</span></button>
     <button id="modeMor" data-mode="mor"><span id="modeMorName">Morale</span></button>
   </div>
 </div>
@@ -931,6 +943,7 @@ table.labtab td.pname .namebtn:hover{text-decoration-color:var(--accent); color:
   </div>
 </div>
 
+<div class="shell" id="medShell" hidden><iframe id="medFrame" title="Medis"></iframe></div>
 <div class="shell" id="morShell" hidden>
   <header class="pathead" id="morHead">
     <div class="ptitle"><span id="morTitle">Morale</span><span class="n" id="morN"></span></div>
@@ -3026,22 +3039,37 @@ function setMode(m){
   $("noteShell").hidden = (m !== "note");
   $("colShell").hidden = (m !== "col");
   $("morShell").hidden = (m !== "mor");
+  $("medShell").hidden = (m !== "med");
   document.querySelector("footer.compose").hidden = (m !== "shift");
   $("modeShift").classList.toggle("on", m === "shift");
   $("modePat").classList.toggle("on", m === "pat");
   $("modeNote").classList.toggle("on", m === "note");
   $("modeCol").classList.toggle("on", m === "col");
   $("modeMor").classList.toggle("on", m === "mor");
+  $("modeMed").classList.toggle("on", m === "med");
   $("modeShiftName").textContent = t("mShift");
   $("modePatName").textContent = t("mPat");
   $("modeNoteName").textContent = t("mNote");
   $("modeColName").textContent = t("mCol");
   $("modeMorName").textContent = t("mMor");
+  $("modeMedName").textContent = "Medis";
+  /* il tasto scelto deve vedersi anche se sta in fondo alla barra */
+  var mOn = document.querySelector(".modeseg button.on");
+  if(mOn){
+    var mSeg = mOn.parentNode, mr = mOn.getBoundingClientRect(), sr = mSeg.getBoundingClientRect();
+    if(mr.right > sr.right) mSeg.scrollLeft += mr.right - sr.right + 4;
+    else if(mr.left < sr.left) mSeg.scrollLeft -= sr.left - mr.left + 4;
+  }
   S.settings.lastMode = m; save();
   if(m === "pat") gatePat();
   else if(m === "note") renderNote();
   else if(m === "col") renderCol();
   else if(m === "mor") renderMor();
+  else if(m === "med"){
+    /* si carica solo la prima volta che lo apri: l'avvio dell'app resta veloce */
+    var fr = $("medFrame");
+    if(!fr.getAttribute("src")) fr.setAttribute("src", "medis.html");
+  }
   else render();
 }
 function gatePat(){
@@ -5524,7 +5552,7 @@ function initPat(){
   initCol();
   initMor();
   var ultimo = S.settings.lastMode;
-  setMode(["pat","note","col","mor"].indexOf(ultimo) >= 0 ? ultimo : "shift");
+  setMode(["pat","note","col","mor","med"].indexOf(ultimo) >= 0 ? ultimo : "shift");
 }
 
 /* ------------------------------------------------- modificare una nota scritta
@@ -6971,6 +6999,7 @@ function openMoralSheet(){
 function initMor(){
   S.morals = S.morals || [];
   $("modeMor").onclick = function(){ setMode("mor"); };
+  $("modeMed").onclick = function(){ setMode("med"); };
   $("morNewBtn").onclick = openMoralSheet;
   $("morSearch").addEventListener("input", function(){ mview.q = this.value; renderMor(); });
 }

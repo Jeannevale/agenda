@@ -1,8 +1,8 @@
 /* Agenda di turno: l'app resta salvata sul telefono e si apre subito, anche
    senza rete. A ogni apertura controlla in sottofondo se c'e' una versione
    nuova: se c'e', la salva e avvisa la pagina. */
-const CACHE = "agenda-v1";
-const CORE = ["./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png"];
+const CACHE = "agenda-v2";
+const CORE = ["./", "./index.html", "./medis.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png"];
 /* true quando la pagina aperta e' piu' vecchia di quella appena scaricata */
 let nuova = false;
 
@@ -29,7 +29,8 @@ self.addEventListener("fetch", (e) => {
   const req = e.request;
   if (req.method !== "GET") return;
   const url = new URL(req.url);
-  const pagina = req.mode === "navigate";
+  /* la pagina dell'app; il riquadro dei Medis e' un'altra pagina e resta la sua */
+  const pagina = req.mode === "navigate" && req.destination !== "iframe";
   const nostro = url.origin === self.location.origin;
   const caratteri = /(^|\.)fonts\.(googleapis|gstatic)\.com$/.test(url.hostname);
   if (!nostro && !caratteri) return;
