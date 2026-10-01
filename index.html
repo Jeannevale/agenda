@@ -747,6 +747,10 @@ table.labtab td.pname .namebtn:hover{text-decoration-color:var(--accent); color:
 @media (prefers-color-scheme:dark){ :root:not([data-theme="light"]) .ptab.icutab.on{ color:#1a1020; } }
 :root[data-theme="dark"] .ptab.icutab.on{ color:#1a1020; }
 .entryrow input.e-new{border-color:var(--rail-result); background:var(--rail-result-soft)}
+/* nome nuovo dettato: un tocco corregge, due lo mettono nel vocabolario */
+.entryrow input.e-name{touch-action:manipulation}
+.entryrow input.e-name[readonly]{cursor:pointer; -webkit-user-select:none; user-select:none;
+  -webkit-tap-highlight-color:transparent}
 /* terapia intensiva */
 :root{ --icu:#7A3E9D; --icu-soft:#F2E8F8; }
 @media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){ --icu:#C9A0EC; --icu-soft:#2B1E36; } }
@@ -2257,36 +2261,74 @@ var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
 var recog = null, recTarget = null, recBtn = null, recAfter = null, recBase = "";
 
 var micErr = null;
+/* "keep": il microfono resta acceso anche nelle pause e si ferma solo quando
+   lo tocchi tu (o chiudi il foglio, o per 45 s non senti piu' niente).
+   Il riconoscimento del telefono chiude comunque la sessione a ogni silenzio:
+   qui la riapro subito, e il testo gia' dettato resta nel campo. */
+var recKeep = false, recHeard = 0, recQuick = 0, recRestart = null;
+var REC_SILENZIO_MAX = 45000;
 
-function dictateInto(field, btn, after){
+function dictateInto(field, btn, after, keep){
   if(!SR){ showToast(t("micNo")); field.focus(); return; }
-  if(recog){ stopDictation(); return; }
-  recog = new SR();
-  recog.lang = S.settings.speech;
-  recog.interimResults = true;
-  recog.continuous = false;
-  recTarget = field; recBtn = btn; recAfter = after || null;
-  recBase = field.value ? field.value.replace(/\s+$/, "") + " " : "";
+  if(recog || recTarget){ stopDictation(); return; }
+  recTarget = field; recBtn = btn; recAfter = after || null; recKeep = !!keep;
+  recHeard = Date.now(); recQuick = 0;
   btn.classList.add("rec");
   $("micNote").textContent = t("listening");
-  recog.onresult = function(e){
+  avviaAscolto();
+}
+function avviaAscolto(){
+  recRestart = null;
+  var field = recTarget;
+  if(!field) return;
+  recBase = field.value ? field.value.replace(/\s+$/, "") + " " : "";
+  var r = new SR();
+  r.lang = S.settings.speech;
+  r.interimResults = true;
+  r.continuous = false;
+  var partito = Date.now();
+  recog = r;
+  r.onresult = function(e){
+    if(recog !== r || !recTarget) return;
     var s = "";
-    for(var i = e.resultIndex; i < e.results.length; i++) s += e.results[i][0].transcript;
+    for(var i = 0; i < e.results.length; i++) s += e.results[i][0].transcript;
     recTarget.value = recBase + s;
+    recHeard = Date.now();
     autoGrow(recTarget);
     if(recAfter) recAfter();
   };
-  recog.onerror = function(e){ micErr = (e && e.error) || "error"; stopDictation(); };
-  recog.onend = function(){ stopDictation(); };
-  try{ recog.start(); }catch(e){ micErr = "not-allowed"; stopDictation(); }
+  r.onerror = function(e){
+    if(recog !== r) return;
+    var err = (e && e.error) || "error";
+    /* nelle pause il telefono dice "no-speech": in modalita' continua non e' un errore */
+    if(recKeep && (err === "no-speech" || err === "aborted")) return;
+    micErr = err; stopDictation();
+  };
+  r.onend = function(){
+    if(recog !== r) return;
+    if(!recKeep){ stopDictation(); return; }
+    var f = recTarget;
+    var chiuso = !f || !f.isConnected || document.hidden;
+    var muto = Date.now() - recHeard > REC_SILENZIO_MAX;
+    /* sessioni che muoiono appena nate, una dopo l'altra: c'e' qualcosa che non va */
+    recQuick = (Date.now() - partito < 400) ? recQuick + 1 : 0;
+    if(chiuso || muto || recQuick >= 5){ stopDictation(); return; }
+    if(recAfter) recAfter();
+    recog = null;
+    recRestart = setTimeout(avviaAscolto, 120);
+  };
+  try{ r.start(); }catch(e){ micErr = "not-allowed"; stopDictation(); }
 }
 function stopDictation(){
   var field = recTarget;
-  if(recog){ try{ recog.stop(); }catch(e){} }
+  var r = recog;
+  recog = null; recKeep = false;
+  if(recRestart){ clearTimeout(recRestart); recRestart = null; }
+  if(r){ try{ r.stop(); }catch(e){} }
   if(recBtn) recBtn.classList.remove("rec");
   $("micNote").textContent = "";
   if(recAfter) recAfter();
-  recog = null; recBtn = null; recTarget = null; recAfter = null;
+  recBtn = null; recTarget = null; recAfter = null;
   if(micErr && micErr !== "aborted"){
     var blocked = (micErr === "not-allowed" || micErr === "service-not-allowed" || micErr === "audio-capture");
     showToast(blocked ? t("micBlocked") : t("micErr"));
@@ -2428,10 +2470,12 @@ Object.assign(I18N.it, {
   labNewHint:"Scrivi solo i valori che hai davvero in mano. I nomi li decidi tu: l'app se li ricorda e la volta dopo te li propone.",
   labFreeName:"nome del valore", labFreeVal:"valore", labUnitPh:"unità", labUnit:"Unità di misura",
   labAddRow:"Aggiungi un'altra riga", labKnown:"Già usati — tocca per aggiungerli",
-  labVoice:"Detta i valori", labVoiceStop:"Tocca per fermare",
+  labVoice:"Detta i valori", labVoiceStop:"Ascolto anche nelle pause · tocca per fermare",
   labVoicePh:"Parla o incolla il testo, per esempio: potassio 4,2 sodio 138 emoglobina 6,1 creatinina 98 PCR 45",
   labVoiceFound:"N valori riconosciuti: controlla le righe e salva",
-  labVoiceNewN:"N nomi nuovi", labVoiceNew1:"1 nome nuovo", labVoiceNew:"nome nuovo: controlla che sia giusto",
+  labVoiceNewN:"N nomi nuovi", labVoiceNew1:"1 nome nuovo", labVoiceNew:"nome nuovo · 1 tocco: correggi · 2 tocchi: nel vocabolario",
+  labFixName:"correggi il nome con la tastiera", labVocAdded:"aggiunto al vocabolario",
+  labVocAddedToast:"«X» aggiunto al vocabolario",
   labVoiceUnit:"controlla l'unità: il numero sembra in un'altra unità",
   labVoiceNone:"Nessun valore riconosciuto: di' il nome e subito dopo il numero",
   labPrev:"prima", labSaved:"Prelievo salvato",
@@ -2558,10 +2602,12 @@ Object.assign(I18N.de, {
   labNewHint:"Nur eintragen, was du wirklich hast. Die Namen bestimmst du: die App merkt sie sich und schlägt sie beim nächsten Mal vor.",
   labFreeName:"Name des Werts", labFreeVal:"Wert", labUnitPh:"Einheit", labUnit:"Einheit",
   labAddRow:"Noch eine Zeile", labKnown:"Schon benutzt — zum Übernehmen tippen",
-  labVoice:"Werte diktieren", labVoiceStop:"Zum Beenden tippen",
+  labVoice:"Werte diktieren", labVoiceStop:"Hört auch in Pausen · zum Beenden tippen",
   labVoicePh:"Sprechen oder Text einfügen, z. B.: Kalium 4,2 Natrium 138 Hb 6,1 Krea 98 CRP 45",
   labVoiceFound:"N Werte erkannt: Zeilen prüfen und speichern",
-  labVoiceNewN:"N neue Namen", labVoiceNew1:"1 neuer Name", labVoiceNew:"neuer Name: bitte prüfen",
+  labVoiceNewN:"N neue Namen", labVoiceNew1:"1 neuer Name", labVoiceNew:"neuer Name · 1× tippen: korrigieren · 2×: ins Vokabular",
+  labFixName:"Namen mit der Tastatur korrigieren", labVocAdded:"ins Vokabular aufgenommen",
+  labVocAddedToast:"„X“ ins Vokabular aufgenommen",
   labVoiceUnit:"Einheit prüfen: die Zahl passt zu einer anderen Einheit",
   labVoiceNone:"Kein Wert erkannt: Name und direkt danach die Zahl sagen",
   labPrev:"vorher", labSaved:"Abnahme gespeichert",
@@ -3573,6 +3619,59 @@ function openLabSheet(p){
     vbox.appendChild(vmic); vbox.appendChild(vta); vbox.appendChild(vst);
     sheet.appendChild(vbox);
     var righeVoce = [];
+    /* nomi nuovi venuti dalla voce: un tocco = li correggi con la tastiera,
+       due tocchi = entrano nel vocabolario. Le righe della voce si rifanno
+       mentre detti, quindi i tocchi si contano per nome, non per riga. */
+    var tocco = { k:null, t:0, timer:null };
+    var appenaAggiunti = [];
+    function rigaNuova(k){
+      return Array.prototype.filter.call(rowsHost.children, function(fr){
+        return fr.dataset.nuovo === "1" && labKey(fr.querySelector(".e-name").value) === k;
+      })[0] || null;
+    }
+    function toccaNome(fr){
+      if(fr.dataset.nuovo !== "1") return;
+      var k = labKey(fr.querySelector(".e-name").value), ora = Date.now();
+      clearTimeout(tocco.timer);
+      if(tocco.k === k && ora - tocco.t < 400){
+        tocco.k = null;
+        nelVocabolario(k);
+        return;
+      }
+      tocco = { k:k, t:ora, timer:setTimeout(function(){ tocco.k = null; correggiNome(k); }, 400) };
+    }
+    function correggiNome(k){
+      var fr = rigaNuova(k);
+      if(!fr) return;
+      var fn = fr.querySelector(".e-name");
+      fr.dataset.nuovo = "0"; fr.dataset.voice = "0";
+      fn.readOnly = false;
+      fr.querySelector(".entryhint").textContent = t("labFixName");
+      fn.focus();
+      try{ var n = fn.value.length; fn.setSelectionRange(n, n); }catch(e){}
+    }
+    function nelVocabolario(k){
+      var fr = rigaNuova(k);
+      if(!fr) return;
+      var fn = fr.querySelector(".e-name");
+      var nome = fn.value.trim();
+      if(!nome) return;
+      try{ fn.blur(); window.getSelection().removeAllRanges(); }catch(e){}
+      rememberLabName(nome, fr.querySelector(".e-unit").value.trim());
+      save();
+      appenaAggiunti.push(labKey(nome));
+      fr.dataset.nuovo = "0";
+      fn.readOnly = false;
+      fn.classList.remove("e-new");
+      fr.querySelector(".entryhint").textContent = t("labVocAdded");
+      leggiVoce();
+      showToast(t("labVocAddedToast").replace("X", nome), t("undo"), function(){
+        S.settings.labNames = labNames().filter(function(z){ return labKey(z.name) !== labKey(nome); });
+        appenaAggiunti = appenaAggiunti.filter(function(z){ return z !== labKey(nome); });
+        save();
+        if(rowsHost.isConnected) leggiVoce();
+      });
+    }
     function leggiVoce(){
       var trovati = leggiValoriDettati(vta.value, p);
       /* rifaccio le righe della voce; quelle che hai toccato a mano restano */
@@ -3582,18 +3681,30 @@ function openLabSheet(p){
         var ins = fr.querySelectorAll("input");
         if(fr.dataset.voice !== "0" && !ins[0].value.trim() && !ins[1].value.trim()) fr.remove();
       });
-      var tenute = Array.prototype.map.call(rowsHost.querySelectorAll(".entryrow"), function(line){
-        return labKey(line.querySelector("input").value);
+      /* una riga corretta a mano conta anche col nome che aveva detto la voce,
+         altrimenti al prossimo pezzo di dettatura ricomparirebbe doppia */
+      var tenute = [];
+      Array.prototype.forEach.call(rowsHost.children, function(fr){
+        var fn = fr.querySelector(".e-name");
+        if(fn) tenute.push(labKey(fn.value));
+        if(fr.dataset.vname) tenute.push(fr.dataset.vname);
       });
       var nuovi = 0;
       trovati.forEach(function(f){
         if(tenute.indexOf(labKey(f.name)) >= 0) return;
         var fr = addRow(f.name, f.unit, false, f.value);
         fr.dataset.voice = "1";
+        fr.dataset.vname = labKey(f.name);
         if(!f.noto){
           nuovi++;
-          fr.querySelector(".e-name").classList.add("e-new");
+          var fn = fr.querySelector(".e-name");
+          fr.dataset.nuovo = "1";
+          fn.readOnly = true;
+          fn.classList.add("e-new");
+          fn.addEventListener("click", function(){ toccaNome(fr); });
           fr.querySelector(".entryhint").textContent = t("labVoiceNew");
+        } else if(appenaAggiunti.indexOf(labKey(f.name)) >= 0){
+          fr.querySelector(".entryhint").textContent = t("labVocAdded");
         } else if(f.dubbio){
           fr.querySelector(".e-unit").classList.add("e-new");
           fr.querySelector(".entryhint").textContent = t("labVoiceUnit");
@@ -3618,7 +3729,7 @@ function openLabSheet(p){
       dictateInto(vta, vmic, function(){
         leggiVoce();
         if(!vmic.classList.contains("rec")) vlab.textContent = t("labVoice");
-      });
+      }, true);
     };
 
     var prev = lastLab(p);
@@ -3697,13 +3808,16 @@ function openLabSheet(p){
     var ok = document.createElement("button"); ok.className = "btn"; ok.style.background = "var(--accent)";
     ok.textContent = t("saveBtn");
     ok.onclick = function(){
+      stopDictation();
       var entries = [];
       Array.prototype.forEach.call(rowsHost.querySelectorAll(".entryrow"), function(line){
         var ins = line.querySelectorAll("input");
         var nm = ins[0].value.trim(), vv = numOrNull(ins[1].value), un = ins[2].value.trim();
         if(nm && hasNum(vv)){
           entries.push({ name:nm, value:vv, unit:un });
-          rememberLabName(nm, un);
+          /* un nome nuovo dettato e mai confermato (doppio tocco) o corretto:
+             il valore si salva, ma il nome non entra nel vocabolario */
+          if(line.parentNode.dataset.nuovo !== "1") rememberLabName(nm, un);
         }
       });
       if(!entries.length){ showToast(t("labNothing")); return; }
@@ -3713,7 +3827,7 @@ function openLabSheet(p){
       save(); close(); renderPat(); showToast(t("labSaved"));
     };
     var cn = document.createElement("button"); cn.className = "btn btn-ghost";
-    cn.textContent = t("cancel"); cn.onclick = close;
+    cn.textContent = t("cancel"); cn.onclick = function(){ stopDictation(); close(); };
     acts.appendChild(ok); acts.appendChild(cn);
     sheet.appendChild(acts);
   });
