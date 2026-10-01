@@ -2689,7 +2689,7 @@ Object.assign(I18N.it, {
   verlSaved:"Voce salvata",
   verlMove:"Trascina per spostare",
   verlWhen:"Quando", verlWhenPh:"una data, un periodo, POD 3\u2026",
-  verlNote:"Le voci restano nell'ordine in cui le metti: le nuove si aggiungono in fondo.",
+  verlNote:"Le voci restano nell'ordine in cui le metti: le nuove si aggiungono in cima.",
   verlDragHint:"Per cambiare l'ordine trascina una voce dalla presa a sinistra. Doppio tocco sul testo per correggerlo o aggiungere foto.",
   checkTitle:"Checklist di questo paziente", checkAdd:"Aggiungi",
   checkEmpty:"Nessuna checklist su questo paziente. Tocca «Aggiungi» e scegline una dai tuoi modelli.",
@@ -2821,7 +2821,7 @@ Object.assign(I18N.de, {
   verlSaved:"Eintrag gespeichert",
   verlMove:"Zum Verschieben ziehen",
   verlWhen:"Wann", verlWhenPh:"ein Datum, ein Zeitraum, POD 3\u2026",
-  verlNote:"Die Eintr\u00e4ge bleiben in deiner Reihenfolge: neue kommen ans Ende.",
+  verlNote:"Die Eintr\u00e4ge bleiben in deiner Reihenfolge: neue kommen nach oben.",
   verlDragHint:"Zum Umsortieren einen Eintrag am Griff links ziehen. Doppeltippen auf den Text zum \u00c4ndern oder f\u00fcr Fotos.",
   checkTitle:"Checklisten dieses Patienten", checkAdd:"Hinzufügen",
   checkEmpty:"Noch keine Checkliste. Auf „Hinzufügen“ tippen und eine aus deinen Vorlagen wählen.",
@@ -5766,6 +5766,15 @@ function initPat(){
     save();
   }
 
+  /* una volta sola: il Verlauf passa da "nuove in fondo" a "nuove in cima".
+     Capovolgo le liste esistenti, cosi' anche le voci vecchie hanno la piu'
+     recente in alto e l'ordine scelto a mano resta, solo rovesciato. */
+  if(!S.settings.verlTop){
+    patients().forEach(function(p){ if(p.verlauf && p.verlauf.length > 1) p.verlauf.reverse(); });
+    S.settings.verlTop = 1;
+    save();
+  }
+
   semePazienti();
 
   $("modeShift").onclick = function(){ setMode("shift"); };
@@ -6174,7 +6183,7 @@ function openVerlSheet(p){
       var v = { id:uid(), day:todayStr(), time:nowTime(), ts:Date.now(),
         quando:quando.value.trim(),
         text:txt, photos:tmp.photos, tasks:[], morals:[] };
-      verlauf(p).push(v);
+      verlauf(p).unshift(v);   /* la piu' recente sta in cima */
       var r = convertiTutto(v, "text", p, { pid:p.id });
       save(); stopDictation(); close(); render(); renderPat();
       if(!avvisaTutto(r)) showToast(t("verlSaved"));
