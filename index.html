@@ -4021,13 +4021,13 @@ function addPatTodo(p, text, urgent, day, wish){
 
 /* ------------------------------------------------------------- note e documenti */
 function secNotes(host, p){
-  var c = secCard(host, "notesTitle", t("addNote"), function(){ openNoteSheet(p); });
-  var fileBtn = document.createElement("button");
-  fileBtn.className = "btn btn-ghost";
-  fileBtn.style.cssText = "width:100%; margin-bottom:10px";
-  fileBtn.textContent = t("addFile");
-  fileBtn.onclick = function(){ pickFile(p); };
-  c.appendChild(fileBtn);
+  var c = secCard(host, "notesTitle", t("addFile"), function(){ pickFile(p); });
+  var noteBtn = document.createElement("button");
+  noteBtn.className = "btn btn-ghost";
+  noteBtn.style.cssText = "width:100%; margin-bottom:10px";
+  noteBtn.textContent = t("addNote");
+  noteBtn.onclick = function(){ openNoteSheet(p); };
+  c.appendChild(noteBtn);
 
   var notes = (p.notes || []).slice().sort(function(a,b){ return (b.ts||0) - (a.ts||0); });
   var files = (p.files || []).slice().sort(function(a,b){ return (b.ts||0) - (a.ts||0); });
@@ -4903,7 +4903,7 @@ function hasPhotos(o){ return !!(o && o.photos && o.photos.length); }
 function checkTpls(){ return S.settings.checklists || (S.settings.checklists = []); }
 
 function secCheck(host, p){
-  var c = secCard(host, "checkTitle", t("checkAdd"), function(){ openPickTplSheet(p); });
+  var c = secCard(host, "checkTitle", t("myTpl"), function(){ openTplsSheet(); });
   var list = p.checklists || [];
   if(!list.length){
     var e = document.createElement("p"); e.className = "emptysm";
@@ -4914,7 +4914,7 @@ function secCheck(host, p){
 
   var acts = document.createElement("div"); acts.className = "btnrow";
   var mb = document.createElement("button"); mb.className = "btn btn-ghost";
-  mb.textContent = t("myTpl"); mb.onclick = function(){ openTplsSheet(); };
+  mb.textContent = t("checkAdd"); mb.onclick = function(){ openPickTplSheet(p); };
   acts.appendChild(mb);
   c.appendChild(acts);
 }
