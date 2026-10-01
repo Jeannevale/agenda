@@ -809,6 +809,151 @@ table.labtab td.pname .namebtn:hover{text-decoration-color:var(--accent); color:
 #medFrame{position:fixed; top:var(--mb); left:0; right:0; bottom:0; width:100%;
   height:calc(100dvh - var(--mb)); border:0; background:var(--bg); display:block}
 
+/* ================= sistemi: il disegno ================= */
+:root{ --sysbody:#DCE8EA; }
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){ --sysbody:#20363A; } }
+:root[data-theme="dark"]{ --sysbody:#20363A; }
+.sysfig{position:relative; max-width:440px; margin:0 auto}
+.sysvg{display:block; width:100%; height:auto; cursor:pointer; touch-action:manipulation;
+  -webkit-user-select:none; user-select:none}
+.sysvg .sb{fill:var(--sysbody); transition:opacity .2s ease}
+.sysvg .sbs{stroke:var(--sysbody); fill:none; stroke-linecap:round; stroke-linejoin:round;
+  transition:opacity .2s ease}
+.sg{color:var(--ink-2); transition:opacity .2s ease}
+.sg path,.sg circle,.sg rect,.sg ellipse{fill:none; stroke:currentColor; stroke-width:1.7;
+  stroke-linecap:round; stroke-linejoin:round}
+.sg .fl{fill:var(--surface); fill-opacity:.9}
+.sg .hb{fill:var(--surface); stroke:none}
+.sg .tb{stroke-width:3.2}
+.sg .thin{stroke-width:1.2; opacity:.7}
+.sg.st-ok{color:var(--rail-done)}
+.sg.st-watch{color:var(--rail-result)}
+.sg.st-bad{color:var(--alert)}
+.sg.st-ok .fl,.sg.st-watch .fl,.sg.st-bad .fl{fill:currentColor; fill-opacity:.2}
+.sysmini{display:block; flex:none}
+.sysmini .sg path,.sysmini .sg circle,.sysmini .sg rect,.sysmini .sg ellipse{
+  vector-effect:non-scaling-stroke; stroke-width:1.5}
+.sysmini .sg .tb{stroke-width:2.4}
+.halo *{fill:var(--accent); fill-opacity:0; stroke:none; transition:fill-opacity .2s ease}
+.halo.st-bad *{fill:var(--alert); animation:sysPulse 1.8s ease-in-out infinite}
+@keyframes sysPulse{0%,100%{fill-opacity:.04} 50%{fill-opacity:.2}}
+.halo.sel *{fill:var(--accent); fill-opacity:.17; animation:none}
+.slead line{stroke:var(--line-strong); stroke-width:1}
+.slead circle{fill:var(--line-strong)}
+.slead{transition:opacity .2s ease}
+.slab{transition:opacity .2s ease}
+.slab .shit{fill:transparent}
+.slab text{font-family:"IBM Plex Sans Condensed","IBM Plex Sans",sans-serif; font-weight:600;
+  font-size:13px; letter-spacing:.01em; fill:var(--ink-3)}
+.slab.has text{fill:var(--ink)}
+.slab.sel text{fill:var(--accent)}
+.slab .sdot{fill:var(--surface); stroke:var(--line-strong); stroke-width:1.4}
+.slab.st-ok .sdot{fill:var(--rail-done); stroke:var(--rail-done)}
+.slab.st-watch .sdot{fill:var(--rail-result); stroke:var(--rail-result)}
+.slab.st-bad .sdot{fill:var(--alert); stroke:var(--alert)}
+.sysfig.open .sb,.sysfig.open .sbs{opacity:.55}
+.sysfig.open .sg:not(.sel):not(.rel),.sysfig.open .slab:not(.sel):not(.rel){opacity:.3}
+.sysfig.open .slead:not(.sel):not(.rel){opacity:.18}
+.syslinks path{fill:none; stroke:var(--accent); stroke-width:2; stroke-dasharray:5 5;
+  stroke-linecap:round; animation:sysDash 1.1s linear infinite}
+.syslinks circle{fill:var(--accent)}
+@keyframes sysDash{to{stroke-dashoffset:-20}}
+
+/* la scheda che si apre sopra il disegno */
+.syscard{position:absolute; left:4px; right:4px; z-index:4;
+  overflow-y:auto; overscroll-behavior:contain; -webkit-overflow-scrolling:touch;
+  background:var(--surface); border:1px solid var(--line-strong); border-top:4px solid var(--accent);
+  border-radius:14px; padding:11px 12px 12px;
+  box-shadow:0 22px 48px -14px rgba(10,28,32,.5), 0 2px 8px rgba(10,28,32,.12)}
+.syscard.st-ok{border-top-color:var(--rail-done)}
+.syscard.st-watch{border-top-color:var(--rail-result)}
+.syscard.st-bad{border-top-color:var(--alert)}
+.syscard.anim{animation:sysIn .26s cubic-bezier(.2,.85,.25,1) both}
+.syscard.out{animation:sysOut .15s ease-in both; pointer-events:none}
+@keyframes sysIn{from{opacity:0; transform:scale(.16)} to{opacity:1; transform:none}}
+@keyframes sysOut{to{opacity:0; transform:scale(.92)}}
+.sc-head{display:flex; align-items:center; gap:10px}
+.sc-ic{width:42px; height:42px; border-radius:11px; background:var(--surface-2);
+  display:grid; place-items:center; flex:none}
+.sc-tt{flex:1; min-width:0}
+.sc-title{font-family:"IBM Plex Sans Condensed","IBM Plex Sans",sans-serif; font-weight:600;
+  font-size:17px; line-height:1.2; letter-spacing:.01em; overflow-wrap:anywhere}
+.sc-sub{font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--ink-3); margin-top:2px}
+.sc-sub.st-ok{color:var(--rail-done)}
+.sc-sub.st-watch{color:var(--rail-result)}
+.sc-sub.st-bad{color:var(--alert)}
+.sc-x{flex:none; align-self:flex-start; margin:-3px -5px 0 0}
+.sc-st{display:flex; gap:6px; margin-top:11px}
+.sc-st button{flex:1; min-width:0; padding:8px 4px; border-radius:8px; border:1px solid var(--line-strong);
+  background:var(--surface); font-family:"IBM Plex Sans Condensed","IBM Plex Sans",sans-serif;
+  font-weight:600; font-size:13px; letter-spacing:.01em; display:flex; align-items:center;
+  justify-content:center; gap:6px; white-space:nowrap; overflow:hidden}
+.sc-st button::before{content:""; flex:none; width:8px; height:8px; border-radius:50%; background:currentColor}
+.sc-st .st-ok{color:var(--rail-done)}
+.sc-st .st-watch{color:var(--rail-result)}
+.sc-st .st-bad{color:var(--alert)}
+@media (max-width:400px){
+  .sc-st{gap:5px}
+  .sc-st button{font-size:12px; gap:4px; padding:8px 2px}
+  .sc-st button::before{width:7px; height:7px}
+}
+@media (max-width:350px){ .sc-st button::before{display:none} }
+.sc-st button.on{color:var(--surface)}
+.sc-st button.on::before{background:var(--surface)}
+.sc-st button.on.st-ok{background:var(--rail-done); border-color:var(--rail-done)}
+.sc-st button.on.st-watch{background:var(--rail-result); border-color:var(--rail-result)}
+.sc-st button.on.st-bad{background:var(--alert); border-color:var(--alert)}
+.sysnote{display:block; width:100%; min-height:74px; margin-top:10px; padding:9px 10px;
+  border:1px solid var(--line); border-radius:9px; background:var(--surface-2); color:var(--ink);
+  font-size:15px; line-height:1.4; resize:none}
+.sysnote::placeholder{color:var(--ink-3)}
+.sysnote:focus{outline:none; border-color:var(--accent)}
+.sc-tools{display:flex; align-items:center; gap:8px; margin-top:8px}
+.sc-lab{font-family:"IBM Plex Sans Condensed","IBM Plex Sans",sans-serif; font-size:12px;
+  letter-spacing:.06em; text-transform:uppercase; color:var(--ink-3); margin:14px 0 2px}
+.sc-rel{display:flex; gap:10px; align-items:flex-start; width:100%; text-align:left;
+  padding:8px 0; border-top:1px solid var(--line)}
+.sc-rel .ri,.sysrow .ri{width:30px; height:30px; flex:none; border-radius:8px; background:var(--surface-2);
+  display:grid; place-items:center; margin-top:1px}
+.sc-rel .rb{flex:1; min-width:0; display:block}
+.sc-rel .rn{display:flex; gap:8px; align-items:baseline; flex-wrap:wrap; font-size:14px;
+  font-weight:600; color:var(--ink)}
+.rs{font-family:"IBM Plex Sans Condensed","IBM Plex Sans",sans-serif; font-weight:600;
+  font-size:12px; letter-spacing:.02em}
+.rs.st-ok,.sr-st.st-ok{color:var(--rail-done)}
+.rs.st-watch,.sr-st.st-watch{color:var(--rail-result)}
+.rs.st-bad,.sr-st.st-bad{color:var(--alert)}
+.sc-rel .rp{display:block; font-size:13px; color:var(--ink-2); margin-top:1px;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.sc-rel .rw{display:block; font-size:12px; line-height:1.35; color:var(--ink-3); margin-top:2px}
+.sc-rel .rc{flex:none; color:var(--ink-3); font-size:19px; line-height:1; margin-top:5px}
+.sc-rel:hover .rn{color:var(--accent)}
+.sc-histbtn{margin-top:12px; font-size:12.5px; font-weight:600; color:var(--accent);
+  text-decoration:underline; text-underline-offset:3px}
+.sc-hist{margin-top:4px}
+.sc-hrow{padding:7px 0; border-top:1px dashed var(--line)}
+.sc-hrow .hd{display:flex; gap:9px; align-items:baseline; font-family:"IBM Plex Mono",monospace;
+  font-size:11px; color:var(--ink-3)}
+.sc-hrow .ht{font-size:13.5px; line-height:1.4; color:var(--ink-2); white-space:pre-wrap;
+  overflow-wrap:anywhere; margin-top:2px}
+
+/* sotto il disegno: quello che hai segnato */
+.sysrows{display:flex; flex-direction:column; gap:8px; margin-top:12px}
+.sysrow{display:flex; gap:10px; align-items:flex-start; border:1px solid var(--line);
+  border-left:3px solid var(--line-strong); border-radius:9px; padding:9px 10px;
+  background:var(--surface); cursor:pointer}
+.sysrow:hover{border-color:var(--line-strong)}
+.sysrow.st-ok{border-left-color:var(--rail-done)}
+.sysrow.st-watch{border-left-color:var(--rail-result)}
+.sysrow.st-bad{border-left-color:var(--alert); background:var(--alert-soft)}
+.sysrow .rb{flex:1; min-width:0}
+.sr-top{display:flex; gap:8px; align-items:baseline; flex-wrap:wrap}
+.sr-name{font-weight:600; font-size:14.5px}
+.sr-st{font-family:"IBM Plex Sans Condensed","IBM Plex Sans",sans-serif; font-weight:600; font-size:12.5px}
+.sr-when{margin-left:auto; font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--ink-3)}
+.sr-tx{font-size:14px; line-height:1.42; color:var(--ink-2); white-space:pre-wrap; overflow-wrap:anywhere;
+  margin-top:3px; display:-webkit-box; -webkit-line-clamp:5; -webkit-box-orient:vertical; overflow:hidden}
+
 </style>
 
 <div id="modebar">
@@ -1022,6 +1167,7 @@ function indietroInterno(){
     sc[sc.length - 1].remove();
     return;
   }
+  if(mode === "pat" && pview.id && sysAperto){ sysChiudi(); return; }
   if(mode === "pat" && pview.id){ $("patBack").click(); return; }
   if(mode === "col" && cview.id){ $("colBack").click(); return; }
 }
@@ -2379,7 +2525,7 @@ function tick(){
     }
   });
   if(view.day !== todayStr() && view._wasToday){ view.day = todayStr(); changed = true; }
-  if(changed){ save(); if(!editingId && !modificaAperta) render(); }
+  if(changed){ save(); if(!editingId && !modificaAperta && !sysScrive()) render(); }
 }
 
 /* ---------------------------------------------------------------- wiring */
@@ -2558,7 +2704,7 @@ Object.assign(I18N.it, {
   taskMade1:"Compito creato nel turno", taskMadeN:"N compiti creati nel turno",
   taskGo:"Vai al compito", taskGone:"Il compito non c'è più",
   markLabel:"Da testo a compito",
-  markNote:"Quello che scrivi fra due di questi segni, dentro un paziente, diventa un compito nell'agenda del turno. Vale nelle note, nei commenti delle checklist, nelle proposte e nella diagnosi. I segni spariscono e la frase resta evidenziata.",
+  markNote:"Quello che scrivi fra due di questi segni, dentro un paziente, diventa un compito nell'agenda del turno. Vale nelle note, nei sistemi, nei commenti delle checklist, nelle proposte e nella diagnosi. I segni spariscono e la frase resta evidenziata.",
   markField:"Segno di apertura e chiusura", markExample:"Esempio: ",
   delPat:"Elimina la scheda",
   delPatSure:"Sparisce tutto quello che c'è qui dentro: valori, terapia, note, allegati, proposte e i compiti collegati. Per qualche secondo potrai annullare.",
@@ -2690,7 +2836,7 @@ Object.assign(I18N.de, {
   taskMade1:"Aufgabe im Dienst angelegt", taskMadeN:"N Aufgaben im Dienst angelegt",
   taskGo:"Zur Aufgabe", taskGone:"Die Aufgabe gibt es nicht mehr",
   markLabel:"Aus Text wird Aufgabe",
-  markNote:"Was du bei einem Patienten zwischen zwei dieser Zeichen schreibst, wird eine Aufgabe im Dienst-Tagebuch. Gilt in Notizen, Checklisten-Kommentaren, Vorschlägen und der Diagnose. Die Zeichen verschwinden, der Satz bleibt hervorgehoben.",
+  markNote:"Was du bei einem Patienten zwischen zwei dieser Zeichen schreibst, wird eine Aufgabe im Dienst-Tagebuch. Gilt in Notizen, Systemen, Checklisten-Kommentaren, Vorschlägen und der Diagnose. Die Zeichen verschwinden, der Satz bleibt hervorgehoben.",
   markField:"Zeichen für Anfang und Ende", markExample:"Beispiel: ",
   delPat:"Karte löschen",
   delPatSure:"Alles hier drin verschwindet: Werte, Therapie, Notizen, Anhänge, Vorschläge und die verknüpften Aufgaben. Ein paar Sekunden lang kannst du das rückgängig machen.",
@@ -3145,6 +3291,7 @@ function renderPat(){
 }
 
 function renderPatList(){
+  sysLascia();
   $("patDetail").hidden = true;
   $("patListHead").hidden = false;
   $("patFilterRow").hidden = false;
@@ -3335,7 +3482,7 @@ function miniChip(text, cls){
 
 /* ------------------------------------------------------------- scheda */
 var PTABS = [
-  ["lab","tLab"], ["ther","tTher"], ["check","tCheck"], ["todo","tTodo"],
+  ["sys","tSys"], ["lab","tLab"], ["ther","tTher"], ["check","tCheck"], ["todo","tTodo"],
   ["notes","tNotes"], ["verl","tVerl"], ["icu","tIcu"], ["sum","tSum"]
 ];
 /* la sezione Intensiva c'e' finche' il paziente e' in terapia intensiva,
@@ -3366,6 +3513,9 @@ function renderPatDetail(){
   if(p.surgeon) bits.push(t("fSurg") + ": " + p.surgeon);
   $("pdDay").textContent = bits.join("  ·  ");
 
+  /* la scheda di un sistema resta aperta solo se resti sui Sistemi dello stesso paziente */
+  if(pview.tab !== "sys" || (sysAperto && sysAperto.pid !== p.id)) sysLascia();
+
   var tabs = $("pdTabs");
   tabs.textContent = "";
   if(pview.tab === "icu" && !icuTabVisibile(p)) pview.tab = "lab";
@@ -3376,7 +3526,7 @@ function renderPatDetail(){
     b.append(document.createTextNode(t(pair[1])));
     var n = tabCount(p, pair[0]);
     if(n) { var s = document.createElement("span"); s.className = "tn"; s.textContent = n; b.appendChild(s); }
-    if(pair[0] === "lab" && patHasWarn(p)){
+    if((pair[0] === "lab" && patHasWarn(p)) || (pair[0] === "sys" && sysHasBad(p))){
       var d = document.createElement("span"); d.className = "warndot"; b.appendChild(d);
     }
     b.onclick = function(){ pview.tab = pair[0]; renderPat(); };
@@ -3402,6 +3552,7 @@ function renderPatDetail(){
   else if(pview.tab === "verl") secVerlauf(sec, p);
   else if(pview.tab === "icu") secIcu(sec, p);
   else if(pview.tab === "sum") secSum(sec, p);
+  else if(pview.tab === "sys") secSys(sec, p);
 }
 function tabCount(p, tab){
   if(tab === "ther") return (p.meds || []).filter(function(m){ return !m.stopped; }).length;
@@ -3411,6 +3562,7 @@ function tabCount(p, tab){
   if(tab === "notes") return (p.notes || []).length + (p.files || []).length;
   if(tab === "verl") return (p.verlauf || []).length;
   if(tab === "icu") return (p.icu || []).length;
+  if(tab === "sys") return sysCount(p);
   return 0;
 }
 function secCard(host, titleKey, actionLabel, action){
@@ -5151,6 +5303,13 @@ function buildSummary(p){
   if(op !== null) L.push("Intervento " + fmtDayShort(p.opDate) + " — " + op + "° giorno post-op");
   L.push("");
 
+  var sistemi = sysPerRiassunto(p);
+  if(sistemi.length){
+    L.push("-- SISTEMI (la mia valutazione) --");
+    sistemi.forEach(function(r){ L.push(r); });
+    L.push("");
+  }
+
   var meds = (p.meds || []).filter(function(m){ return !m.stopped; });
   L.push("-- TERAPIA IN CORSO --");
   if(!meds.length) L.push("(nessun farmaco registrato)");
@@ -5418,6 +5577,7 @@ function confirmDeletePat(p){
     if((p.meds || []).length) n.push((p.meds || []).length + " " + t("tTher").toLowerCase());
     if((p.notes || []).length + (p.files || []).length) n.push(((p.notes||[]).length + (p.files||[]).length) + " " + t("tNotes").toLowerCase());
     if(patTodos(p.id).length) n.push(patTodos(p.id).length + " " + t("tTodo").toLowerCase());
+    if(sysCount(p)) n.push(sysCount(p) + " " + t("tSys").toLowerCase());
     if(n.length){
       var cnt = document.createElement("p"); cnt.className = "labnote";
       cnt.style.marginTop = "10px";
@@ -7116,6 +7276,708 @@ function initMor(){
   $("modeMed").onclick = function(){ setMode("med"); };
   $("morNewBtn").onclick = openMoralSheet;
   $("morSearch").addEventListener("input", function(){ mview.q = this.value; renderMor(); });
+}
+
+
+/* ================================================================
+   SISTEMI — il paziente a colpo d'occhio
+   Un disegno schematico di una persona: ogni sistema da tenere d'occhio
+   in cardiochirurgia (ritmo, coagulazione, fluidi, elettroliti...) e' una
+   parte del disegno. Toccandola, sopra il disegno si apre la sua scheda:
+   lo stato (in ordine, da seguire, problema), uno spazio per scrivere,
+   le foto e i sistemi collegati, con il perche' del collegamento.
+   Dati: p.sys[id] = { text, status, day, ts, photos, tasks, morals, hist }.
+   Il primo cambiamento di un giorno nuovo mette da parte com'era il giorno
+   prima (hist): lo storico resta, giorno per giorno.
+   ================================================================ */
+
+Object.assign(I18N.it, {
+  tSys:"Sistemi",
+  sysTitle:"Sistemi da tenere d'occhio",
+  sysHint:"Tocca una parte del disegno: sopra si apre la sua scheda, con lo stato e uno spazio per scrivere. Le linee tratteggiate portano ai sistemi collegati.",
+  sysOk:"In ordine", sysWatch:"Da seguire", sysBad:"Problema",
+  sysRel:"Collegato con", sysHist:"Giorni precedenti",
+  sysUpd:"aggiornato", sysNew:"ancora niente di scritto",
+  sysPhotos:"foto"
+});
+Object.assign(I18N.de, {
+  tSys:"Systeme",
+  sysTitle:"Systeme im Blick",
+  sysHint:"Tippe auf einen Teil der Zeichnung: darüber öffnet sich seine Karte, mit Status und Platz zum Schreiben. Die gestrichelten Linien führen zu den verknüpften Systemen.",
+  sysOk:"In Ordnung", sysWatch:"Beobachten", sysBad:"Problem",
+  sysRel:"Verknüpft mit", sysHist:"Frühere Tage",
+  sysUpd:"geändert", sysNew:"noch nichts geschrieben",
+  sysPhotos:"Fotos"
+});
+
+/* nome sul disegno, titolo della scheda, cosa ci si scrive di solito */
+var SYS_TXT = {
+  it:{
+    neuro:["Neuro", "Neurologico", "Vigilanza, orientamento, delirio, dolore, deficit…"],
+    ferite:["Infezioni", "Ferite e infezioni", "Ferita sternale, ferita della safena, temperatura, PCR, antibiotico…"],
+    resp:["Respiro", "Respirazione", "SpO₂ e ossigeno, emogas, versamento pleurico, fisioterapia respiratoria…"],
+    glic:["Glicemia", "Glicemia e alimentazione", "Glicemie, insulina, alimentazione, alvo, nausea…"],
+    reni:["Reni", "Funzione renale", "Creatinina, eGFR, diuresi…"],
+    fluidi:["Fluidi", "Bilancio dei fluidi", "Bilancio, peso giornaliero, edemi, diuretici…"],
+    ritmo:["Ritmo", "Ritmo cardiaco", "Sinusale o FA, frequenza, pacemaker temporaneo, fili epicardici…"],
+    emo:["Emodinamica", "Emodinamica", "Pressione, frequenza, catecolamine, lattato, funzione di pompa all'eco…"],
+    dren:["Drenaggi", "Drenaggi e accessi", "Drenaggi e quanto perdono, CVC, arteria, catetere vescicale: da quando ci sono, quando toglierli…"],
+    elett:["Elettroliti", "Elettroliti", "Potassio, magnesio, sodio, calcio — e cosa stai sostituendo…"],
+    coag:["Coagulazione", "Coagulazione e anticoagulazione", "Anticoagulante e obiettivo, INR, piastrine, perdite, trasfusioni…"],
+    mobil:["Mobilità", "Mobilizzazione e gambe", "Mobilizzazione, fisioterapia, edemi, gambe…"]
+  },
+  de:{
+    neuro:["Neuro", "Neurologie", "Vigilanz, Orientierung, Delir, Schmerz, Defizite…"],
+    ferite:["Infektion", "Wunden und Infektion", "Sternumwunde, Entnahmestelle der Vene, Temperatur, CRP, Antibiose…"],
+    resp:["Atmung", "Atmung", "SpO₂ und Sauerstoff, BGA, Pleuraerguss, Atemtherapie…"],
+    glic:["Blutzucker", "Blutzucker und Ernährung", "BZ-Werte, Insulin, Kostaufbau, Stuhlgang, Übelkeit…"],
+    reni:["Niere", "Nierenfunktion", "Kreatinin, eGFR, Diurese…"],
+    fluidi:["Bilanz", "Flüssigkeitsbilanz", "Bilanz, Tagesgewicht, Ödeme, Diuretika…"],
+    ritmo:["Rhythmus", "Herzrhythmus", "Sinusrhythmus oder VHF, Frequenz, passagerer Schrittmacher, epikardiale Drähte…"],
+    emo:["Kreislauf", "Hämodynamik", "Blutdruck, Frequenz, Katecholamine, Laktat, Pumpfunktion im Echo…"],
+    dren:["Drainagen", "Drainagen und Zugänge", "Drainagen und Fördermenge, ZVK, Arterie, Blasenkatheter: seit wann, wann ziehen…"],
+    elett:["Elektrolyte", "Elektrolyte", "Kalium, Magnesium, Natrium, Calcium — und was du substituierst…"],
+    coag:["Gerinnung", "Gerinnung und Antikoagulation", "Antikoagulans und Ziel, INR, Thrombozyten, Blutverlust, Transfusionen…"],
+    mobil:["Mobilität", "Mobilisation und Beine", "Mobilisation, Physiotherapie, Ödeme, Beine…"]
+  }
+};
+
+/* Come i sistemi si toccano fra loro: [a, b, perche' (it), perche' (de)] */
+var SYS_REL = [
+  ["ritmo","elett", "K⁺ e Mg²⁺ bassi favoriscono le aritmie, anche la FA postoperatoria",
+                    "Niedriges K⁺ und Mg²⁺ begünstigen Rhythmusstörungen, auch postoperatives VHF"],
+  ["ritmo","coag",  "FA che persiste: va valutata l'anticoagulazione",
+                    "Anhaltendes VHF: Antikoagulation prüfen"],
+  ["ritmo","emo",   "Una frequenza troppo alta o troppo bassa riduce la portata",
+                    "Zu schnelle oder zu langsame Frequenz senkt das Herzzeitvolumen"],
+  ["ritmo","neuro", "FA: rischio di embolia e di ictus",
+                    "VHF: Embolie- und Schlaganfallrisiko"],
+  ["ritmo","dren",  "I fili di pacing epicardici sono la riserva per il ritmo",
+                    "Epikardiale Schrittmacherdrähte sind die Reserve für den Rhythmus"],
+  ["emo","fluidi",  "Il riempimento (precarico) sostiene pressione e portata",
+                    "Die Vorlast trägt Blutdruck und Herzzeitvolumen"],
+  ["emo","reni",    "Pressione o portata basse danneggiano il rene",
+                    "Niedriger Druck oder niedriges HZV schädigen die Niere"],
+  ["emo","coag",    "Un sanguinamento fa calare la pressione: pensa anche al tamponamento",
+                    "Eine Blutung senkt den Blutdruck: auch an eine Tamponade denken"],
+  ["emo","ferite",  "Un'infezione grave può far calare la pressione (sepsi)",
+                    "Eine schwere Infektion kann den Blutdruck senken (Sepsis)"],
+  ["fluidi","reni", "Diuresi e funzione renale decidono il bilancio",
+                    "Diurese und Nierenfunktion bestimmen die Bilanz"],
+  ["fluidi","elett","Diuretici e infusioni spostano K⁺ e Na⁺",
+                    "Diuretika und Infusionen verschieben K⁺ und Na⁺"],
+  ["fluidi","resp", "Troppi liquidi: congestione polmonare e versamenti pleurici",
+                    "Zu viel Volumen: Lungenstauung und Pleuraergüsse"],
+  ["reni","elett",  "Con la funzione renale ridotta il K⁺ tende a salire",
+                    "Bei eingeschränkter Nierenfunktion neigt das K⁺ zum Anstieg"],
+  ["reni","coag",   "GFR < 30 mL/min: eparine a basso peso molecolare e anticoagulanti orali diretti si accumulano, da rivalutare",
+                    "GFR < 30 ml/min: niedermolekulare Heparine und DOAKs kumulieren, neu bewerten"],
+  ["coag","dren",   "Quanto perdono i drenaggi dice se sanguina",
+                    "Die Drainagemenge zeigt, ob es blutet"],
+  ["coag","mobil",  "Stare a letto aumenta il rischio di trombosi",
+                    "Bettruhe erhöht das Thromboserisiko"],
+  ["ferite","dren", "Ogni drenaggio o catetere è una porta d'ingresso per le infezioni",
+                    "Jede Drainage und jeder Katheter ist eine Eintrittspforte für Infektionen"],
+  ["ferite","glic", "Glicemie alte aumentano il rischio di infezione della ferita sternale",
+                    "Hohe Blutzucker erhöhen das Risiko einer Sternumwundinfektion"],
+  ["glic","elett",  "L'insulina sposta il K⁺ nelle cellule: il K⁺ nel sangue scende",
+                    "Insulin verschiebt K⁺ in die Zellen: das K⁺ im Serum sinkt"],
+  ["glic","neuro",  "Un'ipoglicemia può dare confusione e sonnolenza",
+                    "Eine Hypoglykämie kann Verwirrtheit und Somnolenz machen"],
+  ["neuro","elett", "Un Na⁺ alterato può dare confusione",
+                    "Ein gestörtes Na⁺ kann Verwirrtheit machen"],
+  ["resp","mobil",  "Mobilizzare presto aiuta a respirare meglio",
+                    "Frühe Mobilisation hilft der Atmung"]
+];
+
+/* Il disegno. Coordinate nel riquadro 364 x 520 (da x = -2).
+   side/ly: da che parte e a che altezza sta il nome; lead: dove arriva la
+   lineetta; c: il centro del sistema; hit: punti [x, y, raggio] per capire
+   che cosa hai toccato; vb: il riquadro per l'iconcina; halo: l'alone. */
+function sysOrma(x, y, r){
+  return '<g transform="rotate(' + r + ' ' + x + ' ' + y + ')">' +
+    '<ellipse class="fl" cx="' + x + '" cy="' + (y + 2) + '" rx="4.4" ry="7"/>' +
+    '<circle class="fl" cx="' + (x - 3.4) + '" cy="' + (y - 7.4) + '" r="1.25"/>' +
+    '<circle class="fl" cx="' + (x - 1.1) + '" cy="' + (y - 8.6) + '" r="1.35"/>' +
+    '<circle class="fl" cx="' + (x + 1.4) + '" cy="' + (y - 8.4) + '" r="1.25"/>' +
+    '<circle class="fl" cx="' + (x + 3.5) + '" cy="' + (y - 7) + '" r="1.1"/></g>';
+}
+var SYS_CUORE = "M200 177.4 S183.2 167.6 183.2 156 a9.2 9.2 0 0 1 16.8 -5.2 a9.2 9.2 0 0 1 16.8 5.2 c0 11.6 -16.8 21.4 -16.8 21.4 Z";
+var SYS_DEF = [
+  { id:"neuro", side:"L", ly:50, lead:[159,50], c:[180,50],
+    hit:[[180,50,26]], vb:[150,22,60,58],
+    halo:'<circle cx="180" cy="50" r="26"/>',
+    art:'<path class="fl" d="M180 37 C175 34 167 35 165.5 41 C160 42 158.5 48 161.5 51.5 C158.5 55 160.5 61 166 61.5 C167.5 66 174 67 177 64 L180 63 L183 64 C186 67 192.5 66 194 61.5 C199.5 61 201.5 55 198.5 51.5 C201.5 48 200 42 194.5 41 C193 35 185 34 180 37 Z"/>' +
+        '<path d="M180 38 V63 M167 47 C170 46 172.5 48 172 51 M193 47 C190 46 187.5 48 188 51 M168 56 C171 57.5 174 56.5 175 54 M192 56 C189 57.5 186 56.5 185 54"/>' },
+  { id:"ferite", side:"L", ly:104, lead:[177,110], c:[180,150],
+    hit:[[180,110,9],[180,132,9],[180,154,9],[180,176,9],[180,195,9]], vb:[150,100,60,100], miniVb:[162,104,36,46],
+    halo:'<rect x="168" y="100" width="24" height="100" rx="12"/>',
+    art:'<path d="M180 106 V194" style="stroke-width:2.3"/>' +
+        '<path d="M177 113 H183 M177 124 H183 M177 135 H183 M177 146 H183 M177 157 H183 M177 168 H183 M177 179 H183 M177 190 H183"/>' },
+  { id:"resp", side:"L", ly:150, lead:[147,150], c:[159,147],
+    hit:[[159,128,14],[159,162,14],[200,126,13],[211,144,10]], vb:[140,108,80,80],
+    halo:'<ellipse cx="160" cy="149" rx="18" ry="38"/><ellipse cx="200" cy="140" rx="18" ry="30"/>',
+    art:'<path class="fl" d="M172 116 C164 114 152 124 148 142 C145 156 145 170 150 178 C155 184 166 182 171 176 C174 170 174 160 174 150 L174 122 C174 118 173.5 116.5 172 116 Z"/>' +
+        '<path class="fl" d="M188 116 C196 114 208 124 212 142 C215 156 215 170 210 178 C206 183 200 182 196 178 C193 172 192 168 188 166 L186 150 L186 122 C186 118 186.5 116.5 188 116 Z"/>' +
+        '<path class="thin" d="M171 125 C166 133 160 141 157 151 M165 137 C161 142 158.5 150 158 159 M189 125 C194 133 200 141 203 151"/>' },
+  { id:"glic", side:"L", ly:206, lead:[147,206], c:[156,206],
+    hit:[[156,206,12]], vb:[136,186,40,40],
+    halo:'<circle cx="156" cy="206" r="17"/>',
+    art:'<path class="fl" d="M156 196 L164.5 200.8 V210.8 L156 215.6 L147.5 210.8 V200.8 Z"/>' +
+        '<path d="M147.5 200.8 L156 205.6 L164.5 200.8 M156 205.6 V215.6"/>' },
+  { id:"reni", side:"L", ly:246, lead:[138,245], c:[146,245],
+    hit:[[146,245,13],[214,245,13]], vb:[132,215,96,60], miniVb:[130,228,32,32],
+    halo:'<circle cx="146" cy="245" r="17"/><circle cx="214" cy="245" r="17"/>',
+    art:'<path class="fl" d="M150 233 C142 231 138 238 138 245 C138 252 142 257 149 256 C153 255.5 155 252 153 248 C151.5 245 151.5 243 153 240.5 C155 237 154 233.5 150 233 Z"/>' +
+        '<path class="fl" d="M210 233 C218 231 222 238 222 245 C222 252 218 257 211 256 C207 255.5 205 252 207 248 C208.5 245 208.5 243 207 240.5 C205 237 206 233.5 210 233 Z"/>' },
+  { id:"fluidi", side:"L", ly:284, lead:[142,281], c:[169,281],
+    hit:[[155,281,14],[183,281,14]], vb:[138,256,62,50],
+    halo:'<ellipse cx="169" cy="281" rx="32" ry="18"/>',
+    art:'<path d="M142 271 q6.75 -5 13.5 0 t13.5 0 t13.5 0 t13.5 0 M142 281 q6.75 -5 13.5 0 t13.5 0 t13.5 0 t13.5 0 M142 291 q6.75 -5 13.5 0 t13.5 0 t13.5 0 t13.5 0"/>' },
+  { id:"ritmo", side:"R", ly:106, lead:[211,150], c:[200,163],
+    hit:[[200,163,18]], vb:[178,140,44,44],
+    halo:'<circle cx="200" cy="162" r="22"/>',
+    art:'<path class="hb" d="' + SYS_CUORE + '"/><path class="fl" d="' + SYS_CUORE + '"/>' +
+        '<path d="M186.5 163 H191 L194 157 L197.6 170 L201.4 153 L204.4 165 L206.6 162.5 H213.5" style="stroke-width:1.6"/>' },
+  { id:"emo", side:"R", ly:150, lead:[251.5,150], c:[237,150],
+    hit:[[237,150,15],[255,188,8]], vb:[218,132,48,64],
+    halo:'<ellipse cx="243" cy="164" rx="20" ry="34"/>',
+    art:'<g transform="rotate(-4.8 237.3 150)"><rect class="fl" x="223.3" y="140" width="28" height="20" rx="4"/><path d="M229 140 V160 M245.6 140 V160"/></g>' +
+        '<path d="M250.5 157 C256 163 257 170 255 177"/><circle class="fl" cx="255" cy="184" r="6.5"/><path d="M255 184 L258 180.6"/>' },
+  { id:"dren", side:"R", ly:214, lead:[189,216], c:[180,215],
+    hit:[[175,215,11],[185,215,11]], vb:[160,194,40,48],
+    halo:'<ellipse cx="180" cy="218" rx="17" ry="24"/>',
+    art:'<path class="tb" d="M175 200 C174 210 172 222 170 233 M185 200 C186 210 188 222 190 233"/>' +
+        '<circle class="fl" cx="170" cy="236" r="2.6"/><circle class="fl" cx="190" cy="236" r="2.6"/>' },
+  { id:"elett", side:"R", ly:278, lead:[227,283], c:[212,282],
+    hit:[[208,270,9],[221,284,8],[206,294,7]], vb:[193,258,36,46],
+    halo:'<ellipse cx="213" cy="282" rx="18" ry="22"/>',
+    art:'<circle class="fl" cx="208" cy="270" r="7"/><path d="M204.6 270 H211.4 M208 266.6 V273.4"/>' +
+        '<circle class="fl" cx="221" cy="284" r="6"/><path d="M218.2 284 H223.8 M221 281.2 V286.8"/>' +
+        '<circle class="fl" cx="206" cy="294" r="5"/><path d="M203.8 294 H208.2"/>' },
+  { id:"coag", side:"R", ly:322, lead:[253.5,320], c:[246,316],
+    hit:[[246,316,11]], vb:[230,300,32,32],
+    halo:'<circle cx="246" cy="317" r="15"/>',
+    art:'<path class="fl" d="M246 303 C246 303 238.5 312.5 238.5 318 A7.5 7.5 0 0 0 253.5 318 C253.5 312.5 246 303 246 303 Z"/>' },
+  { id:"mobil", side:"R", ly:470, lead:[253,468], c:[240,476],
+    hit:[[234,464,10],[246,489,10]], vb:[220,448,40,56],
+    halo:'<ellipse cx="240" cy="476" rx="17" ry="26"/>',
+    art: sysOrma(234, 462, 14) + sysOrma(247, 487, 14) }
+];
+
+var sysAperto = null;   /* { pid, id }: la scheda aperta sopra il disegno */
+
+function sysDef(id){
+  for(var i = 0; i < SYS_DEF.length; i++) if(SYS_DEF[i].id === id) return SYS_DEF[i];
+  return null;
+}
+function sysTxt(id, k){ return (SYS_TXT[S.settings.ui] || SYS_TXT.it)[id][k]; }
+function sysGet(p, id){ return (p && p.sys && p.sys[id]) || null; }
+function sysEnsure(p, id){
+  p.sys = p.sys || {};
+  return p.sys[id] || (p.sys[id] = { text:"", status:"", day:null, ts:0, photos:[], tasks:[], morals:[], hist:[] });
+}
+function sysHaTesto(s){ return !!(s && s.text && s.text.trim()); }
+function sysUsato(s){ return !!(s && (s.status || sysHaTesto(s) || hasPhotos(s))); }
+function sysCount(p){ return SYS_DEF.filter(function(d){ return sysUsato(sysGet(p, d.id)); }).length; }
+function sysHasBad(p){
+  return SYS_DEF.some(function(d){ var s = sysGet(p, d.id); return !!(s && s.status === "bad"); });
+}
+/* prima di cambiare qualcosa in un giorno nuovo, metto da parte com'era */
+function sysTouch(s){
+  var oggi = todayStr();
+  if(s.day && s.day !== oggi && (s.status || sysHaTesto(s))){
+    s.hist = s.hist || [];
+    s.hist.push({ day:s.day, text:s.text || "", status:s.status || "" });
+  }
+  s.day = oggi;
+  s.ts = Date.now();
+}
+function sysStWord(st){
+  return st === "ok" ? t("sysOk") : st === "watch" ? t("sysWatch") : st === "bad" ? t("sysBad") : "";
+}
+function sysRels(id){
+  var k = S.settings.ui === "de" ? 3 : 2;
+  return SYS_REL.filter(function(r){ return r[0] === id || r[1] === id; })
+    .map(function(r){ return { id:(r[0] === id ? r[1] : r[0]), why:r[k] }; });
+}
+function sysQuando(s){
+  if(!s || !s.ts) return "";
+  var d = dayStr(new Date(s.ts)), g = dayGap(d);
+  return (g === 0 ? t("cToday") : g === -1 ? t("back1") : fmtDayShort(d)) + " " + fmtTime(s.ts);
+}
+function sysEl(tag, cls, text){
+  var e = document.createElement(tag);
+  if(cls) e.className = cls;
+  if(text !== undefined && text !== null) e.textContent = text;
+  return e;
+}
+/* l'iconcina di un sistema, presa dal disegno */
+function sysMini(d, st, size){
+  var s = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  s.setAttribute("viewBox", (d.miniVb || d.vb).join(" "));
+  s.setAttribute("width", size);
+  s.setAttribute("height", size);
+  s.setAttribute("aria-hidden", "true");
+  s.setAttribute("class", "sysmini");
+  s.innerHTML = '<g class="sg' + (st ? " st-" + st : "") + '">' + d.art + '</g>';
+  return s;
+}
+
+function sysFigMarkup(){
+  var h = '<svg class="sysvg" viewBox="-2 0 364 520" role="img" aria-label="' + t("sysTitle").replace(/"/g, "") + '">';
+  /* la persona */
+  h += '<g class="sb"><circle cx="180" cy="50" r="27"/><rect x="170" y="70" width="20" height="26" rx="6"/>' +
+    '<path d="M150 90 H210 C226 91 238 98 240 114 L234 200 C232 228 228 250 226 268 C230 284 232 300 230 314 H130 C128 300 130 284 134 268 C132 250 128 228 126 200 L120 114 C122 98 134 91 150 90 Z"/>' +
+    '<ellipse cx="146" cy="500" rx="14" ry="7"/><ellipse cx="214" cy="500" rx="14" ry="7"/></g>';
+  h += '<g class="sbs"><path d="M126 110 L118 206 L114 290" stroke-width="22"/><path d="M234 110 L242 206 L246 290" stroke-width="22"/>' +
+    '<path d="M159 306 L156 400 L154 488" stroke-width="30"/><path d="M201 306 L204 400 L206 488" stroke-width="30"/></g>';
+  SYS_DEF.forEach(function(d){ h += '<g class="halo" data-h="' + d.id + '">' + d.halo + '</g>'; });
+  h += '<g class="syslinks"></g>';
+  SYS_DEF.forEach(function(d){
+    var x0 = d.side === "L" ? 97 : 263;
+    h += '<g class="slead" data-l="' + d.id + '"><line x1="' + x0 + '" y1="' + d.ly + '" x2="' + d.lead[0] + '" y2="' + d.lead[1] + '"/>' +
+      '<circle cx="' + d.lead[0] + '" cy="' + d.lead[1] + '" r="1.8"/></g>';
+  });
+  SYS_DEF.forEach(function(d){ h += '<g class="sg" data-g="' + d.id + '">' + d.art + '</g>'; });
+  SYS_DEF.forEach(function(d){
+    var L = d.side === "L";
+    h += '<g class="slab" data-sys="' + d.id + '">' +
+      '<rect class="shit" x="' + (L ? -2 : 258) + '" y="' + (d.ly - 15) + '" width="104" height="30"/>' +
+      '<circle class="sdot" cx="' + (L ? 97 : 263) + '" cy="' + d.ly + '" r="4.2"/>' +
+      '<text x="' + (L ? 89 : 271) + '" y="' + (d.ly + 4.6) + '" text-anchor="' + (L ? "end" : "start") + '"></text></g>';
+  });
+  return h + '</svg>';
+}
+
+/* i nomi lunghi non devono uscire dal disegno */
+function sysNomi(svg){
+  Array.prototype.forEach.call(svg.querySelectorAll(".slab"), function(g){
+    var tx = g.querySelector("text");
+    tx.textContent = sysTxt(g.getAttribute("data-sys"), 0);
+    tx.style.fontSize = "";
+    try{
+      var w = tx.getComputedTextLength();
+      if(w > 90) tx.style.fontSize = (13 * 90 / w).toFixed(2) + "px";
+    }catch(e){}
+  });
+}
+
+/* colori dello stato, chi e' aperto, chi e' collegato */
+function sysPaint(fig, p){
+  var sel = (sysAperto && sysAperto.pid === p.id) ? sysAperto.id : null;
+  var rel = sel ? sysRels(sel).map(function(r){ return r.id; }) : [];
+  fig.classList.toggle("open", !!sel);
+  SYS_DEF.forEach(function(d){
+    var s = sysGet(p, d.id);
+    var cls = (s && s.status ? " st-" + s.status : "") +
+      (d.id === sel ? " sel" : "") + (rel.indexOf(d.id) >= 0 ? " rel" : "");
+    fig.querySelector('[data-g="' + d.id + '"]').setAttribute("class", "sg" + cls);
+    fig.querySelector('[data-h="' + d.id + '"]').setAttribute("class", "halo" + cls);
+    fig.querySelector('[data-l="' + d.id + '"]').setAttribute("class", "slead" + cls);
+    fig.querySelector('[data-sys="' + d.id + '"]').setAttribute("class", "slab" + cls + (sysHaTesto(s) ? " has" : ""));
+  });
+  var lk = fig.querySelector(".syslinks"), h = "";
+  if(sel){
+    var a = sysDef(sel).c;
+    rel.forEach(function(rid){
+      var b = sysVicinoA(sysDef(rid), a);
+      /* una curva leggera, non un righello */
+      var mx = (a[0] + b[0]) / 2, my = (a[1] + b[1]) / 2;
+      var dx = b[0] - a[0], dy = b[1] - a[1], len = Math.sqrt(dx*dx + dy*dy) || 1;
+      var k = Math.min(18, len * 0.14);
+      var cx = mx - dy / len * k, cy = my + dx / len * k;
+      h += '<path d="M' + a[0] + ' ' + a[1] + ' Q' + cx.toFixed(1) + ' ' + cy.toFixed(1) + ' ' + b[0] + ' ' + b[1] + '"/>' +
+        '<circle cx="' + b[0] + '" cy="' + b[1] + '" r="3"/>';
+    });
+    h += '<circle cx="' + a[0] + '" cy="' + a[1] + '" r="3.4"/>';
+  }
+  lk.innerHTML = h;
+}
+function sysVicinoA(d, a){
+  var best = d.hit[0], bd = Infinity;
+  d.hit.forEach(function(q){
+    var v = (q[0] - a[0]) * (q[0] - a[0]) + (q[1] - a[1]) * (q[1] - a[1]);
+    if(v < bd){ bd = v; best = q; }
+  });
+  return [best[0], best[1]];
+}
+/* che sistema hai toccato: il piu' vicino, in proporzione alla sua grandezza */
+function sysToccato(svg, x, y){
+  var m = svg.getScreenCTM();
+  if(!m) return null;
+  var pt = svg.createSVGPoint();
+  pt.x = x; pt.y = y;
+  var q = pt.matrixTransform(m.inverse());
+  var best = null, bd = 1.7;
+  SYS_DEF.forEach(function(d){
+    d.hit.forEach(function(hh){
+      var dx = q.x - hh[0], dy = q.y - hh[1];
+      var v = Math.sqrt(dx*dx + dy*dy) / hh[2];
+      if(v < bd){ bd = v; best = d.id; }
+    });
+  });
+  return best;
+}
+
+/* ------------------------------------------------------------- la sezione */
+function secSys(host, p){
+  var c = secCard(host, "sysTitle", null);
+  var fig = sysEl("div", "sysfig");
+  fig.innerHTML = sysFigMarkup();
+  c.appendChild(fig);
+  var svg = fig.querySelector("svg");
+  if(!(sysAperto && sysAperto.pid === p.id && sysDef(sysAperto.id))) sysAperto = null;
+  sysPaint(fig, p);
+
+  svg.addEventListener("click", function(e){
+    var lab = e.target.closest ? e.target.closest(".slab") : null;
+    var id = lab ? lab.getAttribute("data-sys") : sysToccato(svg, e.clientX, e.clientY);
+    if(id && !(sysAperto && sysAperto.id === id)) sysApri(fig, p, id, true);
+    else if(sysAperto) sysChiudi();
+  });
+
+  var hint = sysEl("p", "labnote", t("sysHint"));
+  c.appendChild(hint);
+  sysLista(c, p, fig);
+
+  /* i nomi si misurano alla fine, quando la sezione e' tutta al suo posto */
+  sysNomi(svg);
+  if(sysAperto) sysApri(fig, p, sysAperto.id, false);
+}
+
+/* sotto il disegno: quello che hai segnato, da leggere tutto insieme */
+function sysLista(c, p, fig){
+  var rango = { bad:0, watch:1, "":2, ok:3 };
+  var usati = SYS_DEF.filter(function(d){ return sysUsato(sysGet(p, d.id)); });
+  if(!usati.length) return;
+  usati.sort(function(a, b){
+    var sa = sysGet(p, a.id).status || "", sb = sysGet(p, b.id).status || "";
+    if(rango[sa] !== rango[sb]) return rango[sa] - rango[sb];
+    return SYS_DEF.indexOf(a) - SYS_DEF.indexOf(b);
+  });
+  var box = sysEl("div", "sysrows");
+  usati.forEach(function(d){
+    var s = sysGet(p, d.id);
+    var row = sysEl("div", "sysrow" + (s.status ? " st-" + s.status : ""));
+    row.setAttribute("role", "button");
+    row.tabIndex = 0;
+    var ic = sysEl("span", "ri");
+    ic.appendChild(sysMini(d, s.status, 24));
+    row.appendChild(ic);
+    var body = sysEl("div", "rb");
+    var top = sysEl("div", "sr-top");
+    top.appendChild(sysEl("span", "sr-name", sysTxt(d.id, 1)));
+    if(s.status) top.appendChild(sysEl("span", "sr-st st-" + s.status, sysStWord(s.status)));
+    var quando = sysQuando(s);
+    if(hasPhotos(s)) quando = (quando ? quando + " · " : "") + s.photos.length + " " + t("sysPhotos");
+    if(quando) top.appendChild(sysEl("span", "sr-when", quando));
+    body.appendChild(top);
+    if(sysHaTesto(s)){
+      var tx = sysEl("div", "sr-tx");
+      tx.appendChild(textWithMorals(s.text, s.tasks, s.morals));
+      body.appendChild(tx);
+    }
+    row.appendChild(body);
+    row.onclick = function(){ sysVaiA(fig, p, d.id); };
+    row.addEventListener("keydown", function(e){ if(e.key === "Enter"){ e.preventDefault(); sysVaiA(fig, p, d.id); } });
+    box.appendChild(row);
+  });
+  c.appendChild(box);
+}
+/* dalla lista: porto su il disegno e apro la scheda */
+function sysVaiA(fig, p, id){
+  var head = document.querySelector("#patDetail .pdet-head");
+  var hb = head ? head.getBoundingClientRect().bottom : 0;
+  var r = fig.getBoundingClientRect();
+  window.scrollTo(0, Math.max(0, window.pageYOffset + r.top - hb - 8));
+  sysApri(fig, p, id, true);
+}
+
+/* la scheda che si ingrandisce sopra il disegno */
+function sysApri(fig, p, id, anim){
+  var vecchia = fig.querySelector(".syscard");
+  if(vecchia){
+    stopDictation();
+    if(sysAperto && sysAperto.pid === p.id) sysConverti(p, sysAperto.id);
+    sysStacca(vecchia);
+    vecchia.remove();
+  }
+  sysAperto = { pid:p.id, id:id };
+  sysPaint(fig, p);
+
+  var d = sysDef(id);
+  var card = sysEl("div", "syscard");
+  card.setAttribute("role", "dialog");
+  card.setAttribute("aria-label", sysTxt(id, 1));
+
+  /* intestazione */
+  var head = sysEl("div", "sc-head");
+  var ic = sysEl("span", "sc-ic");
+  var tt = sysEl("div", "sc-tt");
+  var titolo = sysEl("div", "sc-title", sysTxt(id, 1));
+  var sotto = sysEl("div", "sc-sub");
+  tt.appendChild(titolo); tt.appendChild(sotto);
+  var x = sysEl("button", "iconbtn sc-x");
+  x.setAttribute("aria-label", t("close"));
+  x.appendChild(svgIcon("x", 18, 2));
+  x.onclick = function(e){ e.stopPropagation(); sysChiudi(); };
+  head.appendChild(ic); head.appendChild(tt); head.appendChild(x);
+  card.appendChild(head);
+
+  /* lo stato: un tocco lo mette, un altro tocco sullo stesso lo toglie */
+  var seg = sysEl("div", "sc-st");
+  var bottoni = {};
+  ["ok", "watch", "bad"].forEach(function(st){
+    var b = sysEl("button", "st-" + st, sysStWord(st));
+    b.onclick = function(){
+      var s = sysEnsure(p, id);
+      sysTouch(s);
+      s.status = (s.status === st) ? "" : st;
+      save();
+      aggiorna();
+    };
+    bottoni[st] = b;
+    seg.appendChild(b);
+  });
+  card.appendChild(seg);
+
+  /* lo spazio per scrivere: si salva mentre scrivi */
+  var s0 = sysGet(p, id);
+  var ta = sysEl("textarea", "sysnote");
+  ta.placeholder = sysTxt(id, 2);
+  ta.value = s0 ? (s0.text || "") : "";
+  ta.setAttribute("enterkeyhint", "enter");
+  ta.rows = 3;
+  function scrivi(){
+    var s = sysGet(p, id);
+    if(!s && !ta.value) return;
+    s = sysEnsure(p, id);
+    if(s.text !== ta.value){
+      sysTouch(s);
+      s.text = ta.value;
+      save();
+      sottotitolo();
+      var lab = fig.querySelector('[data-sys="' + id + '"]');
+      if(lab) lab.classList.toggle("has", sysHaTesto(s));
+    }
+    autoGrow(ta);
+  }
+  ta.addEventListener("input", scrivi);
+  ta.addEventListener("blur", function(){
+    var r = sysConverti(p, id);
+    if(r && (r.compiti || r.morali)) ta.value = sysGet(p, id).text;
+  });
+  card.appendChild(ta);
+
+  var fotoBox = sysEl("div");
+  function disegnaFoto(){
+    fotoBox.textContent = "";
+    var s = sysGet(p, id);
+    if(hasPhotos(s)) fotoBox.appendChild(photoRow(s, function(){ disegnaFoto(); aggiorna(); }, { add:false }));
+  }
+
+  var tools = sysEl("div", "sc-tools");
+  var mic = sysEl("button", "mic-sm");
+  mic.appendChild(svgIcon("mic", 15));
+  mic.setAttribute("aria-label", t("listening"));
+  mic.onclick = function(){ dictateInto(ta, mic, scrivi); };
+  var cam = sysEl("button", "mic-sm");
+  cam.appendChild(svgIcon("camera", 15));
+  cam.setAttribute("aria-label", t("photoAdd"));
+  cam.title = t("photoAdd");
+  cam.onclick = function(){
+    var s = sysEnsure(p, id);
+    addPhotoTo(s, function(){ sysTouch(s); save(); disegnaFoto(); aggiorna(); });
+  };
+  tools.appendChild(mic); tools.appendChild(cam);
+  card.appendChild(tools);
+  card.appendChild(fotoBox);
+  disegnaFoto();
+
+  /* i sistemi collegati, con il loro stato e quello che ci hai scritto */
+  var rel = sysRels(id);
+  if(rel.length){
+    card.appendChild(sysEl("div", "sc-lab", t("sysRel")));
+    rel.forEach(function(r){
+      var rd = sysDef(r.id), rs = sysGet(p, r.id);
+      var row = sysEl("button", "sc-rel");
+      var ri = sysEl("span", "ri");
+      ri.appendChild(sysMini(rd, rs && rs.status, 22));
+      var rb = sysEl("span", "rb");
+      var rn = sysEl("span", "rn");
+      rn.appendChild(sysEl("span", "", sysTxt(r.id, 1)));
+      if(rs && rs.status) rn.appendChild(sysEl("span", "rs st-" + rs.status, sysStWord(rs.status)));
+      rb.appendChild(rn);
+      if(sysHaTesto(rs)) rb.appendChild(sysEl("span", "rp", rs.text.trim().split("\n")[0]));
+      rb.appendChild(sysEl("span", "rw", r.why));
+      row.appendChild(ri); row.appendChild(rb);
+      row.appendChild(sysEl("span", "rc", "›"));
+      row.onclick = function(){ sysApri(fig, p, r.id, true); };
+      card.appendChild(row);
+    });
+  }
+
+  /* com'era nei giorni prima */
+  var hist = (s0 && s0.hist) ? s0.hist.slice().reverse() : [];
+  if(hist.length){
+    var hb = sysEl("button", "sc-histbtn", t("sysHist") + " · " + hist.length);
+    var hl = sysEl("div", "sc-hist");
+    hl.hidden = true;
+    hist.forEach(function(v){
+      var hr = sysEl("div", "sc-hrow");
+      var hd = sysEl("div", "hd", fmtDayShort(v.day));
+      if(v.status) hd.appendChild(sysEl("span", "rs st-" + v.status, sysStWord(v.status)));
+      hr.appendChild(hd);
+      if(v.text && v.text.trim()) hr.appendChild(sysEl("div", "ht", v.text));
+      hl.appendChild(hr);
+    });
+    hb.onclick = function(){ hl.hidden = !hl.hidden; };
+    card.appendChild(hb);
+    card.appendChild(hl);
+  }
+
+  function aggiorna(){
+    var s = sysGet(p, id);
+    var st = s && s.status ? s.status : "";
+    card.className = card.className.replace(/\s*st-\w+/g, "") + (st ? " st-" + st : "");
+    ["ok", "watch", "bad"].forEach(function(k){ bottoni[k].classList.toggle("on", st === k); });
+    ic.textContent = "";
+    ic.appendChild(sysMini(d, st, 30));
+    sottotitolo();
+    sysPaint(fig, p);
+  }
+  function sottotitolo(){
+    var s = sysGet(p, id);
+    var st = s && s.status ? s.status : "";
+    var bits = [];
+    if(st) bits.push(sysStWord(st));
+    bits.push(s && s.ts ? t("sysUpd") + " " + sysQuando(s) : t("sysNew"));
+    sotto.textContent = bits.join(" · ");
+    sotto.className = "sc-sub" + (st ? " st-" + st : "");
+  }
+  aggiorna();
+
+  fig.appendChild(card);
+  autoGrow(ta);
+  sysPosiziona(fig, card, d);
+  if(anim){
+    /* si apre partendo dal punto che hai toccato */
+    var svg = fig.querySelector("svg");
+    var sc = svg.getBoundingClientRect().width / 364;
+    var ox = (d.c[0] + 2) * sc - card.offsetLeft, oy = d.c[1] * sc - card.offsetTop;
+    card.style.transformOrigin = ox.toFixed(0) + "px " + oy.toFixed(0) + "px";
+    card.classList.add("anim");
+    sysMostra(card);
+  }
+}
+
+/* La scheda si apre subito sotto la parte toccata, cosi' quella resta in vista
+   insieme a tutto il disegno sopra; se la scheda e' lunga, il riquadro si allunga.
+   Per le gambe, che stanno in fondo, si apre sopra. */
+function sysPosiziona(fig, card, d){
+  var svg = fig.querySelector("svg");
+  var r = svg.getBoundingClientRect();
+  var sc = r.width / 364, figH = r.height;
+  var bb = { y:d.c[1] - 20, height:40 };
+  try{ bb = fig.querySelector('[data-g="' + d.id + '"]').getBBox(); }catch(e){}
+  fig.style.paddingBottom = "";
+  card.style.top = ""; card.style.bottom = ""; card.style.maxHeight = "";
+  if(d.c[1] < 400){
+    var top = Math.round((bb.y + bb.height) * sc + 12);
+    card.style.top = top + "px";
+    sysAllunga(fig, card);
+    if(window.ResizeObserver){
+      card._ro = new ResizeObserver(function(){ if(card.isConnected) sysAllunga(fig, card); });
+      card._ro.observe(card);
+    }
+  } else {
+    var giu = Math.round(figH - bb.y * sc + 12);
+    card.style.bottom = giu + "px";
+    card.style.maxHeight = Math.max(160, figH - giu - 6) + "px";
+  }
+}
+function sysAllunga(fig, card){
+  var figH = fig.querySelector("svg").getBoundingClientRect().height;
+  var fondo = card.offsetTop + card.offsetHeight + 8;
+  fig.style.paddingBottom = fondo > figH ? (fondo - figH) + "px" : "";
+}
+function sysStacca(card){
+  if(card && card._ro){ try{ card._ro.disconnect(); }catch(e){} card._ro = null; }
+}
+/* la scheda deve vedersi, e anche la parte toccata subito sopra */
+function sysMostra(card){
+  var head = document.querySelector("#patDetail .pdet-head");
+  var hb = head ? head.getBoundingClientRect().bottom : 0;
+  var figTop = card.parentNode.getBoundingClientRect().top;
+  var top = figTop + card.offsetTop;
+  var vh = window.innerHeight;
+  var visibile = Math.min(card.offsetHeight, 300);
+  if(top + visibile > vh - 10) window.scrollBy(0, Math.min(top + visibile - vh + 10, top - hb - 70));
+  else if(top < hb + 60) window.scrollBy(0, top - hb - 60);
+}
+
+/* le frasi fra asterischi diventano compiti, quelle con M: morali */
+function sysConverti(p, id){
+  var s = sysGet(p, id);
+  if(!s || !s.text) return null;
+  var r = convertiTutto(s, "text", p, { pid:p.id });
+  if(r.compiti || r.morali) avvisaTutto(r);
+  return r;
+}
+
+/* chiude la scheda aperta; torna true se c'era qualcosa da chiudere */
+function sysChiudi(){
+  if(!sysAperto) return false;
+  var ap = sysAperto;
+  var p = patById(ap.pid);
+  stopDictation();
+  if(p) sysConverti(p, ap.id);
+  sysAperto = null;
+  var fig = document.querySelector("#pdSec .sysfig");
+  var card = fig && fig.querySelector(".syscard");
+  if(fig && p) sysPaint(fig, p);
+  if(card){
+    sysStacca(card);
+    card.classList.remove("anim");
+    card.classList.add("out");
+    setTimeout(function(){ if(!sysAperto) renderPat(); }, 150);
+  } else {
+    renderPat();
+  }
+  return true;
+}
+/* lasciando la sezione senza chiudere la scheda: gli asterischi diventano
+   comunque compiti, e il microfono si spegne */
+function sysLascia(){
+  if(!sysAperto) return;
+  var ap = sysAperto;
+  sysAperto = null;
+  var p = patById(ap.pid);
+  if(recTarget && recTarget.classList && recTarget.classList.contains("sysnote")) stopDictation();
+  if(p) sysConverti(p, ap.id);
+}
+/* mentre scrivi in una scheda, il ridisegno automatico aspetta */
+function sysScrive(){
+  var a = document.activeElement;
+  return !!(sysAperto && a && a.classList && a.classList.contains("sysnote"));
+}
+document.addEventListener("keydown", function(e){
+  if(e.key === "Escape" && sysAperto && !document.querySelector(".scrim, .viewer")) sysChiudi();
+});
+
+/* per il riassunto da copiare: sempre in italiano, come il resto del riassunto */
+function sysPerRiassunto(p){
+  var out = [];
+  SYS_DEF.forEach(function(d){
+    var s = sysGet(p, d.id);
+    if(!s || !(s.status || sysHaTesto(s))) return;
+    var st = s.status === "ok" ? "in ordine" : s.status === "watch" ? "da seguire" : s.status === "bad" ? "problema" : "";
+    var tag = [st, s.day ? fmtDayShort(s.day) : ""].filter(Boolean).join(", ");
+    out.push("- " + SYS_TXT.it[d.id][1] + (tag ? " [" + tag + "]" : "") +
+      (sysHaTesto(s) ? ": " + s.text.trim().replace(/\s*\n\s*/g, " / ") : ""));
+  });
+  return out;
 }
 
 /* ---------------------------------------------------------------- boot */
