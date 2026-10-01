@@ -860,11 +860,13 @@ table.labtab td.pname .namebtn:hover{text-decoration-color:var(--accent); color:
 @keyframes sysDash{to{stroke-dashoffset:-20}}
 
 /* la scheda che si apre sopra il disegno */
-.syscard{position:absolute; left:4px; right:4px; z-index:4;
+.syscard{position:fixed; z-index:26; left:max(6px, calc(50% - 304px)); right:max(6px, calc(50% - 304px));
+  bottom:0; max-height:min(46dvh, 440px);
   overflow-y:auto; overscroll-behavior:contain; -webkit-overflow-scrolling:touch;
-  background:var(--surface); border:1px solid var(--line-strong); border-top:4px solid var(--accent);
-  border-radius:14px; padding:11px 12px 12px;
-  box-shadow:0 22px 48px -14px rgba(10,28,32,.5), 0 2px 8px rgba(10,28,32,.12)}
+  background:var(--surface); border:1px solid var(--line-strong); border-bottom:none;
+  border-top:4px solid var(--accent); border-radius:16px 16px 0 0;
+  padding:11px 12px calc(14px + env(safe-area-inset-bottom));
+  box-shadow:0 -12px 36px -10px rgba(10,28,32,.42), 0 -1px 6px rgba(10,28,32,.10)}
 .syscard.st-ok{border-top-color:var(--rail-done)}
 .syscard.st-watch{border-top-color:var(--rail-result)}
 .syscard.st-bad{border-top-color:var(--alert)}
@@ -936,6 +938,8 @@ table.labtab td.pname .namebtn:hover{text-decoration-color:var(--accent); color:
   font-size:11px; color:var(--ink-3)}
 .sc-hrow .ht{font-size:13.5px; line-height:1.4; color:var(--ink-2); white-space:pre-wrap;
   overflow-wrap:anywhere; margin-top:2px}
+
+.sysspacer{pointer-events:none}
 
 /* sotto il disegno: quello che hai segnato */
 .sysrows{display:flex; flex-direction:column; gap:8px; margin-top:12px}
@@ -7294,7 +7298,7 @@ function initMor(){
 Object.assign(I18N.it, {
   tSys:"Sistemi",
   sysTitle:"Sistemi da tenere d'occhio",
-  sysHint:"Tocca una parte del disegno: sopra si apre la sua scheda, con lo stato e uno spazio per scrivere. Le linee tratteggiate portano ai sistemi collegati.",
+  sysHint:"Tocca una parte del disegno: in basso si apre la sua scheda, con lo stato e uno spazio per scrivere. Dietro, il disegno continua a scorrere da solo; le linee tratteggiate portano ai sistemi collegati.",
   sysOk:"In ordine", sysWatch:"Da seguire", sysBad:"Problema",
   sysRel:"Collegato con", sysHist:"Giorni precedenti",
   sysUpd:"aggiornato", sysNew:"ancora niente di scritto",
@@ -7303,7 +7307,7 @@ Object.assign(I18N.it, {
 Object.assign(I18N.de, {
   tSys:"Systeme",
   sysTitle:"Systeme im Blick",
-  sysHint:"Tippe auf einen Teil der Zeichnung: darüber öffnet sich seine Karte, mit Status und Platz zum Schreiben. Die gestrichelten Linien führen zu den verknüpften Systemen.",
+  sysHint:"Tippe auf einen Teil der Zeichnung: unten öffnet sich seine Karte, mit Status und Platz zum Schreiben. Dahinter lässt sich die Zeichnung allein weiter scrollen; die gestrichelten Linien führen zu den verknüpften Systemen.",
   sysOk:"In Ordnung", sysWatch:"Beobachten", sysBad:"Problem",
   sysRel:"Verknüpft mit", sysHist:"Frühere Tage",
   sysUpd:"geändert", sysNew:"noch nichts geschrieben",
@@ -7641,6 +7645,14 @@ function secSys(host, p){
   c.appendChild(hint);
   sysLista(c, p, fig);
 
+  /* con la scheda aperta lo spazio sotto la sezione c'e' subito,
+     cosi' la pagina non perde il punto in cui eri */
+  if(sysAperto){
+    var sp0 = sysEl("div", "sysspacer");
+    sp0.setAttribute("aria-hidden", "true");
+    sp0.style.height = Math.round(Math.min(window.innerHeight * 0.46, 440) + 16) + "px";
+    host.appendChild(sp0);
+  }
   /* i nomi si misurano alla fine, quando la sezione e' tutta al suo posto */
   sysNomi(svg);
   if(sysAperto) sysApri(fig, p, sysAperto.id, false);
@@ -7685,14 +7697,8 @@ function sysLista(c, p, fig){
   });
   c.appendChild(box);
 }
-/* dalla lista: porto su il disegno e apro la scheda */
-function sysVaiA(fig, p, id){
-  var head = document.querySelector("#patDetail .pdet-head");
-  var hb = head ? head.getBoundingClientRect().bottom : 0;
-  var r = fig.getBoundingClientRect();
-  window.scrollTo(0, Math.max(0, window.pageYOffset + r.top - hb - 8));
-  sysApri(fig, p, id, true);
-}
+/* dalla lista: apro la scheda, e il disegno scorre fino alla parte giusta */
+function sysVaiA(fig, p, id){ sysApri(fig, p, id, true); }
 
 /* la scheda che si ingrandisce sopra il disegno */
 function sysApri(fig, p, id, anim){
@@ -7700,7 +7706,6 @@ function sysApri(fig, p, id, anim){
   if(vecchia){
     stopDictation();
     if(sysAperto && sysAperto.pid === p.id) sysConverti(p, sysAperto.id);
-    sysStacca(vecchia);
     vecchia.remove();
   }
   sysAperto = { pid:p.id, id:id };
@@ -7860,61 +7865,71 @@ function sysApri(fig, p, id, anim){
 
   fig.appendChild(card);
   autoGrow(ta);
-  sysPosiziona(fig, card, d);
-  if(anim){
-    /* si apre partendo dal punto che hai toccato */
-    var svg = fig.querySelector("svg");
-    var sc = svg.getBoundingClientRect().width / 364;
-    var ox = (d.c[0] + 2) * sc - card.offsetLeft, oy = d.c[1] * sc - card.offsetTop;
-    card.style.transformOrigin = ox.toFixed(0) + "px " + oy.toFixed(0) + "px";
-    card.classList.add("anim");
-    sysMostra(card);
+  sysTieniFermo(card, ta);
+  sysPosiziona(fig, card, d, anim);
+}
+
+/* La scheda sta ferma in basso sullo schermo e scorre per conto suo; il
+   disegno resta dietro e scorre con la pagina. Sotto la sezione lascio uno
+   spazio alto quanto la scheda, cosi' anche le gambe possono salire sopra di
+   lei. Aprendola, porto la parte toccata nello spazio libero sopra la scheda. */
+function sysPosiziona(fig, card, d, anim){
+  var sec = $("pdSec");
+  var sp = sec.querySelector(".sysspacer");
+  if(!sp){ sp = sysEl("div", "sysspacer"); sp.setAttribute("aria-hidden", "true"); sec.appendChild(sp); }
+  var r = card.getBoundingClientRect();
+  var mh = parseFloat(window.getComputedStyle(card).maxHeight);
+  sp.style.height = Math.round((isNaN(mh) ? r.height : Math.max(mh, r.height)) + 16) + "px";
+  if(!anim) return;
+
+  var head = document.querySelector("#patDetail .pdet-head");
+  var alto = (head ? head.getBoundingClientRect().bottom : 0) + 12;
+  var basso = r.top - 12;
+  var gr = fig.querySelector('[data-g="' + d.id + '"]').getBoundingClientRect();
+  var delta = 0;
+  if(gr.top < alto || gr.bottom > basso){
+    delta = (gr.top + gr.bottom) / 2 - (alto + basso) / 2;
+    var y = window.pageYOffset;
+    var max = document.documentElement.scrollHeight - window.innerHeight;
+    delta = Math.max(-y, Math.min(delta, max - y));
+  }
+  /* si apre partendo da dove sara' la parte toccata a fine scorrimento */
+  var gx = (gr.left + gr.right) / 2, gy = (gr.top + gr.bottom) / 2 - delta;
+  card.style.transformOrigin = Math.round(gx - r.left) + "px " + Math.round(gy - r.top) + "px";
+  card.classList.add("anim");
+  if(Math.abs(delta) > 2){
+    try{ window.scrollBy({ top:delta, left:0, behavior:"smooth" }); }
+    catch(e){ window.scrollBy(0, delta); }
   }
 }
 
-/* La scheda si apre subito sotto la parte toccata, cosi' quella resta in vista
-   insieme a tutto il disegno sopra; se la scheda e' lunga, il riquadro si allunga.
-   Per le gambe, che stanno in fondo, si apre sopra. */
-function sysPosiziona(fig, card, d){
-  var svg = fig.querySelector("svg");
-  var r = svg.getBoundingClientRect();
-  var sc = r.width / 364, figH = r.height;
-  var bb = { y:d.c[1] - 20, height:40 };
-  try{ bb = fig.querySelector('[data-g="' + d.id + '"]').getBBox(); }catch(e){}
-  fig.style.paddingBottom = "";
-  card.style.top = ""; card.style.bottom = ""; card.style.maxHeight = "";
-  if(d.c[1] < 400){
-    var top = Math.round((bb.y + bb.height) * sc + 12);
-    card.style.top = top + "px";
-    sysAllunga(fig, card);
-    if(window.ResizeObserver){
-      card._ro = new ResizeObserver(function(){ if(card.isConnected) sysAllunga(fig, card); });
-      card._ro.observe(card);
-    }
-  } else {
-    var giu = Math.round(figH - bb.y * sc + 12);
-    card.style.bottom = giu + "px";
-    card.style.maxHeight = Math.max(160, figH - giu - 6) + "px";
+/* Il dito sulla scheda muove solo la scheda. Quando la scheda non ha piu'
+   niente da scorrere in quella direzione (o e' corta e non scorre affatto),
+   lo sfondo resta fermo lo stesso. */
+function sysTieniFermo(card, ta){
+  var y0 = 0;
+  function puoScorrere(el, giu){
+    if(el.scrollHeight <= el.clientHeight + 1) return false;
+    return giu ? el.scrollTop + el.clientHeight < el.scrollHeight - 1 : el.scrollTop > 0;
   }
-}
-function sysAllunga(fig, card){
-  var figH = fig.querySelector("svg").getBoundingClientRect().height;
-  var fondo = card.offsetTop + card.offsetHeight + 8;
-  fig.style.paddingBottom = fondo > figH ? (fondo - figH) + "px" : "";
-}
-function sysStacca(card){
-  if(card && card._ro){ try{ card._ro.disconnect(); }catch(e){} card._ro = null; }
-}
-/* la scheda deve vedersi, e anche la parte toccata subito sopra */
-function sysMostra(card){
-  var head = document.querySelector("#patDetail .pdet-head");
-  var hb = head ? head.getBoundingClientRect().bottom : 0;
-  var figTop = card.parentNode.getBoundingClientRect().top;
-  var top = figTop + card.offsetTop;
-  var vh = window.innerHeight;
-  var visibile = Math.min(card.offsetHeight, 300);
-  if(top + visibile > vh - 10) window.scrollBy(0, Math.min(top + visibile - vh + 10, top - hb - 70));
-  else if(top < hb + 60) window.scrollBy(0, top - hb - 60);
+  function lascia(target, giu){
+    /* mentre scrivi, il campo di testo fa come vuole lui */
+    if(document.activeElement === ta && target === ta) return true;
+    var campo = target && target.closest ? target.closest("textarea") : null;
+    return (campo && puoScorrere(campo, giu)) || puoScorrere(card, giu);
+  }
+  card.addEventListener("touchstart", function(e){
+    if(e.touches.length) y0 = e.touches[0].clientY;
+  }, { passive:true });
+  card.addEventListener("touchmove", function(e){
+    if(!e.touches.length) return;
+    var y = e.touches[0].clientY, giu = y < y0;
+    y0 = y;
+    if(!lascia(e.target, giu) && e.cancelable) e.preventDefault();
+  }, { passive:false });
+  card.addEventListener("wheel", function(e){
+    if(!lascia(e.target, e.deltaY > 0) && e.cancelable) e.preventDefault();
+  }, { passive:false });
 }
 
 /* le frasi fra asterischi diventano compiti, quelle con M: morali */
@@ -7938,7 +7953,6 @@ function sysChiudi(){
   var card = fig && fig.querySelector(".syscard");
   if(fig && p) sysPaint(fig, p);
   if(card){
-    sysStacca(card);
     card.classList.remove("anim");
     card.classList.add("out");
     setTimeout(function(){ if(!sysAperto) renderPat(); }, 150);
