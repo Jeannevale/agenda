@@ -701,6 +701,15 @@ table.labtab td.pname .namebtn:hover{text-decoration-color:var(--accent); color:
 .vbox .vtext{font-size:14.5px; line-height:1.45; white-space:pre-wrap; overflow-wrap:anywhere;
   margin-top:2px; cursor:text; touch-action:manipulation;
   -webkit-user-select:none; user-select:none}
+/* caselle automatiche: partenza per l'intensiva e Wiederaufnahme */
+.vbox.vk-icu{border-left-color:var(--icu); background:var(--icu-soft)}
+.vbox.vk-back{border-left-color:var(--accent)}
+.vkind{display:flex; flex-wrap:wrap; align-items:baseline; gap:2px 10px;
+  touch-action:manipulation; -webkit-user-select:none; user-select:none}
+.vkind .vk-t{font-family:"IBM Plex Sans Condensed","IBM Plex Sans",sans-serif; font-weight:600;
+  font-size:15.5px; letter-spacing:.01em; color:var(--icu)}
+.vbox.vk-back .vk-t{color:var(--accent)}
+.vkind .vk-d{font-family:"IBM Plex Mono",monospace; font-size:12.5px; color:var(--ink-2)}
 
 /* ================= morale ================= */
 .moritem{background:var(--surface); border:1px solid var(--line);
@@ -2684,6 +2693,7 @@ Object.assign(I18N.it, {
   icuNeedHead:"Scrivi il titolo.", icuSaved:"Voce salvata",
   icuNote:"Doppio tocco su una voce per correggerla. Trascina dalla presa a sinistra per cambiare l'ordine.",
   verlTitle:"Verlauf", verlAdd:"Aggiungi",
+  verlIcu:"Terapia intensiva", verlBack:"Wiederaufnahme",
   verlEmpty:"Nessuna voce nel Verlauf.",
   verlPh:"Come sta andando, oggi\u2026",
   verlSaved:"Voce salvata",
@@ -2816,6 +2826,7 @@ Object.assign(I18N.de, {
   icuNeedHead:"Titel fehlt.", icuSaved:"Eintrag gespeichert",
   icuNote:"Doppeltippen zum Ändern. Zum Umsortieren am Griff links ziehen.",
   verlTitle:"Verlauf", verlAdd:"Hinzuf\u00fcgen",
+  verlIcu:"Intensivstation", verlBack:"Wiederaufnahme",
   verlEmpty:"Noch kein Eintrag im Verlauf.",
   verlPh:"Wie es heute l\u00e4uft\u2026",
   verlSaved:"Eintrag gespeichert",
@@ -3153,25 +3164,60 @@ function patInIcu(p, giorno){
 }
 function mandaInIcu(p){
   var prima = JSON.stringify(p.icuStays || []);
+  var primaV = verlauf(p).slice();
   var g = view.day || todayStr();
-  icuStays(p).push({ from:g, to:null });
+  var s = { id:uid(), from:g, to:null };
+  icuStays(p).push(s);
+  verlauf(p).unshift(verlEvento("icu", s, g));   /* casella nel Verlauf */
   if(pview.id === p.id) pview.tab = "icu";
   save(); render(); renderPat();
   showToast(t("icuSent") + " " + fmtDayShort(g), t("undo"), function(){
-    p.icuStays = JSON.parse(prima); save(); render(); renderPat();
+    p.icuStays = JSON.parse(prima); p.verlauf = primaV; save(); render(); renderPat();
   });
 }
 function riportaDaIcu(p){
   var s = icuAperta(p);
   if(!s) return;
   var prima = JSON.stringify(p.icuStays || []);
+  var primaV = verlauf(p).slice();
   var g = view.day || todayStr();
-  if(g <= s.from) p.icuStays.splice(p.icuStays.indexOf(s), 1);   /* tornato lo stesso giorno */
-  else s.to = g;
+  if(!s.id) s.id = uid();
+  if(g <= s.from){   /* tornato lo stesso giorno: vale come correzione */
+    p.icuStays.splice(p.icuStays.indexOf(s), 1);
+    togliEventiIcu(p, s);
+  } else {
+    s.to = g;
+    verlauf(p).unshift(verlEvento("back", s, g));   /* Wiederaufnahme */
+  }
   save(); render(); renderPat();
   showToast(t("icuBackDone") + " " + fmtDayShort(g), t("undo"), function(){
-    p.icuStays = JSON.parse(prima); save(); render(); renderPat();
+    p.icuStays = JSON.parse(prima); p.verlauf = primaV; save(); render(); renderPat();
   });
+}
+
+/* Il Verlauf registra da solo i passaggi in intensiva: una casella
+   "Terapia intensiva" col giorno in cui parte, una "Wiederaufnahme" col
+   giorno in cui torna in reparto. Legate al periodo con icuId. */
+function fmtDayFull(iso){
+  if(!iso) return "";
+  return parseDay(iso).toLocaleDateString(t("locale"), { day:"2-digit", month:"2-digit", year:"numeric" });
+}
+function verlEvento(kind, stay, giorno, ora){
+  return { id:uid(), kind:kind, icuId:stay.id, day:giorno,
+    time:(ora === undefined ? nowTime() : ora), ts:Date.now(),
+    quando:"", text:"", photos:[], tasks:[], morals:[] };
+}
+function togliEventiIcu(p, stay){
+  if(!p.verlauf || !stay || !stay.id) return;
+  p.verlauf = p.verlauf.filter(function(v){ return !(v.kind && v.icuId === stay.id); });
+}
+/* per le voci recuperate dal passato: al loro posto in base al giorno */
+function mettiPerData(p, v){
+  var l = verlauf(p);
+  for(var i = 0; i < l.length; i++){
+    if((l[i].day || "") < v.day){ l.splice(i, 0, v); return; }
+  }
+  l.push(v);
 }
 
 function patDimesso(p, giorno){
@@ -5546,10 +5592,11 @@ function openPatSheet(p){
 function dimetti(p){
   var prima = p.dischargedOn || null;
   var primaIcu = JSON.stringify(p.icuStays || []);
+  var primaV = (p.verlauf || []).slice();
   var aperta = icuAperta(p);
   if(aperta){
     var g0 = view.day || todayStr();
-    if(g0 <= aperta.from) p.icuStays.splice(p.icuStays.indexOf(aperta), 1);
+    if(g0 <= aperta.from){ p.icuStays.splice(p.icuStays.indexOf(aperta), 1); togliEventiIcu(p, aperta); }
     else aperta.to = g0;
   }
   p.dischargedOn = view.day || todayStr();
@@ -5560,6 +5607,7 @@ function dimetti(p){
   showToast(t("discharged") + " " + fmtDayShort(p.dischargedOn), t("undo"), function(){
     p.dischargedOn = prima;
     p.icuStays = JSON.parse(primaIcu);
+    p.verlauf = primaV;
     save(); render(); renderPat();
   });
 }
@@ -5775,6 +5823,20 @@ function initPat(){
     save();
   }
 
+  /* una volta sola: i passaggi in intensiva fatti prima di questa funzione
+     ricevono anche loro le caselle nel Verlauf, al loro posto per data */
+  if(!S.settings.icuVerl){
+    patients().forEach(function(p){
+      (p.icuStays || []).forEach(function(s){
+        if(!s.id) s.id = uid();
+        mettiPerData(p, verlEvento("icu", s, s.from, ""));
+        if(s.to) mettiPerData(p, verlEvento("back", s, s.to, ""));
+      });
+    });
+    S.settings.icuVerl = 1;
+    save();
+  }
+
   semePazienti();
 
   $("modeShift").onclick = function(){ setMode("shift"); };
@@ -5984,7 +6046,7 @@ function attachDragHandle(card, handle, cls, salva){
     var r = card.getBoundingClientRect();
     grabDy = y - r.top;
     ghost = card.cloneNode(true);
-    ghost.className = cls + " ghost";
+    ghost.classList.add("ghost");
     ghost.style.width = r.width + "px";
     ghost.style.left = r.left + "px";
     ghost.style.top = (y - grabDy) + "px";
@@ -6082,30 +6144,43 @@ function verlCard(p, v){
   box.appendChild(grip);
 
   var body = document.createElement("div"); body.className = "vbody";
+  /* casella automatica dell'intensiva: titolo + giorno, il testo e' facoltativo */
+  var head = null;
+  if(v.kind){
+    box.classList.add(v.kind === "icu" ? "vk-icu" : "vk-back");
+    head = document.createElement("div"); head.className = "vkind";
+    var kt = document.createElement("span"); kt.className = "vk-t";
+    kt.textContent = t(v.kind === "icu" ? "verlIcu" : "verlBack");
+    var kd = document.createElement("span"); kd.className = "vk-d";
+    kd.textContent = fmtDayFull(v.day);
+    head.appendChild(kt); head.appendChild(kd);
+  }
   var quando = document.createElement("div"); quando.className = "vwhen";
-  quando.textContent = verlQuando(v);
+  quando.textContent = v.kind ? "" : verlQuando(v);
   quando.hidden = !quando.textContent;
   var tx = document.createElement("div"); tx.className = "vtext";
   tx.appendChild(textWithMorals(v.text, v.tasks, v.morals));
-  if(!v.text) tx.style.minHeight = "22px";
+  if(!v.text && !v.kind) tx.style.minHeight = "22px";
   /* in modifica le miniature stanno dentro il riquadro di modifica */
   var fr = hasPhotos(v) ? photoRow(v, renderPat, { add:false }) : null;
-  attaccaModifica(tx, function(){
+  function apri(){
     if(fr && !modificaAperta && !editingId) fr.hidden = true;
-    modificaTesto(tx, v.text, {
-      libero: verlQuando(v),
-      liberoPh: t("verlWhenPh"),
+    var o = {
       foto: v,
       annulla: renderPat,
       salva: function(nuovo, quandoNuovo){
         v.text = nuovo;
-        v.quando = quandoNuovo || "";
+        if(!v.kind) v.quando = quandoNuovo || "";
         var r = convertiTutto(v, "text", p, { pid:p.id });
         save(); render(); renderPat();
         avvisaTutto(r);
       }
-    });
-  });
+    };
+    if(!v.kind){ o.libero = verlQuando(v); o.liberoPh = t("verlWhenPh"); }
+    modificaTesto(tx, v.text, o);
+  }
+  attaccaModifica(tx, apri);
+  if(head){ attaccaModifica(head, apri); body.appendChild(head); }
   body.appendChild(quando); body.appendChild(tx);
   if(fr) body.appendChild(fr);
   box.appendChild(body);
