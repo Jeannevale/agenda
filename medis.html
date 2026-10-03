@@ -143,6 +143,7 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
     <button class="tile" data-go="ak" data-k="anticoagulazione clexane enoxaparina eparina pausa pre operatoria intervento"><span class="k pro">Procedura</span><span class="t">Anticoag. pre-OP</span><span class="s">Pause Clexane · eparina</span></button>
     <button class="tile" data-go="ms" data-k="magensonde sondino naso gastrico"><span class="k pro">Procedura</span><span class="t">Sondino gastrico</span><span class="s">Controindicazioni</span></button>
     <button class="tile" data-go="el" data-k="potassio ipokaliemia iperkaliemia ipercaliemia kcl magnesio elettroliti calcio gluconato cloruro bicarbonato insulina glucosio salbutamolo lokelma dialisi"><span class="k met">Metabolico</span><span class="t">Potassio · Magnesio</span><span class="s">Ipo- e iperkaliemia · calcio · bicarbonato</span></button>
+    <button class="tile" data-go="ca" data-k="ipercalcemia calcio alto ca calcemia nacl calcitonina acido zoledronico zoledronato zometa denosumab xgeva prednisolone dialisi qt corto aritmia"><span class="k met">Metabolico</span><span class="t">Ipercalcemia</span><span class="s">NaCl · calcitonina · zoledronato</span></button>
     <button class="tile" data-go="glu" data-k="ipoglicemia iperglicemia glicemia zucchero glucosio glucagone glucagen insulina actrapid lantus glargin novorapid humalog fiasp apidra huminsulin insuman berlinsulin abasaglar toujeo levemir tresiba protaphane actraphane novomix correzione schema chetoacidosi sglt2 metformin"><span class="k met">Metabolico</span><span class="t">Glicemia</span><span class="s">Ipo · iper · Actrapid · Lantus</span></button>
     <button class="tile" data-go="az" data-k="farmaci elenco a-z dosi renale gfr insufficienza"><span class="k ref">Riferimento</span><span class="t">Farmaci A–Z</span><span class="s">Tutte le dosi · GFR &lt; 30</span></button>
   </div>
@@ -633,6 +634,7 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
         <div class="prep" style="color:var(--ink)">Calcio cloruro 10 % 10 ml bolo rapido + bicarbonato 8,4 % 50 ml rapido (altra linea) + insulina/glucosio · dialisi durante RCP.</div></div>
       <div class="rx"><div class="nm">Digitale</div>
         <div class="prep" style="color:var(--ink)">Calcio in 30 min, non a bolo.</div></div>
+      <div class="rx">Calcio alto → <a class="x" href="#ca">ipercalcemia</a></div>
     </div>
     <div class="blk">
       <h3>In cardiochirurgia</h3>
@@ -642,6 +644,93 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
         <li><b>Cause post-OP:</b> AKI, emolisi (HLM, ECMO), trasfusioni, KCl in eccesso, acidosi, rabdomiolisi.</li>
         <li>Suxametonio vietato con K⁺ &gt; 5,5.</li>
       </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ IPERCALCEMIA ============ -->
+<section class="page" id="ca" data-t="Ipercalcemia">
+  <div class="ph"><h2>Ipercalcemia</h2><span class="cat">Metabolico · 1 mmol/l = 4 mg/dl</span></div>
+  <div class="grid">
+    <div class="blk">
+      <h3>Quanto è grave</h3>
+      <p class="prep"><b>Ca corretto</b> = Ca totale + 0,02 × (40 − albumina g/l) · oppure Ca ionizzato (BGA, normale 1,15–1,30 mmol/l).</p>
+      <div class="tbl"><table>
+        <thead><tr><th>Ca corretto mmol/l</th><th>mg/dl</th><th></th></tr></thead>
+        <tbody>
+          <tr><td class="d">2,6–3,0</td><td class="d">10,5–12</td><td class="d">lieve: idrata p.o., togli le cause</td></tr>
+          <tr><td class="d">3,0–3,5</td><td class="d">12–14</td><td class="d">moderata: tratta se sintomi</td></tr>
+          <tr><td class="d">&gt; 3,5</td><td class="d">&gt; 14</td><td class="d">grave: tratta subito</td></tr>
+        </tbody>
+      </table></div>
+      <p class="prep" style="margin-top:6px">Sintomi o ECG alterato → tratta a qualsiasi valore. Prelievi: PTH, 25-OH-vitamina D, fosfato, creatinina, K⁺, Mg.</p>
+    </div>
+
+    <div class="blk alert">
+      <h3>Togli subito</h3>
+      <ul class="l">
+        <li><b>Calcio</b> p.o. ed e.v., <b>vitamina D</b></li>
+        <li><b>Tiazidici</b> (HCT, xipamide, clortalidone) → alzano il Ca</li>
+        <li><b>Litio</b></li>
+        <li><b>Digossina</b>: con Ca alto rischio di TV/FV</li>
+        <li><b>Ringer, Jonosteril, Sterofundin</b>: contengono calcio → usa NaCl 0,9 %</li>
+      </ul>
+    </div>
+
+    <div class="blk alert">
+      <h3>Terapia</h3>
+      <ol class="steps">
+        <li><b>Volume</b>
+          <div class="rx"><div class="nm">NaCl 0,9 %</div>
+            <div class="dose">200 ml/h e.v.</div>
+            <div class="prep">LVEF ridotta o scompenso: 100 ml/h · target diuresi 100 ml/h · bilancio ogni 6 h</div>
+            <div class="prep"><b>Effetto:</b> in ore · Ca scende ~0,3 mmol/l in 24 h</div>
+            <div class="ren">oligurico: niente carichi → dialisi</div></div></li>
+        <li><b>Effetto rapido</b> <span class="prep">(grave o sintomatica)</span>
+          <div class="rx"><div class="nm">Calcitonina (fiala 100 IE/ml)</div>
+            <div class="dose">4 IE/kg s.c. ogni 12 h = <span class="c" data-c="calcit"></span></div>
+            <div class="prep">nausea, flush · <b>Effetto:</b> in 4 h · Ca −0,5 mmol/l · dopo 48 h non funziona più (tachifilassi): serve solo come ponte al bifosfonato</div>
+            <div class="ren same">invariata</div></div></li>
+        <li><b>Effetto duraturo</b> <span class="prep">(dallo insieme alla calcitonina)</span>
+          <div class="rx"><div class="nm">Acido zoledronico (Zometa 4 mg/5 ml)</div>
+            <div class="dose std">4 mg in 100 ml NaCl 0,9 % in 15 min</div>
+            <div class="prep">prima idrata · linea separata, mai con soluzioni che contengono calcio (Ringer) · giorno 1 spesso febbre e dolori (flu-like) · ripetibile dopo ≥ 7 giorni</div>
+            <div class="prep"><b>Effetto:</b> inizia dopo 2 giorni · massimo al giorno 4 · dura 3 settimane</div>
+            <div class="ren">solo se beneficio &gt; rischio (nefrotossico) → meglio denosumab</div></div>
+          <div class="rx"><div class="nm">Denosumab (Xgeva 120 mg/1,7 ml)</div>
+            <div class="dose">120 mg s.c.</div>
+            <div class="prep">se GFR &lt; 30 o zoledronato non basta · <b>Effetto:</b> inizia dopo 3 giorni, dura settimane</div>
+            <div class="ren">dose invariata · rischio ipocalcemia grave: Ca ogni giorno per 1 settimana</div></div></li>
+        <li><b>Solo in casi scelti</b>
+          <div class="rx"><div class="nm">Furosemide</div>
+            <div class="dose std">20 mg e.v.</div>
+            <div class="prep">solo dopo aver ripristinato il volume e se sovraccarico, non di routine · <b>Effetto:</b> in 1 h</div>
+            <div class="ren">40 mg e.v.</div></div>
+          <div class="rx"><div class="nm">Prednisolone</div>
+            <div class="dose">50 mg 1-0-0 p.o. o e.v.</div>
+            <div class="prep">solo intossicazione da vitamina D, sarcoidosi/granulomatosi, linfoma · <b>Effetto:</b> dopo 3 giorni</div>
+            <div class="ren same">invariato</div></div></li>
+        <li><b>Dialisi → Nefrologia</b>
+          <div class="rx"><div class="prep" style="color:var(--ink)">Ca &gt; 4,5 mmol/l (18 mg/dl), sintomi neurologici, anuria o scompenso che vieta i liquidi · emodialisi con dialisato povero di calcio · <b>Effetto:</b> in ore.</div></div></li>
+        <li><b>Controllo:</b> Ca, K⁺, Mg, creatinina ogni 12 h · ECG.</li>
+      </ol>
+    </div>
+
+    <div class="blk">
+      <h3>Aritmia con ipercalcemia</h3>
+      <p class="prep"><b>ECG:</b> QT corto, bradicardia, blocco AV · raro TV/FV. La terapia vera è abbassare il Ca.</p>
+      <div class="rx"><div class="nm">Bradicardia sintomatica: Atropina</div>
+        <div class="dose">0,5 mg e.v. bolo, ripeti ogni 3 min, max 3 mg</div>
+        <div class="prep">pacemaker epicardico se c'è · pads pronti</div>
+        <div class="ren same">invariata</div></div>
+      <div class="rx"><div class="nm">TV/FV</div>
+        <div class="prep" style="color:var(--ink)">Defibrillazione/cardioversione come sempre · amiodarone come da <a class="x" href="#vhf">FA</a> (il QT corto non è un problema).</div></div>
+      <div class="rx"><div class="nm">Magnesio solfato</div>
+        <div class="dose">2 g in 100 ml NaCl 0,9 % in 20 min</div>
+        <div class="prep">se Mg basso o torsione di punta · K⁺ 4,5–5,0 → <a class="x" href="#el">elettroliti</a></div>
+        <div class="ren">1 g, solo con Mg basso misurato</div></div>
+      <div class="rx"><div class="nm">Mai</div>
+        <div class="prep" style="color:var(--ink)"><b>Calcio</b> (gluconato o cloruro) · <b>digossina</b> · cautela con verapamil, diltiazem e betabloccanti se bradicardia o blocco AV.</div></div>
     </div>
   </div>
 </section>
@@ -843,7 +932,8 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
     lanS:function(w){return n(r(0.2*w,2))+' IE';},
     lanR:function(w){return n(r(0.1*w,1))+' IE';},
     insP:function(w){return n(0.1*w,1)+' IE/h = '+n(0.1*w,1)+' ml/h';},
-    insP05:function(w){return n(0.05*w,1)+' ml/h';}
+    insP05:function(w){return n(0.05*w,1)+' ml/h';},
+    calcit:function(w){var d=r(4*w,10);return n(d)+' IE = '+n(d/100,1)+' ml';}
   };
   function vl(w){return Math.min(r(30*w,250),3000);}
 
@@ -906,6 +996,10 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
     ['Bicarbonato 8,4 % (manca)','iperK + acidosi: 50 ml in 5 min','invariato',0,'el'],
     ['Naloxone (manca)','0,1 mg ogni 2 min','invariato',0,'nk'],
     ['Flumazenil (manca)','0,2 mg, poi 0,1 mg/min, max 1 mg','invariato',0,'nk'],
+    ['Acido zoledronico (Zometa)','ipercalcemia: 4 mg in 100 ml NaCl 0,9 % in 15 min','solo se beneficio > rischio · meglio denosumab',1,'ca'],
+    ['Calcitonina','ipercalcemia: 4 IE/kg s.c. ogni 12 h (max 48 h)','invariata',0,'ca'],
+    ['Denosumab (Xgeva)','ipercalcemia: 120 mg s.c.','invariato · Ca ogni giorno (ipocalcemia)',1,'ca'],
+    ['Prednisolone (ipercalcemia)','50 mg 1-0-0 p.o./e.v.','invariato',0,'ca'],
     ['Furosemide (manca)','40 mg e.v.','80 mg e.v.',1,'nk']
   ];
   var tb=document.getElementById('aztb');
