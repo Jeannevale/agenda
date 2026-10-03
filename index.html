@@ -818,6 +818,73 @@ table.labtab td.pname .namebtn:hover{text-decoration-color:var(--accent); color:
 #medFrame{position:fixed; top:var(--mb); left:0; right:0; bottom:0; width:100%;
   height:calc(100dvh - var(--mb)); border:0; background:var(--bg); display:block}
 
+/* ================= scenari: tessere come i Medis ================= */
+:root{ --c-emo:#B0222B; --c-rit:#C0561B; --c-inf:#0B6B5F; --c-neu:#1D5CA6;
+  --c-ren:#5B34B8; --c-met:#8A5200; --c-isc:#A3245E; --c-alt:#5A6B72; }
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){ --c-emo:#FF7A7F; --c-rit:#F29A62;
+  --c-inf:#62D0BF; --c-neu:#86B6F2; --c-ren:#BCA2FF; --c-met:#F4B657; --c-isc:#F28AB8; --c-alt:#9FB1B7; } }
+:root[data-theme="dark"]{ --c-emo:#FF7A7F; --c-rit:#F29A62; --c-inf:#62D0BF; --c-neu:#86B6F2;
+  --c-ren:#BCA2FF; --c-met:#F4B657; --c-isc:#F28AB8; --c-alt:#9FB1B7; }
+#scnRoot{padding-bottom:40px}
+.scnstick{position:sticky; top:var(--mb); z-index:21; background:var(--bg);
+  padding-bottom:10px; border-bottom:1px solid var(--line)}
+.scnstick .pathead{position:static; border-bottom:none}
+.scntiles{display:grid; grid-template-columns:repeat(auto-fill,minmax(min(150px,100%),1fr));
+  gap:8px; margin-top:12px}
+.scntile{text-align:left; background:var(--surface); border:1px solid var(--line); border-radius:10px;
+  padding:10px 12px; display:flex; flex-direction:column; gap:3px; min-height:92px; position:relative;
+  border-left:4px solid var(--line)}
+.scntile:hover{border-color:var(--cc)}
+.scntile.going{border-left-color:var(--cc); box-shadow:var(--shadow)}
+.scntile .k{font-size:10.5px; text-transform:uppercase; letter-spacing:.07em; font-weight:700; color:var(--cc)}
+.scntile .t{font-family:"IBM Plex Sans Condensed","IBM Plex Sans",sans-serif; font-weight:600;
+  font-size:17px; line-height:1.15}
+.scntile .s{font-size:12.5px; color:var(--ink-3); line-height:1.3}
+.scntile .pr{margin-top:auto; padding-top:4px; font-family:"IBM Plex Mono",monospace; font-size:11.5px;
+  color:var(--cc); font-weight:500}
+.scntile.add{border-style:dashed; border-left-width:1px; align-items:center; justify-content:center;
+  color:var(--accent); font-family:"IBM Plex Sans Condensed","IBM Plex Sans",sans-serif; font-weight:600;
+  font-size:15px; background:transparent}
+.scntile.add .plus{font-size:26px; line-height:1}
+/* la pagina di uno scenario */
+.scnhead .pdet-top{display:flex; align-items:center; gap:6px}
+.scnhead .sk{font-size:10.5px; text-transform:uppercase; letter-spacing:.07em; font-weight:700; color:var(--cc)}
+.scnhead .st{font-family:"IBM Plex Sans Condensed","IBM Plex Sans",sans-serif; font-weight:600;
+  font-size:20px; line-height:1.15}
+.scnbar{display:flex; gap:8px; align-items:center; margin-top:8px}
+.scnbar .scntag{width:96px; flex:none; padding:8px 10px; border:1px solid var(--line); border-radius:8px;
+  background:var(--surface); font-family:"IBM Plex Mono",monospace; font-size:13.5px}
+.scnbar .cnt{margin-left:auto; font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--ink-3)}
+.scncall{margin-top:12px; background:var(--alert-soft); color:var(--alert); border-radius:8px;
+  padding:8px 11px; font-size:13.5px; line-height:1.4}
+.scncall b{font-weight:600}
+.scnrows{margin-top:10px; background:var(--surface); border:1px solid var(--line); border-radius:10px;
+  overflow:hidden}
+.scnrow{display:grid; grid-template-columns:40px minmax(0,1fr) minmax(0,1.15fr); align-items:start;
+  gap:0 8px; padding:8px 10px 8px 4px; border-top:1px solid var(--line)}
+.scnrow:first-child{border-top:0}
+.scnrow.ok{background:color-mix(in srgb, var(--rail-done-soft) 70%, transparent)}
+.scnchk{width:32px; height:32px; margin:2px 0 0 4px; border-radius:8px; border:1.5px solid var(--line-strong);
+  display:grid; place-items:center; color:transparent; background:var(--surface)}
+.scnrow.ok .scnchk{background:var(--rail-done); border-color:var(--rail-done); color:#fff}
+.scnk{padding-top:7px; font-weight:600; font-size:14.5px; line-height:1.25; overflow-wrap:anywhere;
+  cursor:pointer; -webkit-user-select:none; user-select:none}
+.scnrow.ok .scnk{color:var(--ink-2)}
+.scnk .ts{display:block; font-family:"IBM Plex Mono",monospace; font-weight:400; font-size:11px;
+  color:var(--ink-3); margin-top:3px}
+.scnv{width:100%; min-height:36px; resize:none; overflow:hidden; padding:7px 9px; border:1px solid var(--line);
+  border-radius:8px; background:var(--surface-2); color:var(--ink); font-family:"IBM Plex Mono",monospace;
+  font-size:14px; line-height:1.4}
+.scnv::placeholder{color:var(--ink-3); font-family:"IBM Plex Sans",sans-serif; font-size:13px}
+.scnv:focus{border-color:var(--accent); background:var(--surface)}
+.catchips{display:flex; flex-wrap:wrap; gap:6px}
+.catchip{padding:7px 11px; border-radius:999px; border:1px solid var(--line-strong); background:var(--surface);
+  font-size:13px; color:var(--cc); font-weight:600}
+.catchip.on{background:var(--cc); border-color:var(--cc); color:var(--surface)}
+.sheet input.scnin{width:100%; padding:10px; border:1px solid var(--line-strong); border-radius:8px;
+  background:var(--surface); font-size:15px}
+@media (max-width:380px){ .scnrow{grid-template-columns:38px minmax(0,1fr) minmax(0,1.05fr)} .scnk{font-size:14px} }
+
 /* ================= sistemi: il disegno ================= */
 :root{ --sysbody:#DCE8EA; }
 @media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){ --sysbody:#20363A; } }
@@ -976,6 +1043,7 @@ table.labtab td.pname .namebtn:hover{text-decoration-color:var(--accent); color:
     <button id="modeNote" data-mode="note"><span id="modeNoteName">Note</span></button>
     <button id="modeCol" data-mode="col"><span id="modeColName">Colleghi</span></button>
     <button id="modeMed" data-mode="med"><span id="modeMedName">Medis</span></button>
+    <button id="modeScn" data-mode="scn"><span id="modeScnName">Scenari</span></button>
     <button id="modeMor" data-mode="mor"><span id="modeMorName">Morale</span></button>
   </div>
 </div>
@@ -1106,6 +1174,7 @@ table.labtab td.pname .namebtn:hover{text-decoration-color:var(--accent); color:
 </div>
 
 <div class="shell" id="medShell" hidden><iframe id="medFrame" title="Medis"></iframe></div>
+<div class="shell" id="scnShell" hidden><div id="scnRoot"></div></div>
 <div class="shell" id="morShell" hidden>
   <header class="pathead" id="morHead">
     <div class="ptitle"><span id="morTitle">Morale</span><span class="n" id="morN"></span></div>
@@ -1183,6 +1252,7 @@ function indietroInterno(){
   if(mode === "pat" && pview.id && sysAperto){ sysChiudi(); return; }
   if(mode === "pat" && pview.id){ $("patBack").click(); return; }
   if(mode === "col" && cview.id){ $("colBack").click(); return; }
+  if(mode === "scn" && sview.id){ scnChiudi(); return; }
 }
 function armaIndietro(){
   if(!window.history || !history.pushState) return;
@@ -1343,6 +1413,7 @@ function load(){
         if(Array.isArray(o.colleagues)) S.colleagues = o.colleagues;
         if(Array.isArray(o.morals)) S.morals = o.morals;
         if(typeof o.notebook === "string") S.notebook = o.notebook;
+        if(o.scenari && typeof o.scenari === "object") S.scenari = o.scenari;
         if(o.settings) S.settings = Object.assign(S.settings, o.settings);
         return true;
       }
@@ -2382,8 +2453,9 @@ function openSettings(){
         if(Array.isArray(o.colleagues)) S.colleagues = o.colleagues;
         if(Array.isArray(o.morals)) S.morals = o.morals;
         if(typeof o.notebook === "string") S.notebook = o.notebook;
+        if(o.scenari && typeof o.scenari === "object") S.scenari = o.scenari;
         if(o.settings) S.settings = Object.assign(S.settings, o.settings);
-        save(); close(); render(); renderPat(); renderNote(); showToast(t("imported"));
+        save(); close(); render(); renderPat(); renderNote(); if(mode === "scn") renderScn(); showToast(t("imported"));
       }catch(e){ showToast(t("importErr")); }
     };
     ba.appendChild(cp); ba.appendChild(im);
@@ -3282,6 +3354,7 @@ function setMode(m){
   $("colShell").hidden = (m !== "col");
   $("morShell").hidden = (m !== "mor");
   $("medShell").hidden = (m !== "med");
+  $("scnShell").hidden = (m !== "scn");
   document.querySelector("footer.compose").hidden = (m !== "shift");
   $("modeShift").classList.toggle("on", m === "shift");
   $("modePat").classList.toggle("on", m === "pat");
@@ -3289,6 +3362,8 @@ function setMode(m){
   $("modeCol").classList.toggle("on", m === "col");
   $("modeMor").classList.toggle("on", m === "mor");
   $("modeMed").classList.toggle("on", m === "med");
+  $("modeScn").classList.toggle("on", m === "scn");
+  $("modeScnName").textContent = t("mScn");
   $("modeShiftName").textContent = t("mShift");
   $("modePatName").textContent = t("mPat");
   $("modeNoteName").textContent = t("mNote");
@@ -3307,6 +3382,7 @@ function setMode(m){
   else if(m === "note") renderNote();
   else if(m === "col") renderCol();
   else if(m === "mor") renderMor();
+  else if(m === "scn") renderScn();
   else if(m === "med"){
     /* si carica solo la prima volta che lo apri: l'avvio dell'app resta veloce */
     var fr = $("medFrame");
@@ -5900,8 +5976,9 @@ function initPat(){
   initNote();
   initCol();
   initMor();
+  initScn();
   var ultimo = S.settings.lastMode;
-  setMode(["pat","note","col","mor","med"].indexOf(ultimo) >= 0 ? ultimo : "shift");
+  setMode(["pat","note","col","mor","med","scn"].indexOf(ultimo) >= 0 ? ultimo : "shift");
 }
 
 /* ------------------------------------------------- modificare una nota scritta
@@ -8076,6 +8153,457 @@ function sysPerRiassunto(p){
       (sysHaTesto(s) ? ": " + s.text.trim().replace(/\s*\n\s*/g, " / ") : ""));
   });
   return out;
+}
+
+/* ================================================================
+   SCENARI — i casi del Dienst, a tessere come i Medis
+   Ogni scenario e' un modello con le sue parole chiave. Aprendolo, accanto
+   a ogni parola chiave c'e' la casella "controllato" e lo spazio per il
+   valore: scrivendo un valore la casella si spunta da sola (si puo' togliere).
+   "Ricomincia" svuota valori e caselle per il prossimo paziente.
+   Dati: S.scenari = { models:[{ id, cat, title, sub, call, items:[{ id, k, ph }] }],
+                       vals:{ <modelId>:{ tag, items:{ <itemId>:{ v, ok, ts, man } } } } }
+   ================================================================ */
+
+Object.assign(I18N.it, {
+  mScn:"Scenari", scnTitle:"Scenari", scnSearch:"Cerca…", scnNew:"Nuovo scenario",
+  scnEdit:"Modifica scenario", scnReset:"Ricomincia", scnResetDone:"Scenario svuotato",
+  scnVal:"valore…", scnTag:"Zi.", scnCall:"Chiama subito se:",
+  scnName:"Nome", scnCat:"Categoria", scnSub:"Sotto il nome (facoltativo)",
+  scnCallF:"Chiama subito se… (facoltativo)",
+  scnItems:"Parole chiave — una per riga",
+  scnItemsPh:"Hb | da … a … g/dl\nDrenaggi | ml/h\nKreuzblut",
+  scnItemsNote:"Dopo la barra | puoi scrivere un suggerimento per il valore.",
+  scnNeedName:"Scrivi il nome dello scenario.", scnNeedItems:"Scrivi almeno una parola chiave.",
+  scnDel:"Elimina scenario", scnDeleted:"Scenario eliminato", scnEmpty:"Nessuno scenario con questo testo.",
+  scnAdd:"Nuovo"
+});
+Object.assign(I18N.de, {
+  mScn:"Szenarien", scnTitle:"Szenarien", scnSearch:"Suchen…", scnNew:"Neues Szenario",
+  scnEdit:"Szenario bearbeiten", scnReset:"Neu beginnen", scnResetDone:"Szenario geleert",
+  scnVal:"Wert…", scnTag:"Zi.", scnCall:"Sofort anrufen bei:",
+  scnName:"Name", scnCat:"Kategorie", scnSub:"Unter dem Namen (optional)",
+  scnCallF:"Sofort anrufen bei… (optional)",
+  scnItems:"Stichworte — eins pro Zeile",
+  scnItemsPh:"Hb | von … auf … g/dl\nDrainagen | ml/h\nKreuzblut",
+  scnItemsNote:"Nach dem Strich | kannst du einen Hinweis für den Wert schreiben.",
+  scnNeedName:"Schreib den Namen des Szenarios.", scnNeedItems:"Schreib mindestens ein Stichwort.",
+  scnDel:"Szenario löschen", scnDeleted:"Szenario gelöscht", scnEmpty:"Kein Szenario mit diesem Text.",
+  scnAdd:"Neu"
+});
+
+var SCN_CAT = [
+  { id:"emo", it:"Emodinamica", de:"Hämodynamik" },
+  { id:"isc", it:"Ischemia",    de:"Ischämie" },
+  { id:"rit", it:"Ritmo",       de:"Rhythmus" },
+  { id:"inf", it:"Infezione",   de:"Infektion" },
+  { id:"ren", it:"Reni",        de:"Niere" },
+  { id:"neu", it:"Neuro",       de:"Neuro" },
+  { id:"met", it:"Metabolico",  de:"Stoffwechsel" },
+  { id:"alt", it:"Altro",       de:"Sonstiges" }
+];
+function scnCatName(id){
+  var c = SCN_CAT.filter(function(x){ return x.id === id; })[0] || SCN_CAT[SCN_CAT.length - 1];
+  return c[S.settings.ui] || c.it;
+}
+function scnCatVar(id){
+  return "var(--c-" + (SCN_CAT.some(function(x){ return x.id === id; }) ? id : "alt") + ")";
+}
+
+/* gli scenari di partenza: quelli discussi per il Dienst */
+var SCN_BASE = [
+  { cat:"emo", title:"Sanguinamento", sub:"Drenaggi · Hb · coagulazione",
+    call:">400 ml nella prima ora · >200 ml/h per 2 h · drenaggio che si ferma di colpo",
+    items:["Drenaggi|ml ultima ora · ora prima", "Caduta Hb|da … a … g/dl", "Piastrine|/nl", "Quick · INR",
+      "aPTT|s", "Fibrinogeno|g/l", "ACT|s", "Ca²⁺ ionizzato|mmol/l", "Temperatura|°C", "PAS|mmHg",
+      "Heparin-Perfusor in pausa", "Kreuzblut · EK"] },
+  { cat:"emo", title:"Tamponamento", sub:"Drenaggi · eco · ZVD",
+    call:"Ipotensione · catecolamine in aumento → Re-Thorakotomie",
+    items:["FC|/min", "MAP|mmHg", "ZVD|mmHg", "Diuresi|ml/h", "Catecolamine|dose", "Drenaggi ausstreifen · Sog",
+      "Eco: versamento|mm, dove", "Lattato|mmol/l", "Bolo volume|ml · risposta", "Kreuzblut · OP avvisata"] },
+  { cat:"emo", title:"Ipotensione", sub:"Misura · perfusori · lattato",
+    call:"MAP <65 mmHg nonostante il volume · lattato in salita",
+    items:["Arteria azzerata · livello", "Perfusori · catecolamine|dose", "Ritmo · pacemaker", "MAP|mmHg",
+      "Lattato|mmol/l", "ZVD|mmHg", "Diuresi|ml/h", "Drenaggi|ml/h", "Bolo 250 ml · PLR|risposta"] },
+  { cat:"isc", title:"Troponina · CK alte", sub:"ECG · trend · eco",
+    call:"Nuovi ST↑ · aritmie ventricolari · lattato in salita · instabilità",
+    items:["hs-Troponina|ng/l · ora", "Troponina +3 h|ng/l", "CK-MB|U/l", "ECG vs preop|ST · Q · BBS",
+      "Lattato|mmol/l", "Catecolamine|dose", "Eco: cinetica|nuova acinesia?"] },
+  { cat:"rit", title:"Fibrillazione atriale", sub:"K⁺ · Mg²⁺ · trigger",
+    call:"Instabile → cardioversione con l'Anestesia",
+    items:["ECG 12 derivazioni", "FC|/min", "MAP|mmHg", "K⁺|obiettivo ≥ 4,5 mmol/l", "Mg²⁺|obiettivo ≥ 1,0 mmol/l",
+      "Trigger: volume · dolore · febbre", "Eco: versamento", "Magnesium 2 g i.v.|ora", "Amiodaron (con OA)|ora"] },
+  { cat:"inf", title:"Febbre", sub:"Fonte · colture · PCT",
+    call:"Ipotensione · lattato >2 mmol/l · nuove catecolamine · sterno instabile con pus",
+    items:["Temperatura|°C", "Ferita sternale", "Ferita safena", "ZVK · arteria|giorni in sede",
+      "Polmoni · Rx-Thorax", "Urine: Status · Kultur", "Addome", "Diarrea · C. diff", "Blutkulturen 2 paia",
+      "CRP|mg/l", "PCT|ng/ml", "Lattato|mmol/l", "Paracetamol 1 g i.v.|ora"] },
+  { cat:"ren", title:"Oliguria · creatinina", sub:"Catetere · K⁺ · bilancio",
+    call:"K⁺ >6,5 mmol/l o ECG alterato · pH <7,2 · anuria con sovraccarico",
+    items:["Diuresi|ml/kg/h", "Catetere lavato · Blasenscanner", "Creatinina|mg/dl", "K⁺|mmol/l", "pH · BE",
+      "Bilancio · peso", "MAP|mmHg", "Farmaci nefrotossici", "Clexane: CrCl < 30 → 20 mg"] },
+  { cat:"neu", title:"Deficit neurologico", sub:"Ora · glicemia · TC",
+    call:"Sempre subito: Neurologie + TC",
+    items:["Ora di inizio|hh:mm", "Glicemia|mg/dl", "Deficit|lato · cosa", "Pupille", "TC cranica",
+      "Neurologie chiamata|ora", "OA informato|ora"] }
+];
+
+var sview = { id:null, q:"", y:0 };
+
+function scnData(){
+  if(!S.scenari || typeof S.scenari !== "object") S.scenari = {};
+  var d = S.scenari;
+  if(!Array.isArray(d.models)) d.models = [];
+  if(!d.vals || typeof d.vals !== "object") d.vals = {};
+  return d;
+}
+function scnParseItem(line, old){
+  var parts = String(line).split("|");
+  var k = parts[0].trim(), ph = parts.slice(1).join("|").trim();
+  if(!k) return null;
+  /* stessa parola chiave = stessa riga: il valore scritto non si perde */
+  var same = (old || []).filter(function(x){ return x.k.toLowerCase() === k.toLowerCase(); })[0];
+  return { id: same ? same.id : uid(), k:k, ph:ph };
+}
+function scnSeed(){
+  var d = scnData();
+  if(d.seeded) return;
+  SCN_BASE.forEach(function(b){
+    d.models.push({ id:uid(), cat:b.cat, title:b.title, sub:b.sub, call:b.call,
+      items:b.items.map(function(l){ return scnParseItem(l); }) });
+  });
+  d.seeded = true;
+  save();
+}
+function scnById(id){ return scnData().models.filter(function(m){ return m.id === id; })[0] || null; }
+function scnVals(m){
+  var d = scnData();
+  var v = d.vals[m.id];
+  if(!v || typeof v !== "object") v = d.vals[m.id] = { tag:"", items:{} };
+  if(!v.items) v.items = {};
+  return v;
+}
+function scnCount(m){
+  var v = (scnData().vals[m.id] || {}).items || {}, n = 0, used = false;
+  m.items.forEach(function(it){
+    var x = v[it.id];
+    if(x && x.ok) n++;
+    if(x && (x.ok || (x.v || "").trim())) used = true;
+  });
+  return { done:n, tot:m.items.length, used:used || !!((scnData().vals[m.id] || {}).tag || "").trim() };
+}
+
+function renderScn(){
+  scnData();
+  $("modeScnName").textContent = t("mScn");
+  if(sview.id && scnById(sview.id)) renderScnPage();
+  else { sview.id = null; renderScnHome(); }
+}
+
+/* ------------------------------------------------------------- le tessere */
+function renderScnHome(){
+  var root = $("scnRoot");
+  root.textContent = "";
+  var stick = document.createElement("div"); stick.className = "scnstick";
+  var head = document.createElement("header"); head.className = "pathead";
+  var ti = document.createElement("div"); ti.className = "ptitle";
+  var tt = document.createElement("span"); tt.textContent = t("scnTitle");
+  var nn = document.createElement("span"); nn.className = "n"; nn.textContent = String(scnData().models.length);
+  ti.appendChild(tt); ti.appendChild(nn);
+  var nb = document.createElement("button"); nb.className = "newbtn"; nb.textContent = "+";
+  nb.setAttribute("aria-label", t("scnNew"));
+  nb.onclick = function(){ openScnSheet(null); };
+  head.appendChild(ti); head.appendChild(nb);
+  stick.appendChild(head);
+
+  var fr = document.createElement("div"); fr.className = "patfilter";
+  var sw = document.createElement("div"); sw.className = "searchwrap";
+  var q = document.createElement("input"); q.placeholder = t("scnSearch"); q.autocomplete = "off";
+  q.value = sview.q;
+  var sx = document.createElement("button"); sx.className = "sx"; sx.hidden = !sview.q;
+  sx.setAttribute("aria-label", t("del")); sx.appendChild(svgIcon("x", 15));
+  sw.appendChild(q); sw.appendChild(sx); fr.appendChild(sw);
+  stick.appendChild(fr);
+  root.appendChild(stick);
+
+  var grid = document.createElement("div"); grid.className = "scntiles";
+  root.appendChild(grid);
+
+  function fill(){
+    grid.textContent = "";
+    var qq = sview.q.trim().toLowerCase();
+    var list = scnData().models.filter(function(m){
+      if(!qq) return true;
+      var hay = [m.title, m.sub, m.call, scnCatName(m.cat)].concat(m.items.map(function(i){ return i.k; }))
+        .join(" ").toLowerCase();
+      return hay.indexOf(qq) >= 0;
+    });
+    list.forEach(function(m){ grid.appendChild(scnTile(m)); });
+    if(!list.length){
+      var e = document.createElement("p"); e.className = "emptysm"; e.textContent = t("scnEmpty");
+      e.style.gridColumn = "1 / -1";
+      grid.appendChild(e);
+    }
+    if(!qq){
+      var add = document.createElement("button"); add.className = "scntile add";
+      var pl = document.createElement("span"); pl.className = "plus"; pl.textContent = "+";
+      var lb = document.createElement("span"); lb.textContent = t("scnNew");
+      add.appendChild(pl); add.appendChild(lb);
+      add.onclick = function(){ openScnSheet(null); };
+      grid.appendChild(add);
+    }
+  }
+  q.addEventListener("input", function(){ sview.q = q.value; sx.hidden = !q.value; fill(); });
+  sx.onclick = function(){ sview.q = ""; q.value = ""; sx.hidden = true; fill(); q.focus(); };
+  fill();
+}
+
+function scnTile(m){
+  var b = document.createElement("button"); b.className = "scntile";
+  b.style.setProperty("--cc", scnCatVar(m.cat));
+  var c = scnCount(m);
+  if(c.used) b.classList.add("going");
+  var k = document.createElement("span"); k.className = "k"; k.textContent = scnCatName(m.cat);
+  var tt = document.createElement("span"); tt.className = "t"; tt.textContent = m.title;
+  b.appendChild(k); b.appendChild(tt);
+  if(m.sub){ var s = document.createElement("span"); s.className = "s"; s.textContent = m.sub; b.appendChild(s); }
+  if(c.used){
+    var pr = document.createElement("span"); pr.className = "pr";
+    var tag = (scnVals(m).tag || "").trim();
+    pr.textContent = c.done + "/" + c.tot + (tag ? " · " + tag : "");
+    b.appendChild(pr);
+  }
+  b.onclick = function(){ scnApri(m.id); };
+  return b;
+}
+
+function scnApri(id){
+  sview.y = window.scrollY;
+  sview.id = id;
+  renderScnPage();
+  window.scrollTo(0, 0);
+}
+function scnChiudi(){
+  var a = document.activeElement; if(a && a.blur) a.blur();
+  sview.id = null;
+  renderScnHome();
+  var y = sview.y;
+  requestAnimationFrame(function(){ window.scrollTo(0, y); });
+}
+
+/* ------------------------------------------------------------- la pagina */
+function renderScnPage(){
+  var m = scnById(sview.id);
+  if(!m){ sview.id = null; renderScnHome(); return; }
+  var V = scnVals(m);
+  var root = $("scnRoot");
+  root.textContent = "";
+  root.style.setProperty("--cc", scnCatVar(m.cat));
+
+  var head = document.createElement("header"); head.className = "pdet-head scnhead";
+  var top = document.createElement("div"); top.className = "pdet-top";
+  var back = document.createElement("button"); back.className = "iconbtn"; back.innerHTML = "&#8249;";
+  back.setAttribute("aria-label", t("scnTitle"));
+  back.onclick = scnChiudi;
+  var id = document.createElement("div"); id.className = "pdet-id";
+  var sk = document.createElement("div"); sk.className = "sk"; sk.textContent = scnCatName(m.cat);
+  var st = document.createElement("div"); st.className = "st"; st.textContent = m.title;
+  id.appendChild(sk); id.appendChild(st);
+  var ed = document.createElement("button"); ed.className = "iconbtn";
+  ed.setAttribute("aria-label", t("scnEdit")); ed.appendChild(svgIcon("gear", 18));
+  ed.onclick = function(){ openScnSheet(m); };
+  top.appendChild(back); top.appendChild(id); top.appendChild(ed);
+  head.appendChild(top);
+
+  var bar = document.createElement("div"); bar.className = "scnbar";
+  var tag = document.createElement("input"); tag.className = "scntag"; tag.placeholder = t("scnTag");
+  tag.autocomplete = "off"; tag.value = V.tag || "";
+  tag.addEventListener("input", function(){ V.tag = tag.value; salvaPresto(); });
+  var rs = document.createElement("button"); rs.className = "ghostsm"; rs.textContent = t("scnReset");
+  rs.onclick = function(){ scnRicomincia(m); };
+  var cnt = document.createElement("span"); cnt.className = "cnt";
+  bar.appendChild(tag); bar.appendChild(rs); bar.appendChild(cnt);
+  head.appendChild(bar);
+  root.appendChild(head);
+
+  if((m.call || "").trim()){
+    var call = document.createElement("div"); call.className = "scncall";
+    var cb = document.createElement("b"); cb.textContent = t("scnCall") + " ";
+    call.appendChild(cb); call.appendChild(document.createTextNode(m.call));
+    root.appendChild(call);
+  }
+
+  var rows = document.createElement("div"); rows.className = "scnrows";
+  m.items.forEach(function(it){ rows.appendChild(scnRow(m, it, V, conta)); });
+  root.appendChild(rows);
+  conta();
+
+  function conta(){
+    var c = scnCount(m);
+    cnt.textContent = c.done + "/" + c.tot;
+  }
+}
+
+var scnSaveT = null;
+function salvaPresto(){
+  clearTimeout(scnSaveT);
+  scnSaveT = setTimeout(save, 250);
+}
+
+function scnRow(m, it, V, conta){
+  var x = V.items[it.id] || { v:"", ok:false, ts:0, man:false };
+  var row = document.createElement("div"); row.className = "scnrow" + (x.ok ? " ok" : "");
+  var chk = document.createElement("button"); chk.className = "scnchk";
+  chk.setAttribute("aria-label", it.k); chk.setAttribute("aria-pressed", x.ok ? "true" : "false");
+  chk.appendChild(svgIcon("check", 17, 2.4));
+  var k = document.createElement("div"); k.className = "scnk"; k.textContent = it.k;
+  var ts = document.createElement("span"); ts.className = "ts";
+  k.appendChild(ts);
+  var v = document.createElement("textarea"); v.className = "scnv"; v.rows = 1;
+  v.placeholder = it.ph || t("scnVal"); v.value = x.v || "";
+  v.setAttribute("aria-label", it.k);
+
+  function tieni(){ V.items[it.id] = x; }
+  function ora(){ ts.textContent = x.ts ? fmtTime(x.ts) : ""; }
+  function cresci(){ v.style.height = "auto"; v.style.height = v.scrollHeight + "px"; }
+  function spunta(on){
+    x.ok = on; row.classList.toggle("ok", on);
+    chk.setAttribute("aria-pressed", on ? "true" : "false");
+    conta();
+  }
+  function tocco(){
+    x.man = true; spunta(!x.ok);
+    if(x.ok && !x.ts) x.ts = Date.now();
+    ora(); tieni(); save();
+    if(S.settings.vibrate && navigator.vibrate) try{ navigator.vibrate(8); }catch(e){}
+  }
+  chk.onclick = tocco;
+  k.onclick = tocco;
+  v.addEventListener("input", function(){
+    x.v = v.value;
+    x.ts = Date.now();
+    /* il primo valore spunta la casella, finche' non la tocchi tu */
+    if(!x.man) spunta(!!v.value.trim());
+    ora(); cresci(); tieni(); salvaPresto();
+  });
+  v.addEventListener("blur", function(){ save(); });
+  ora();
+  row.appendChild(chk); row.appendChild(k); row.appendChild(v);
+  requestAnimationFrame(cresci);
+  return row;
+}
+
+function scnRicomincia(m){
+  var d = scnData();
+  var prima = d.vals[m.id];
+  d.vals[m.id] = { tag:"", items:{} };
+  save(); renderScnPage();
+  showToast(t("scnResetDone"), t("undo"), function(){
+    d.vals[m.id] = prima || { tag:"", items:{} };
+    save(); renderScn();
+  });
+}
+
+/* ------------------------------------------------------------- nuovo / modifica */
+function openScnSheet(m){
+  var nuovo = !m;
+  var cat = m ? m.cat : "alt";
+  openSheet(function(sheet, close){
+    var h = document.createElement("h2"); h.textContent = nuovo ? t("scnNew") : t("scnEdit");
+    sheet.appendChild(h);
+
+    sheet.appendChild(labelEl(t("scnName")));
+    var nm = document.createElement("input"); nm.className = "scnin"; nm.value = m ? m.title : "";
+    sheet.appendChild(nm);
+
+    sheet.appendChild(labelEl(t("scnCat")));
+    var chips = document.createElement("div"); chips.className = "catchips";
+    SCN_CAT.forEach(function(c){
+      var b = document.createElement("button"); b.className = "catchip" + (c.id === cat ? " on" : "");
+      b.style.setProperty("--cc", scnCatVar(c.id));
+      b.textContent = c[S.settings.ui] || c.it;
+      b.onclick = function(){
+        cat = c.id;
+        Array.prototype.forEach.call(chips.children, function(z){ z.classList.remove("on"); });
+        b.classList.add("on");
+      };
+      chips.appendChild(b);
+    });
+    sheet.appendChild(chips);
+
+    sheet.appendChild(labelEl(t("scnItems")));
+    var ta = document.createElement("textarea"); ta.className = "pastearea"; ta.style.minHeight = "170px";
+    ta.placeholder = t("scnItemsPh");
+    ta.value = m ? m.items.map(function(i){ return i.k + (i.ph ? " | " + i.ph : ""); }).join("\n") : "";
+    sheet.appendChild(ta);
+    var nt = document.createElement("p"); nt.className = "labnote"; nt.textContent = t("scnItemsNote");
+    sheet.appendChild(nt);
+
+    sheet.appendChild(labelEl(t("scnSub")));
+    var sb = document.createElement("input"); sb.className = "scnin"; sb.value = m ? (m.sub || "") : "";
+    sheet.appendChild(sb);
+
+    sheet.appendChild(labelEl(t("scnCallF")));
+    var cl = document.createElement("input"); cl.className = "scnin"; cl.value = m ? (m.call || "") : "";
+    sheet.appendChild(cl);
+
+    var acts = document.createElement("div"); acts.className = "sheet-actions";
+    var ok = document.createElement("button"); ok.className = "btn"; ok.style.background = "var(--accent)";
+    ok.textContent = t("saveBtn");
+    ok.onclick = function(){
+      var title = nm.value.trim();
+      if(!title){ showToast(t("scnNeedName")); nm.focus(); return; }
+      var items = ta.value.split("\n").map(function(l){ return scnParseItem(l, m ? m.items : []); })
+        .filter(Boolean);
+      if(!items.length){ showToast(t("scnNeedItems")); ta.focus(); return; }
+      if(nuovo){
+        m = { id:uid(), cat:cat, title:title, sub:sb.value.trim(), call:cl.value.trim(), items:items };
+        scnData().models.push(m);
+      } else {
+        m.cat = cat; m.title = title; m.sub = sb.value.trim(); m.call = cl.value.trim(); m.items = items;
+      }
+      save(); close();
+      if(nuovo) scnApri(m.id); else renderScn();
+    };
+    var cn = document.createElement("button"); cn.className = "btn btn-ghost";
+    cn.textContent = t("cancel"); cn.onclick = close;
+    acts.appendChild(ok); acts.appendChild(cn);
+    if(!nuovo){
+      var del = document.createElement("button"); del.className = "btn btn-ghost";
+      del.style.cssText = "color:var(--alert); border-color:var(--alert); margin-left:auto";
+      del.textContent = t("scnDel");
+      del.onclick = function(){ close(); scnElimina(m); };
+      acts.appendChild(del);
+    }
+    sheet.appendChild(acts);
+    if(nuovo) setTimeout(function(){ nm.focus(); }, 80);
+  });
+}
+
+function scnElimina(m){
+  var d = scnData();
+  var idx = d.models.indexOf(m);
+  if(idx < 0) return;
+  var vals = d.vals[m.id];
+  d.models.splice(idx, 1);
+  delete d.vals[m.id];
+  sview.id = null;
+  save(); renderScnHome();
+  showToast(t("scnDeleted"), t("undo"), function(){
+    d.models.splice(Math.min(idx, d.models.length), 0, m);
+    if(vals) d.vals[m.id] = vals;
+    save(); renderScn();
+  });
+}
+
+function initScn(){
+  scnSeed();
+  $("modeScn").onclick = function(){
+    /* un secondo tocco sul tasto riporta alle tessere */
+    if(mode === "scn" && sview.id){ scnChiudi(); return; }
+    setMode("scn");
+  };
+  $("modeScnName").textContent = t("mScn");
 }
 
 /* ---------------------------------------------------------------- boot */
