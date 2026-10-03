@@ -83,7 +83,7 @@ ol.steps>li:first-child::before{top:0}
 a.x{color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid currentColor}
 
 /* home */
-.search{display:flex;gap:8px;margin:14px 0 10px}
+.search{display:flex;gap:8px;margin:0 -16px 10px;padding:10px 16px;position:sticky;top:calc(env(safe-area-inset-top,0px) + var(--toph,58px));z-index:19;background:var(--bg)}
 .search input{flex:1;min-width:0;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:10px 12px;font:inherit;color:var(--ink)}
 .tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(158px,100%),1fr));gap:8px}
 .tile{text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:3px;min-height:88px}
@@ -143,7 +143,7 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
     <button class="tile" data-go="ak" data-k="anticoagulazione clexane enoxaparina eparina pausa pre operatoria intervento"><span class="k pro">Procedura</span><span class="t">Anticoag. pre-OP</span><span class="s">Pause Clexane · eparina</span></button>
     <button class="tile" data-go="ms" data-k="magensonde sondino naso gastrico"><span class="k pro">Procedura</span><span class="t">Sondino gastrico</span><span class="s">Controindicazioni</span></button>
     <button class="tile" data-go="el" data-k="potassio ipokaliemia iperkaliemia ipercaliemia kcl magnesio elettroliti calcio gluconato cloruro bicarbonato insulina glucosio salbutamolo lokelma dialisi"><span class="k met">Metabolico</span><span class="t">Potassio · Magnesio</span><span class="s">Ipo- e iperkaliemia · calcio · bicarbonato</span></button>
-    <button class="tile" data-go="ca" data-k="ipercalcemia calcio alto ca calcemia nacl calcitonina acido zoledronico zoledronato zometa denosumab xgeva prednisolone dialisi qt corto aritmia"><span class="k met">Metabolico</span><span class="t">Ipercalcemia</span><span class="s">NaCl · calcitonina · zoledronato</span></button>
+    <button class="tile" data-go="ca" data-k="ipocalcemia calcio basso calciumgluconat calciumchlorid calcitriol rocaltrol tetania ipercalcemia calcio alto ca calcemia nacl calcitonina acido zoledronico zoledronato zometa denosumab xgeva prednisolone dialisi qt corto aritmia"><span class="k met">Metabolico</span><span class="t">Calcio: ipo · iper</span><span class="s">Calciumgluconat · NaCl · zoledronato</span></button>
     <button class="tile" data-go="glu" data-k="ipoglicemia iperglicemia glicemia zucchero glucosio glucagone glucagen insulina actrapid lantus glargin novorapid humalog fiasp apidra huminsulin insuman berlinsulin abasaglar toujeo levemir tresiba protaphane actraphane novomix correzione schema chetoacidosi sglt2 metformin"><span class="k met">Metabolico</span><span class="t">Glicemia</span><span class="s">Ipo · iper · Actrapid · Lantus</span></button>
     <button class="tile" data-go="az" data-k="farmaci elenco a-z dosi renale gfr insufficienza"><span class="k ref">Riferimento</span><span class="t">Farmaci A–Z</span><span class="s">Tutte le dosi · GFR &lt; 30</span></button>
   </div>
@@ -634,7 +634,7 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
         <div class="prep" style="color:var(--ink)">Calcio cloruro 10 % 10 ml bolo rapido + bicarbonato 8,4 % 50 ml rapido (altra linea) + insulina/glucosio · dialisi durante RCP.</div></div>
       <div class="rx"><div class="nm">Digitale</div>
         <div class="prep" style="color:var(--ink)">Calcio in 30 min, non a bolo.</div></div>
-      <div class="rx">Calcio alto → <a class="x" href="#ca">ipercalcemia</a></div>
+      <div class="rx">Calcio basso o alto → <a class="x" href="#ca">ipo- e ipercalcemia</a></div>
     </div>
     <div class="blk">
       <h3>In cardiochirurgia</h3>
@@ -649,11 +649,49 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
 </section>
 
 <!-- ============ IPERCALCEMIA ============ -->
-<section class="page" id="ca" data-t="Ipercalcemia">
-  <div class="ph"><h2>Ipercalcemia</h2><span class="cat">Metabolico · 1 mmol/l = 4 mg/dl</span></div>
+<section class="page" id="ca" data-t="Calcio">
+  <div class="ph"><h2>Calcio: ipo · iper</h2><span class="cat">Metabolico · 1 mmol/l = 4 mg/dl</span></div>
   <div class="grid">
+    <div class="blk alert" id="ipoca">
+      <h3>Ipocalcemia</h3>
+      <p class="big">Ca ionizzato &lt; 1,0 mmol/l o sintomi = e.v. subito</p>
+      <p class="prep">Sintomi: parestesie, tetania, laringospasmo, convulsioni, QT lungo, aritmie, ipotensione/low output. Misura il Ca ionizzato (BGA): con albumina bassa il Ca totale inganna.</p>
+      <ol class="steps">
+        <li><b>Prima il magnesio</b> <span class="prep">(Mg &lt; 0,7 mmol/l: senza Mg il Ca non sale)</span>
+          <div class="rx"><div class="nm">Magnesiumsulfat</div>
+            <div class="dose">2 g in 100 ml NaCl 0,9 % in 20 min</div>
+            <div class="ren">1 g, solo con Mg basso misurato</div></div></li>
+        <li><b>Grave o sintomatica: bolo</b>
+          <div class="rx"><div class="nm">Calciumgluconat 10 %</div>
+            <div class="dose">20 ml (4,5 mmol) in 100 ml Glucose 5 % in 10 min</div>
+            <div class="prep">monitor ECG · va bene in periferia · <b>Effetto:</b> subito, dura 1–2 h → poi Perfusor</div>
+            <div class="ren same">invariato</div></div>
+          <div class="rx"><div class="nm">Peri-arresto, low output post-OP (con ZVK)</div>
+            <div class="dose">Calciumchlorid 10 % 10 ml e.v. in 2 min</div>
+            <div class="prep">solo ZVK: in periferia necrosi se stravasa</div></div></li>
+        <li><b>Mantenimento</b> <span class="prep">(dopo il bolo, se resta basso)</span>
+          <div class="rx"><div class="nm">Calciumgluconat 10 % Perfusor</div>
+            <div class="dose">50 ml puro via ZVK a 5 ml/h (= 1,1 mmol/h)</div>
+            <div class="prep">periferia: 100 ml in 1000 ml Glucose 5 % a 50 ml/h · Ca ionizzato ogni 4 h, adatta la velocità · target ≥ 1,1 mmol/l</div>
+            <div class="ren same">invariato</div></div></li>
+        <li><b>Lieve e asintomatica</b> <span class="prep">(Ca ionizzato 1,0–1,1)</span>
+          <div class="rx"><div class="nm">Calcium Sandoz forte 500 mg Brausetablette</div>
+            <div class="dose">1-0-1 p.o.</div>
+            <div class="prep">sciolta in un bicchiere d'acqua, lontano da L-Thyroxin e ciprofloxacina</div></div>
+          <div class="rx"><div class="nm">Calcitriol (Rocaltrol 0,25 µg)</div>
+            <div class="dose">0,25 µg 1-0-1 p.o.</div>
+            <div class="prep">se manca la vitamina D attiva: post-paratiroidectomia, insufficienza renale · <b>Effetto:</b> dopo 2 giorni</div>
+            <div class="ren">preferisci calcitriol al colecalciferolo · controlla fosfato</div></div></li>
+      </ol>
+      <ul class="l" style="margin-top:6px">
+        <li><b>Mai</b> nella stessa linea di <b>Natriumhydrogencarbonat</b> o <b>Ceftriaxon</b> (precipita).</li>
+        <li><b>Digitalis:</b> il calcio in 30 min, mai a bolo.</li>
+        <li><b>Cause in cardiochirurgia:</b> HLM, trasfusioni massive (citrato), alcalosi/iperventilazione, Mg basso, pancreatite.</li>
+        <li><b>Controllo:</b> Ca ionizzato 1 h dopo il bolo, poi ogni 4 h · Mg, K⁺, fosfato.</li>
+      </ul>
+    </div>
     <div class="blk">
-      <h3>Quanto è grave</h3>
+      <h3>Ipercalcemia: quanto è grave</h3>
       <p class="prep"><b>Ca corretto</b> = Ca totale + 0,02 × (40 − albumina g/l) · oppure Ca ionizzato (BGA, normale 1,15–1,30 mmol/l).</p>
       <div class="tbl"><table>
         <thead><tr><th>Ca corretto mmol/l</th><th>mg/dl</th><th></th></tr></thead>
@@ -667,7 +705,7 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
     </div>
 
     <div class="blk alert">
-      <h3>Togli subito</h3>
+      <h3>Ipercalcemia: togli subito</h3>
       <ul class="l">
         <li><b>Calcio</b> p.o. ed e.v., <b>vitamina D</b></li>
         <li><b>Tiazidici</b> (HCT, xipamide, clortalidone) → alzano il Ca</li>
@@ -678,7 +716,7 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
     </div>
 
     <div class="blk alert">
-      <h3>Terapia</h3>
+      <h3>Ipercalcemia: terapia</h3>
       <ol class="steps">
         <li><b>Volume</b>
           <div class="rx"><div class="nm">NaCl 0,9 %</div>
@@ -1000,6 +1038,9 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
     ['Calcitonina','ipercalcemia: 4 IE/kg s.c. ogni 12 h (max 48 h)','invariata',0,'ca'],
     ['Denosumab (Xgeva)','ipercalcemia: 120 mg s.c.','invariato · Ca ogni giorno (ipocalcemia)',1,'ca'],
     ['Prednisolone (ipercalcemia)','50 mg 1-0-0 p.o./e.v.','invariato',0,'ca'],
+    ['Calciumgluconat 10 % (ipocalcemia)','bolo 20 ml in 100 ml G5 % in 10 min · Perfusor 50 ml puro ZVK a 5 ml/h','invariato',0,'ca'],
+    ['Calcium Sandoz forte 500 mg','ipocalcemia lieve: 1-0-1 p.o.','invariato',0,'ca'],
+    ['Calcitriol (Rocaltrol)','0,25 µg 1-0-1 p.o.','preferito al colecalciferolo · controlla fosfato',1,'ca'],
     ['Furosemide (manca)','40 mg e.v.','80 mg e.v.',1,'nk']
   ];
   var tb=document.getElementById('aztb');
@@ -1033,13 +1074,25 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
 
   var pages=[].slice.call(document.querySelectorAll('.page'));
   var hb=document.getElementById('home-btn'), crumb=document.getElementById('crumb');
+  /* la ricerca resta attaccata sotto la barra: serve l'altezza reale della barra (cambia col filtro GFR) */
+  var topEl=document.querySelector('header.top');
+  function setTopH(){document.documentElement.style.setProperty('--toph',topEl.offsetHeight+'px');}
+  window.addEventListener('resize',setTopH);
+  if(window.ResizeObserver) new ResizeObserver(setTopH).observe(topEl);
+  /* tornando all'indice la lista riparte dal punto in cui era */
+  try{history.scrollRestoration='manual';}catch(e){}
+  var curId=null, homeY=0;
+  try{homeY=parseInt(sessionStorage.getItem('hzv_hy')||'0',10)||0;}catch(e){}
   function show(){
     var id=(location.hash||'#home').slice(1);
     if(!document.getElementById(id)||!document.getElementById(id).classList.contains('page')) id='home';
+    if(curId==='home' && id!=='home'){homeY=window.scrollY; try{sessionStorage.setItem('hzv_hy',String(homeY));}catch(e){}}
     pages.forEach(function(p){p.classList.toggle('on',p.id===id);});
     hb.hidden = id==='home';
     crumb.textContent = document.getElementById(id).getAttribute('data-t');
-    window.scrollTo(0,0);
+    setTopH();
+    window.scrollTo(0, id==='home' ? homeY : 0);
+    curId=id;
   }
   window.addEventListener('hashchange',show);
   hb.addEventListener('click',function(){location.hash='home';});
