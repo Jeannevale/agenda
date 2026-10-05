@@ -137,6 +137,7 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
     <button class="tile" data-go="vhf" data-k="fibrillazione atriale vorhofflimmern amiodarone cordarex anticoagulazione cardioversione"><span class="k rit">Ritmo</span><span class="t">Fibrillazione atriale</span><span class="s">Amiodarone · schema anticoag.</span></button>
     <button class="tile" data-go="endo" data-k="endocardite vancomicina emocolture tdm livello"><span class="k inf">Infezione</span><span class="t">Endocardite</span><span class="s">Emocolture · vancomicina + livelli</span></button>
     <button class="tile" data-go="dia" data-k="diarrea clostridium difficile vancomicina loperamide fidaxomicina"><span class="k inf">Infezione</span><span class="t">Diarrea · C. diff</span><span class="s">Vanco p.o. · loperamide</span></button>
+    <button class="tile" data-go="abx" data-k="antibiotici antibiotico antibiose abx schema cefazolin flucloxacillin penicillin ampicillin unacid sulbactam piperacillin tazobac tazobactam meropenem ceftriaxon clarithromycin linezolid rifampicin daptomycin gentamicin metronidazol clindamycin vancomycin profilassi polmonite pneumonia urinario hwi addome sepsi mediastinite sternale mrsa mssa stafilococchi enterococco endocardite"><span class="k inf">Infezione</span><span class="t">Antibiotici</span><span class="s">Schemi per patogeno · dosi · GFR &lt; 30</span></button>
     <button class="tile" data-go="neuro" data-k="ictus stroke schlaganfall neuro check vorhalteversuch epilessia crisi midazolam levetiracetam lipid"><span class="k neu">Neuro</span><span class="t">Ictus · Crisi epilettica</span><span class="s">Neuro-check · midazolam</span></button>
     <button class="tile" data-go="ana" data-k="anafilassi allergia adrenalina salbutamolo ipratropio cortisone broncospasmo bpco inalatori spiolto trelegy trimbow"><span class="k emo">Emergenza</span><span class="t">Anafilassi · Bronchi</span><span class="s">Adrenalina · salbutamolo · inalatori</span></button>
     <button class="tile" data-go="sed" data-k="analgosedazione sedazione etomidato propofol midazolam noradrenalina bolo cardioversione digiuno nüchtern tee"><span class="k pro">Procedura</span><span class="t">Analgosedazione</span><span class="s">Digiuno · etomidato · propofol</span></button>
@@ -913,6 +914,135 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
   </div>
 </section>
 
+<!-- ============ ANTIBIOTICI ============ -->
+<section class="page" id="abx" data-t="Antibiotici">
+  <div class="ph"><h2>Antibiotici</h2><span class="cat">Schemi per patogeno</span></div>
+  <div class="tiles">
+    <button class="tile" data-go="ab1"><span class="k inf">Infezione</span><span class="t">Profilassi OP</span><span class="s">Cefazolin · allergia · MRSA</span></button>
+    <button class="tile" data-go="ab2"><span class="k inf">Infezione</span><span class="t">Endocardite</span><span class="s">Strepto · Enterococco · MSSA · MRSA · protesi</span></button>
+    <button class="tile" data-go="ab3"><span class="k inf">Infezione</span><span class="t">Polmonite</span><span class="s">Pip/Taz · Unacid · macrolidi · MRSA</span></button>
+    <button class="tile" data-go="ab4"><span class="k inf">Infezione</span><span class="t">Stafilococchi</span><span class="s">Sternale · mediastinite · batteriemia · CVC</span></button>
+    <button class="tile" data-go="ab5"><span class="k inf">Infezione</span><span class="t">Vie urinarie</span><span class="s">Ceftriaxon · Ampicillin · ESBL</span></button>
+    <button class="tile" data-go="ab6"><span class="k inf">Infezione</span><span class="t">Addome · vie biliari</span><span class="s">Pip/Taz · Ceftriaxon + Metronidazol</span></button>
+    <button class="tile" data-go="ab7"><span class="k inf">Infezione</span><span class="t">Sepsi · fonte ignota</span><span class="s">Meropenem + Vancomycin</span></button>
+    <button class="tile" data-go="ab8"><span class="k inf">Infezione</span><span class="t">Attenzioni</span><span class="s">QT · Marcumar/NOAK · Leber · reni</span></button>
+  </div>
+  <div class="legend">
+    <span>Adulti, funzione epatica normale. Con <span class="tag r">GFR &lt; 30</span> attivo le dosi corrette compaiono in viola.</span>
+    <span>Prima dell'antibiotico: emocolture. Con l'antibiogramma: de-escalation.</span>
+  </div>
+</section>
+
+<section class="page" id="ab1" data-t="Profilassi perioperatoria">
+  <div class="ph"><h2>Profilassi perioperatoria</h2><span class="cat">Antibiotici</span></div>
+  <div class="grid">
+    <div class="blk alert"><h3>Standard</h3><div class="rx"><div class="nm">Cefazolin (2 g)</div><div class="dose"><span class="c" data-c="cefaP"></span> i.v. 30–60 min prima dell'incisione</div><div class="prep">2 g in 100 ml NaCl 0,9 % in 30 min = 200 ml/h (oppure bolo lento: 2 g in 10 ml acqua in 3–5 min). Peso ≥ 120 kg: 3 g. Ripeti dopo 4 h di intervento o con perdita ematica &gt; 1500 ml. Dopo l'OP: stop entro 24 h.</div><div class="ren">dose singola invariata · se prosegui dopo l'OP: 1 g ogni 12 h.</div><div class="fixbox">Allergia a penicilline non grave: Cefazolin va bene (catena laterale diversa) · Phenprocoumon: INR può salire.</div></div></div>
+    <div class="blk"><h3>Allergia grave ai β-lattamici (anafilassi)</h3><div class="rx"><div class="nm">Vancomycin</div><div class="dose"><span class="c" data-c="vProph"></span> (15 mg/kg, max 2 g) i.v.</div><div class="prep">In <span data-c="vProphVol"></span> NaCl 0,9 % in ≥ <span data-c="vProphMin"></span> (max 10 mg/min): inizia circa 120 min prima dell'incisione. Mai bolo.</div><div class="ren same">dose singola invariata.</div><div class="fixbox">Sindrome da infusione rapida (rossore, ipotensione) · nefrotossico: creatinina il giorno dopo.</div></div>
+      <div class="rx"><div class="nm">Clindamycin (600 mg)</div><div class="dose">600 mg i.v. 30–60 min prima dell'incisione</div><div class="prep">600 mg in 100 ml NaCl 0,9 % in 30 min = <b>200 ml/h</b> (max 30 mg/min). Ripeti dopo 6 h.</div><div class="ren same">invariata.</div><div class="fixbox">Alto rischio di C. diff · non copre i Gram-negativi.</div></div></div>
+    <div class="blk"><h3>Portatore di MRSA noto</h3><p><b>Vancomycin</b> (dose sopra) <b>in aggiunta</b> a Cefazolin.</p></div>
+  </div>
+</section>
+
+<section class="page" id="ab2" data-t="Endocardite: antibiotici">
+  <div class="ph"><h2>Endocardite: antibiotici</h2><span class="cat">Antibiotici</span></div>
+  <div class="grid">
+    <div class="blk alert"><h3>Prima di partire</h3><p><b>3 set</b> di emocolture (se instabile: almeno 2). Terapia i.v.; durata 4–6 settimane, protesi ≥ 6 settimane.</p>
+      <p>Schema calcolato: <b>concordalo con Infettivologia / Endokarditis-Team</b> (varia tra centri).</p>
+      <p>Vancomycin continuo e livelli → <a class="x" href="#endo">Endocardite</a></p></div>
+    <div class="blk"><h3>Calcolata, prima dell'antibiogramma</h3><div class="rx"><div class="nm">Valvola nativa o protesi tardia (&gt; 12 mesi)</div><div class="dose">Ampicillin 2 g ogni 4 h + Flucloxacillin 2 g ogni 4 h + Gentamicin 3 mg/kg 1×/d</div><div class="prep">Dettaglio delle dosi nelle schede sotto.</div></div>
+      <div class="rx"><div class="nm">Protesi precoce (≤ 12 mesi) o nosocomiale</div><div class="dose">Vancomycin continuo + Gentamicin 3 mg/kg 1×/d + Rifampicin 450 mg ogni 12 h</div><div class="prep">Rifampicin dal 3°–5° giorno.</div></div></div>
+    <div class="blk"><h3>Streptococchi (viridans, bovis)</h3><div class="rx"><div class="nm">Penicillin G</div><div class="dose">3 Mio IE ogni 4 h i.v. (= 18 Mio IE/24 h)</div><div class="prep">3 Mio IE in 100 ml NaCl 0,9 % in 30 min = 200 ml/h. Durata: nativa 4 settimane · protesi 6 settimane.</div><div class="ren">GFR 19–29: 5 Mio IE ogni 8 h · GFR &lt; 19: 5 Mio IE ogni 12 h.</div><div class="fixbox">Convulsioni con dosi alte e reni scarsi · contenuto di Kalium/Natrium secondo preparato · eosinofili, esantema.</div></div>
+      <div class="rx"><div class="nm">Ceftriaxon (2 g)</div><div class="dose">2 g 1×/d (alternativa a Penicillin G)</div><div class="prep">2 g in 100 ml NaCl 0,9 % in 30 min = 200 ml/h. Stessa durata.</div><div class="ren">invariato (solo GFR &lt; 10: max 2 g/24 h).</div><div class="fixbox">Mai nella stessa linea con soluzioni al calcio (Ringer, Calciumgluconat): sciacqua tra i due · colestasi/fango biliare (Leber, ecografia se dolore) · Phenprocoumon: INR · diarrea/C. diff.</div></div></div>
+    <div class="blk"><h3>Enterococcus faecalis · 6 settimane</h3><div class="rx"><div class="nm">Ampicillin (2 g)</div><div class="dose">2 g ogni 4 h i.v.</div><div class="prep">2 g in 100 ml NaCl 0,9 % in 30 min = 200 ml/h. Prepara fresco (poco stabile dopo la diluizione). Con Ceftriaxon.</div><div class="ren">GFR ≥ 20: invariata · GFR 10–19: max 2 g ogni 6 h · GFR &lt; 10: max 1 g ogni 6 h.</div><div class="fixbox">Esantema (soprattutto con mononucleosi) · diarrea/C. diff · Leber: transaminasi e colestasi (raro).</div></div>
+      <div class="rx"><div class="nm">Ceftriaxon (2 g)</div><div class="dose">2 g ogni 12 h i.v. (con Ampicillin)</div><div class="prep">2 g in 100 ml NaCl 0,9 % in 30 min = 200 ml/h.</div><div class="ren">invariato (solo GFR &lt; 10: max 2 g/24 h).</div><div class="fixbox">Mai nella stessa linea con soluzioni al calcio (Ringer, Calciumgluconat): sciacqua tra i due · colestasi/fango biliare (Leber, ecografia se dolore) · Phenprocoumon: INR · diarrea/C. diff.</div></div></div>
+    <div class="blk"><h3>S. aureus sensibile (MSSA)</h3><div class="rx"><div class="nm">Flucloxacillin (Staphylex 2 g)</div><div class="dose">2 g ogni 4 h i.v. (= 12 g/24 h)</div><div class="prep">2 g in 100 ml NaCl 0,9 % in 30–60 min = 100–200 ml/h (meglio via ZVK: irrita le vene). Durata: nativa 4–6 settimane · protesi ≥ 6 settimane.</div><div class="ren">GFR ≥ 20: invariata · GFR 10–19: 2 g ogni 8 h · GFR &lt; 10: max 4 g/24 h in 4 dosi.</div><div class="fixbox"><b>Leber:</b> γGT, AP, bilirubina 2×/settimana — epatite colestatica anche settimane dopo lo stop · Kalium (ipokaliemia) · con Paracetamol ad alte dosi: acidosi piroglutamica (pH, anion gap).</div></div>
+      <p>Valvola nativa: <b>niente Gentamicin</b>. Protesi: Flucloxacillin + Rifampicin + Gentamicin per 2 settimane. Alternativa: Cefazolin 2 g ogni 8 h → <a class="x" href="#ab4">Stafilococchi</a>.</p></div>
+    <div class="blk"><h3>MRSA / stafilococchi coagulasi-negativi</h3><div class="rx"><div class="nm">Vancomycin</div><div class="dose">bolo 30 mg/kg, poi infusione continua</div><div class="prep">Schema completo con bolo, Perfusor e livelli → <a class="x" href="#endo">Endocardite</a></div><div class="ren">bolo invariato, mantenimento ridotto secondo livello (vedi Endocardite).</div></div>
+      <div class="rx"><div class="nm">Daptomycin (350 / 500 mg)</div><div class="dose">10 mg/kg 1×/d = <span class="c" data-c="dapto10"></span> i.v.</div><div class="prep">Scioglilo (350 mg in 7 ml, 500 mg in 10 ml NaCl 0,9 % = 50 mg/ml), poi in 50 ml NaCl 0,9 % in 30 min = <b>100 ml/h</b> (oppure bolo in 2 min).</div><div class="ren">stessa dose, ma ogni 48 h (GFR ≤ 30).</div><div class="fixbox"><b>CK</b> 1×/settimana (2×/settimana con GFR &lt; 30), stop se CK &gt; 10× o dolori muscolari · valuta pausa della statina · mai nella polmonite (inattivato dal surfactante) · eosinofili: polmonite eosinofila.</div></div>
+      <p>Protesi: aggiungi Rifampicin + Gentamicin.</p></div>
+    <div class="blk"><h3>Gentamicin</h3><div class="rx"><div class="nm">Gentamicin (aminoglicoside)</div><div class="dose">3 mg/kg 1×/d = <span class="c" data-c="gent3"></span> i.v.</div><div class="prep">Nel peso ideale/corretto se obeso. In 100 ml NaCl 0,9 % in 30–60 min = 100–200 ml/h. Durata: al massimo 2 settimane (protesi stafilococcica, schema corto con streptococchi).</div><div class="ren">80 % della dose ogni 48 h = <b data-c="gentRen"></b>, poi dosi solo secondo livello (valle &lt; 1 mg/l).</div><div class="fixbox">Creatinina e urea ogni 2 giorni · udito e vertigini · non con diuretici dell'ansa, Vancomycin o mezzo di contrasto senza necessità · livello dopo la 1ª dose e valle prima della 2ª.</div></div></div>
+    <div class="blk"><h3>Rifampicin</h3><div class="rx"><div class="nm">Rifampicin (solo con materiale protesico)</div><div class="dose">450 mg ogni 12 h (= 900 mg/24 h; fino a 600 mg ogni 12 h)</div><div class="prep">p.o.: a digiuno, 30 min prima del pasto. i.v.: 450 mg in 250 ml Glucosio 5 % in 3 h = <b>83 ml/h</b>. Inizia dal 3°–5° giorno di terapia efficace; mai da solo.</div><div class="ren">nessun adattamento (alcune Fachinfo: max 600 mg/24 h con GFR &lt; 30 → chiedi alla farmacia).</div><div class="fixbox"><b>Leber:</b> transaminasi e bilirubina prima, poi 1×/settimana · induce il CYP: <b>NOAK (Apixaban, Rivaroxaban, Edoxaban) non combinabili</b> · Phenprocoumon: INR ogni 2–3 giorni · riduce Amiodarone, Digoxin, statine, Betabloccanti · Clopidogrel ↑ / Ticagrelor: evita · urina e lacrime arancioni.</div></div></div>
+  </div>
+</section>
+
+<section class="page" id="ab3" data-t="Polmonite">
+  <div class="ph"><h2>Polmonite</h2><span class="cat">Antibiotici</span></div>
+  <div class="grid">
+    <div class="blk alert"><h3>Prima di partire</h3><p>Emocolture ×2, secreto/BAL per coltura, PCT. <span class="tag haus">reparto</span> ABS: Piperacillin/Tazobactam per <b>7 giorni</b> in totale.</p></div>
+    <div class="blk"><h3>Nosocomiale / VAP (dopo OP, PIT &gt; 48 h)</h3><div class="rx"><div class="nm">Piperacillin/Tazobactam (Tazobac 4,5 g)</div><div class="dose">4,5 g ogni 8 h i.v.</div><div class="prep">1ª dose: 4,5 g in 100 ml NaCl 0,9 % in 30 min = 200 ml/h. Poi infusione prolungata: 4,5 g in 50 ml NaCl 0,9 % con Perfusor in 4 h = <b>12,5 ml/h</b>, ogni 8 h (linea dedicata).</div><div class="ren">1ª dose piena · GFR 20–29: 4,5 g ogni 8 h (massimo) · GFR &lt; 20: 4,5 g ogni 12 h.</div><div class="fixbox">Con Vancomycin: rischio di AKI → creatinina ogni giorno · Kalium (ipokaliemia) · Leber: transaminasi e colestasi · convulsioni con dosi alte e reni scarsi · Phenprocoumon: controlla INR.</div></div></div>
+    <div class="blk"><h3>Aspirazione / extraospedaliera (senza rischio Pseudomonas)</h3><div class="rx"><div class="nm">Ampicillin/Sulbactam (Unacid 3 g)</div><div class="dose">3 g ogni 8 h i.v.</div><div class="prep">3 g in 100 ml NaCl 0,9 % in 30 min = <b>200 ml/h</b> (minimo 15 min). Durata 5–7 giorni.</div><div class="ren">GFR 15–29: 3 g ogni 12 h · GFR &lt; 15: 3 g ogni 24 h.</div><div class="fixbox"><b>Leber:</b> transaminasi e colestasi (ittero colestatico, anche dopo lo stop) · esantema · diarrea/C. diff.</div></div></div>
+    <div class="blk"><h3>Atipici / Legionella (aggiunta nei casi gravi)</h3><div class="rx"><div class="nm">Clarithromycin</div><div class="dose">500 mg ogni 12 h p.o. o i.v.</div><div class="prep">i.v.: 500 mg in 250 ml NaCl 0,9 % in 60 min = <b>250 ml/h</b>. Durata 5–7 giorni.</div><div class="ren">250 mg ogni 12 h (fino a 500 mg ogni 12 h nei casi gravi).</div><div class="fixbox"><b>QT:</b> ECG prima e dopo 2 giorni, soprattutto con Amiodarone · Apixaban/Rivaroxaban ↑ · Ticagrelor: controindicato · Simvastatin/Atorvastatin: sospendi (rabdomiolisi) · Digoxin ↑ · Phenprocoumon: INR ↑ · Leber: transaminasi.</div></div></div>
+    <div class="blk"><h3>MRSA</h3><div class="rx"><div class="nm">Linezolid (Zyvoxid 600 mg)</div><div class="dose">600 mg ogni 12 h i.v. o p.o.</div><div class="prep">i.v.: sacca pronta 600 mg/300 ml (2 mg/ml) in 60 min = <b>300 ml/h</b> (30–120 min). p.o. stessa dose, biodisponibilità ~100 %. Durata 7–10 giorni, max 28.</div><div class="ren">dose invariata, ma piastrine ogni 2 giorni (accumulo dei metaboliti).</div><div class="fixbox">Piastrine 1×/settimana (più spesso se reni scarsi) · debole MAO-inibitore: <b>Noradrenalin, Phenylephrin, Dopamin</b> → picco pressorio; SSRI, Tramadol → sindrome serotoninergica · lattato ↑ · glicemia ↓ con insulina.</div></div></div>
+    <div class="blk"><h3>Pseudomonas / ESBL / sepsi grave</h3><p>→ Meropenem, vedi <a class="x" href="#ab7">Sepsi</a></p></div>
+  </div>
+</section>
+
+<section class="page" id="ab4" data-t="Stafilococchi">
+  <div class="ph"><h2>Stafilococchi</h2><span class="cat">Antibiotici</span></div>
+  <div class="grid">
+    <div class="blk alert"><h3>Ferita sternale / mediastinite</h3><p>Prelievo profondo (tessuto, non solo tampone) + emocolture ×3. La <b>revisione chirurgica</b> è la terapia principale.</p>
+      <p>Calcolata: <b>Vancomycin</b> (continuo → <a class="x" href="#endo">Endocardite</a>) + <b>Piperacillin/Tazobactam</b> 4,5 g ogni 8 h (dose e GFR → <a class="x" href="#ab3">Polmonite</a>). Sospetto ESBL o grave: Meropenem (→ <a class="x" href="#ab7">Sepsi</a>).</p>
+      <p>Durata: decide con chirurgia/Infettivologia dopo la revisione, di solito settimane.</p></div>
+    <div class="blk"><h3>MSSA</h3><div class="rx"><div class="nm">Cefazolin (terapia)</div><div class="dose">2 g ogni 8 h i.v.</div><div class="prep">2 g in 100 ml NaCl 0,9 % in 30 min = 200 ml/h (oppure bolo lento: 2 g in 10 ml acqua in 3–5 min).</div><div class="ren">1ª dose 2 g, poi 1 g ogni 12 h (GFR &lt; 10: 1 g ogni 24 h).</div><div class="fixbox">Allergia a penicilline non grave: ok (catena laterale diversa) · Phenprocoumon: INR può salire · diarrea → C. diff.</div></div>
+      <div class="rx"><div class="nm">Flucloxacillin (Staphylex 2 g)</div><div class="dose">2 g ogni 6 h i.v. (fino a 12 g/24 h in endocardite/osteomielite)</div><div class="prep">2 g in 100 ml NaCl 0,9 % in 30–60 min = 100–200 ml/h (meglio via ZVK: irrita le vene). Durata: batteriemia non complicata ≥ 14 giorni dal 1° negativo · sternale/protesi: settimane.</div><div class="ren">GFR ≥ 20: invariata · GFR 10–19: 2 g ogni 8 h · GFR &lt; 10: max 4 g/24 h in 4 dosi.</div><div class="fixbox"><b>Leber:</b> γGT, AP, bilirubina 2×/settimana — epatite colestatica anche settimane dopo lo stop · Kalium (ipokaliemia) · con Paracetamol ad alte dosi: acidosi piroglutamica (pH, anion gap).</div></div></div>
+    <div class="blk"><h3>MRSA / CoNS</h3><div class="rx"><div class="nm">Vancomycin</div><div class="dose">bolo 30 mg/kg, poi infusione continua</div><div class="prep">Schema completo con bolo, Perfusor e livelli → <a class="x" href="#endo">Endocardite</a></div><div class="ren">bolo invariato, mantenimento ridotto secondo livello (vedi Endocardite).</div></div>
+      <div class="rx"><div class="nm">Daptomycin (350 / 500 mg)</div><div class="dose">8–10 mg/kg 1×/d = <span class="c" data-c="daptoR"></span> i.v.</div><div class="prep">Scioglilo (350 mg in 7 ml, 500 mg in 10 ml NaCl 0,9 % = 50 mg/ml), poi in 50 ml NaCl 0,9 % in 30 min = <b>100 ml/h</b> (oppure bolo in 2 min).</div><div class="ren">stessa dose, ma ogni 48 h (GFR ≤ 30).</div><div class="fixbox"><b>CK</b> 1×/settimana (2×/settimana con GFR &lt; 30), stop se CK &gt; 10× o dolori muscolari · valuta pausa della statina · mai nella polmonite (inattivato dal surfactante) · eosinofili: polmonite eosinofila.</div></div>
+      <div class="rx"><div class="nm">Linezolid (Zyvoxid 600 mg)</div><div class="dose">600 mg ogni 12 h i.v. o p.o.</div><div class="prep">i.v.: sacca pronta 600 mg/300 ml (2 mg/ml) in 60 min = <b>300 ml/h</b> (30–120 min). p.o. stessa dose, biodisponibilità ~100 %. Durata 7–10 giorni, max 28.</div><div class="ren">dose invariata, ma piastrine ogni 2 giorni (accumulo dei metaboliti).</div><div class="fixbox">Piastrine 1×/settimana (più spesso se reni scarsi) · debole MAO-inibitore: <b>Noradrenalin, Phenylephrin, Dopamin</b> → picco pressorio; SSRI, Tramadol → sindrome serotoninergica · lattato ↑ · glicemia ↓ con insulina.</div></div></div>
+    <div class="blk"><h3>Catetere venoso (CVC)</h3><p>Rimuovi il CVC se possibile · emocolture dal CVC <b>e</b> periferica.</p>
+      <p><b>CoNS:</b> Vancomycin 5–7 giorni dopo la rimozione. <b>S. aureus:</b> ≥ 14 giorni dal 1° negativo, eco (TEE) per escludere endocardite.</p></div>
+  </div>
+</section>
+
+<section class="page" id="ab5" data-t="Vie urinarie">
+  <div class="ph"><h2>Vie urinarie</h2><span class="cat">Antibiotici</span></div>
+  <div class="grid">
+    <div class="blk alert"><h3>Prima di partire</h3><p>Urinocoltura (da catetere nuovo se portatore) + emocolture se febbre. <b>Sostituisci il catetere.</b> Durata 7 giorni (10–14 se risposta lenta).</p></div>
+    <div class="blk"><h3>E. coli, Klebsiella, Proteus</h3><div class="rx"><div class="nm">Ceftriaxon (2 g)</div><div class="dose">2 g 1×/d i.v.</div><div class="prep">2 g in 100 ml NaCl 0,9 % in 30 min = 200 ml/h.</div><div class="ren">invariato (solo GFR &lt; 10: max 2 g/24 h).</div><div class="fixbox">Mai nella stessa linea con soluzioni al calcio (Ringer, Calciumgluconat): sciacqua tra i due · colestasi/fango biliare (Leber, ecografia se dolore) · Phenprocoumon: INR · diarrea/C. diff.</div></div></div>
+    <div class="blk"><h3>Enterococcus faecalis</h3><div class="rx"><div class="nm">Ampicillin (2 g)</div><div class="dose">2 g ogni 8 h i.v.</div><div class="prep">2 g in 100 ml NaCl 0,9 % in 30 min = 200 ml/h. Prepara fresco (poco stabile dopo la diluizione).</div><div class="ren">invariata (GFR &lt; 10: max 1 g ogni 6 h).</div><div class="fixbox">Esantema (soprattutto con mononucleosi) · diarrea/C. diff · Leber: transaminasi e colestasi (raro).</div></div></div>
+    <div class="blk"><h3>ESBL / urosepsi grave</h3><div class="rx"><div class="nm">Meropenem (1 g)</div><div class="dose">1 g ogni 8 h i.v.</div><div class="prep">1 g in 100 ml NaCl 0,9 % in 30 min = 200 ml/h (o infusione prolungata in 3 h = 33 ml/h, se lo prevede l'ABS).</div><div class="ren">GFR 26–29: 1 g ogni 12 h · GFR 10–25: 500 mg ogni 12 h · GFR &lt; 10: 500 mg ogni 24 h.</div><div class="fixbox">Convulsioni con reni scarsi · <b>Valproat: livello crolla, non combinare</b> · Leber: transaminasi (raro) · diarrea/C. diff.</div></div></div>
+  </div>
+</section>
+
+<section class="page" id="ab6" data-t="Addome · vie biliari">
+  <div class="ph"><h2>Addome · vie biliari</h2><span class="cat">Antibiotici</span></div>
+  <div class="grid">
+    <div class="blk alert"><h3>Prima di partire</h3><p>Il <b>controllo della fonte</b> (drenaggio, ERCP, chirurgia) è decisivo. Durata dopo il controllo della fonte: 4–7 giorni. Emocolture ×2.</p></div>
+    <div class="blk"><h3>Prima scelta</h3><div class="rx"><div class="nm">Piperacillin/Tazobactam (Tazobac 4,5 g)</div><div class="dose">4,5 g ogni 8 h i.v.</div><div class="prep">1ª dose: 4,5 g in 100 ml NaCl 0,9 % in 30 min = 200 ml/h. Poi infusione prolungata: 4,5 g in 50 ml NaCl 0,9 % con Perfusor in 4 h = <b>12,5 ml/h</b>, ogni 8 h (linea dedicata).</div><div class="ren">1ª dose piena · GFR 20–29: 4,5 g ogni 8 h (massimo) · GFR &lt; 20: 4,5 g ogni 12 h.</div><div class="fixbox">Con Vancomycin: rischio di AKI → creatinina ogni giorno · Kalium (ipokaliemia) · Leber: transaminasi e colestasi · convulsioni con dosi alte e reni scarsi · Phenprocoumon: controlla INR.</div></div></div>
+    <div class="blk"><h3>Alternativa</h3><div class="rx"><div class="nm">Ceftriaxon (2 g)</div><div class="dose">2 g 1×/d i.v. (con Metronidazol)</div><div class="prep">2 g in 100 ml NaCl 0,9 % in 30 min = 200 ml/h.</div><div class="ren">invariato (solo GFR &lt; 10: max 2 g/24 h).</div><div class="fixbox">Mai nella stessa linea con soluzioni al calcio (Ringer, Calciumgluconat): sciacqua tra i due · colestasi/fango biliare (Leber, ecografia se dolore) · Phenprocoumon: INR · diarrea/C. diff.</div></div>
+      <div class="rx"><div class="nm">Metronidazol (500 mg/100 ml)</div><div class="dose">500 mg ogni 8 h i.v. (p.o.: 400 mg ogni 8 h)</div><div class="prep">Sacca pronta da 100 ml (5 mg/ml) in 30 min = <b>200 ml/h</b>. Durata max 10 giorni.</div><div class="ren same">invariato (solo HD: dopo la dialisi).</div><div class="fixbox"><b>Leber:</b> insufficienza grave (Child C) → dimezza la dose · polineuropatia/encefalopatia con uso prolungato (stop) · Phenprocoumon: INR sale molto · niente alcol.</div></div></div>
+    <div class="blk"><h3>ESBL / molto grave</h3><p>→ Meropenem, vedi <a class="x" href="#ab7">Sepsi</a></p></div>
+  </div>
+</section>
+
+<section class="page" id="ab7" data-t="Sepsi · fonte ignota">
+  <div class="ph"><h2>Sepsi · fonte ignota</h2><span class="cat">Antibiotici</span></div>
+  <div class="grid">
+    <div class="blk alert"><h3>Prima di partire</h3><p>2–3 set di emocolture, lattato, cerca la fonte (Rx torace, urine, ferita sternale, CVC, addome, <b>endocardite</b>). Se shock: antibiotico entro 1 h. De-escalation a 48–72 h.</p></div>
+    <div class="blk"><h3>Calcolata (PIT)</h3><div class="rx"><div class="nm">Meropenem (1 g)</div><div class="dose">1 g ogni 8 h i.v.</div><div class="prep">1 g in 100 ml NaCl 0,9 % in 30 min = 200 ml/h (o infusione prolungata in 3 h = 33 ml/h, se lo prevede l'ABS).</div><div class="ren">GFR 26–29: 1 g ogni 12 h · GFR 10–25: 500 mg ogni 12 h · GFR &lt; 10: 500 mg ogni 24 h.</div><div class="fixbox">Convulsioni con reni scarsi · <b>Valproat: livello crolla, non combinare</b> · Leber: transaminasi (raro) · diarrea/C. diff.</div></div>
+      <div class="rx"><div class="nm">Vancomycin</div><div class="dose">bolo 30 mg/kg, poi infusione continua</div><div class="prep">Schema completo con bolo, Perfusor e livelli → <a class="x" href="#endo">Endocardite</a></div><div class="ren">bolo invariato, mantenimento ridotto secondo livello (vedi Endocardite).</div></div></div>
+    <div class="blk"><h3>Senza rischio ESBL / Pseudomonas</h3><p>Piperacillin/Tazobactam al posto di Meropenem → <a class="x" href="#ab3">Polmonite</a>.</p></div>
+  </div>
+</section>
+
+<section class="page" id="ab8" data-t="Attenzioni">
+  <div class="ph"><h2>Attenzioni</h2><span class="cat">Antibiotici</span></div>
+  <div class="grid">
+    <div class="blk alert"><h3>QT lungo</h3><p><b>Clarithromycin, Levofloxacin, Moxifloxacin</b> + Amiodarone, Sotalol, Haloperidol: ECG prima e dopo 2 giorni.</p>
+      <p>K⁺ 4,5–5,0 · Mg ≥ 1,0 mmol/l → <a class="x" href="#el">elettroliti</a></p></div>
+    <div class="blk"><h3>Fluorchinoloni</h3><p>In cardiochirurgia <b>evitali</b>: aneurisma/dissezione aortica (avviso EMA), QT, tendini, convulsioni, glicemia. Solo se non c'è alternativa.</p></div>
+    <div class="blk"><h3>Anticoagulanti</h3><p><b>Rifampicin:</b> NOAK non combinabili, Phenprocoumon ↓.</p>
+      <p><b>Clarithromycin:</b> NOAK ↑ · <b>Metronidazol:</b> INR ↑↑ · Cefazolin, Ceftriaxon, Ampicillin: INR ↑.</p>
+      <p>INR dopo 2–3 giorni dall'inizio.</p></div>
+    <div class="blk"><h3>Funzione epatica</h3><p>Flucloxacillin (colestasi, anche tardiva), Unacid e Amoxicillin/Clavulansäure, Rifampicin, Clarithromycin, Ceftriaxon (fango biliare).</p>
+      <p>AST, ALT, γGT, AP, bilirubina all'inizio e 1–2×/settimana.</p></div>
+    <div class="blk"><h3>Reni</h3><p>Vancomycin + Piperacillin/Tazobactam, Gentamicin: creatinina ogni giorno, livello Vancomycin.</p>
+      <p>Convulsioni con reni scarsi: Penicillin G, Meropenem (e Valproat ↓).</p>
+      <p>Attiva <span class="tag r">GFR &lt; 30</span> in alto per le dosi corrette.</p></div>
+    <div class="blk"><h3>Diarrea dopo antibiotici</h3><p>Clindamycin, cefalosporine, Piperacillin/Tazobactam → test C. diff → <a class="x" href="#dia">Diarrea</a></p></div>
+    <div class="blk"><h3>Linezolid e farmaci serotoninergici / vasopressori</h3><p>Noradrenalin, Phenylephrin, Dopamin: picco pressorio · SSRI, Tramadol: sindrome serotoninergica.</p></div>
+  </div>
+</section>
+
 <!-- ============ A–Z ============ -->
 <section class="page" id="az" data-t="Farmaci A–Z">
   <div class="ph"><h2>Farmaci A–Z</h2><span class="cat">Attiva "GFR &lt; 30" in alto per la colonna rene</span></div>
@@ -971,9 +1101,18 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
     lanR:function(w){return n(r(0.1*w,1))+' IE';},
     insP:function(w){return n(0.1*w,1)+' IE/h = '+n(0.1*w,1)+' ml/h';},
     insP05:function(w){return n(0.05*w,1)+' ml/h';},
-    calcit:function(w){var d=r(4*w,10);return n(d)+' IE = '+n(d/100,1)+' ml';}
+    calcit:function(w){var d=r(4*w,10);return n(d)+' IE = '+n(d/100,1)+' ml';},
+    cefaP:function(w){return w>=120?'3 g (≥ 120 kg)':'2 g';},
+    vProph:function(w){return n(vp(w))+' mg';},
+    vProphVol:function(w){return n(Math.ceil(vp(w)/5/250)*250)+' ml';},
+    vProphMin:function(w){return n(Math.max(60,Math.ceil(vp(w)/10)))+' min';},
+    gent3:function(w){return n(r(3*w,10))+' mg';},
+    gentRen:function(w){return n(r(2.4*w,10))+' mg ogni 48 h';},
+    dapto10:function(w){return n(r(10*w,50))+' mg';},
+    daptoR:function(w){return n(r(8*w,50))+'–'+n(r(10*w,50))+' mg';}
   };
   function vl(w){return Math.min(r(30*w,250),3000);}
+  function vp(w){return Math.min(r(15*w,50),2000);}
 
   // A–Z data: [nome, dose, rene, cambia?, pagina]
   var AZ = [
@@ -1041,7 +1180,22 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
     ['Calciumgluconat 10 % (ipocalcemia)','bolo 20 ml in 100 ml G5 % in 10 min · Perfusor 50 ml puro ZVK a 5 ml/h','invariato',0,'ca'],
     ['Calcium Sandoz forte 500 mg','ipocalcemia lieve: 1-0-1 p.o.','invariato',0,'ca'],
     ['Calcitriol (Rocaltrol)','0,25 µg 1-0-1 p.o.','preferito al colecalciferolo · controlla fosfato',1,'ca'],
-    ['Furosemide (manca)','40 mg e.v.','80 mg e.v.',1,'nk']
+    ['Furosemide (manca)','40 mg e.v.','80 mg e.v.',1,'nk'],
+    ['Ampicillin','2 g ogni 4–8 h i.v. (endocardite 12 g/24 h)','GFR 10–19: max 2 g ogni 6 h · &lt; 10: max 1 g ogni 6 h',1,'ab2'],
+    ['Ampicillin/Sulbactam (Unacid)','3 g ogni 8 h i.v.','GFR 15–29: 3 g ogni 12 h · &lt; 15: ogni 24 h',1,'ab3'],
+    ['Cefazolin','2 g ogni 8 h i.v. · profilassi 2 g (≥ 120 kg: 3 g)','1ª dose 2 g, poi 1 g ogni 12 h · profilassi singola invariata',1,'ab4'],
+    ['Ceftriaxon','2 g 1×/d i.v. (enterococco: 2 g ogni 12 h)','invariato · solo GFR < 10: max 2 g/24 h',0,'ab5'],
+    ['Clarithromycin','500 mg ogni 12 h p.o./i.v.','250 mg ogni 12 h',1,'ab3'],
+    ['Clindamycin','600 mg i.v. (profilassi)','invariata',0,'ab1'],
+    ['Daptomycin','8–10 mg/kg i.v. 1×/d','stessa dose ogni 48 h',1,'ab4'],
+    ['Flucloxacillin','2 g ogni 6 h i.v. (endocardite: ogni 4 h)','GFR 10–19: 2 g ogni 8 h · < 10: max 4 g/24 h',1,'ab4'],
+    ['Gentamicin','3 mg/kg i.v. 1×/d','80 % della dose ogni 48 h, poi secondo livello',1,'ab2'],
+    ['Linezolid','600 mg ogni 12 h i.v./p.o.','invariato · piastrine ogni 2 giorni',0,'ab3'],
+    ['Meropenem','1 g ogni 8 h i.v.','GFR 26–29: 1 g ogni 12 h · 10–25: 500 mg ogni 12 h · < 10: 500 mg ogni 24 h',1,'ab7'],
+    ['Metronidazol','500 mg ogni 8 h i.v.','invariato',0,'ab6'],
+    ['Penicillin G','3 Mio IE ogni 4 h i.v. (endocardite)','GFR 19–29: 5 Mio IE ogni 8 h · < 19: ogni 12 h',1,'ab2'],
+    ['Piperacillin/Tazobactam','4,5 g ogni 8 h i.v.','1ª dose piena · GFR 20–29: ogni 8 h · < 20: ogni 12 h',1,'ab3'],
+    ['Rifampicin','450 mg ogni 12 h p.o./i.v. (solo con protesi)','invariato (alcune Fachinfo: max 600 mg/24 h)',0,'ab2']
   ];
   var tb=document.getElementById('aztb');
   AZ.sort(function(a,b){return a[0].localeCompare(b[0],'it');});
@@ -1095,7 +1249,7 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
     curId=id;
   }
   window.addEventListener('hashchange',show);
-  hb.addEventListener('click',function(){location.hash='home';});
+  hb.addEventListener('click',function(){var c=(location.hash||'#home').slice(1);location.hash=/^ab[1-8]$/.test(c)?'abx':'home';});
   document.querySelectorAll('[data-go]').forEach(function(b){b.addEventListener('click',function(){location.hash=b.getAttribute('data-go');});});
 
   var q=document.getElementById('q'), tiles=[].slice.call(document.querySelectorAll('#tiles .tile'));
