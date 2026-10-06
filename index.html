@@ -3208,7 +3208,7 @@ function leggiValoriDettati(testo, p){
 }
 
 /* ------------------------------------------------------------- stato pazienti */
-var pview = { id:null, tab:"lab", q:"", showIcu:false, unlocked:false };
+var pview = { id:null, tab:"sys", q:"", showIcu:false, unlocked:false };
 var mode = "shift";
 
 function patients(){ return S.patients || (S.patients = []); }
@@ -3626,7 +3626,7 @@ function patCard(p){
     if(patDragged) return;            /* stavi spostando la scheda, non aprendola */
     /* mi segno dove stavi nella lista: tornando indietro riparti da li' */
     pview.listY = window.scrollY || 0;
-    pview.id = p.id; pview.tab = "lab"; renderPat(); window.scrollTo(0,0);
+    pview.id = p.id; pview.tab = "sys"; renderPat(); window.scrollTo(0,0);
   };
   return b;
 }
@@ -3639,8 +3639,8 @@ function miniChip(text, cls){
 
 /* ------------------------------------------------------------- scheda */
 var PTABS = [
-  ["sys","tSys"], ["lab","tLab"], ["ther","tTher"], ["check","tCheck"], ["todo","tTodo"],
-  ["notes","tNotes"], ["verl","tVerl"], ["icu","tIcu"], ["sum","tSum"]
+  ["sys","tSys"], ["todo","tTodo"], ["notes","tNotes"], ["verl","tVerl"], ["check","tCheck"],
+  ["lab","tLab"], ["ther","tTher"], ["icu","tIcu"], ["sum","tSum"]
 ];
 /* la sezione Intensiva c'e' finche' il paziente e' in terapia intensiva,
    e resta se ci hai scritto qualcosa */
@@ -3675,7 +3675,7 @@ function renderPatDetail(){
 
   var tabs = $("pdTabs");
   tabs.textContent = "";
-  if(pview.tab === "icu" && !icuTabVisibile(p)) pview.tab = "lab";
+  if(pview.tab === "icu" && !icuTabVisibile(p)) pview.tab = "sys";
   PTABS.forEach(function(pair){
     if(pair[0] === "icu" && !icuTabVisibile(p)) return;
     var b = document.createElement("button");
@@ -5847,7 +5847,7 @@ function openPatSheet(p){
           surgeon:fS.input.value.trim(), opDate:fO.get() || null, admDate:view.day, dischargedOn:null,
           created:Date.now(), meds:[], labs:[], notes:[], files:[], proposals:[], summary:null };
         inserisciPerStanza(np);
-        pview.id = np.id; pview.tab = "lab";
+        pview.id = np.id; pview.tab = "sys";
         creati = convertiMarcati(np, "dx", "dxTasks", np) + convertiMorali(np, "dx", "dxMorals", { pid:np.id });
       }
       save(); close(); render(); renderPat();
