@@ -309,6 +309,8 @@ button{cursor:pointer; background:none; border:none}
   color:var(--ink); font-size:15.5px; line-height:1.55; overflow-wrap:anywhere;
   -webkit-user-select:text; user-select:text}
 .notearea:focus{outline:none; border-color:var(--line-strong)}
+/* mentre scrivi nel foglio, sotto c'e' tanto spazio quanto la tastiera */
+body.kb-scrive{padding-bottom:var(--kb,0px)}
 .notearea > div{min-height:1.55em}
 .notearea .md-h{font-family:"IBM Plex Sans Condensed","IBM Plex Sans",sans-serif;
   font-weight:600; font-size:20px; line-height:1.3; color:var(--ink);
@@ -4906,8 +4908,72 @@ function quadernoDetta(ed, btn){
   var blk = quadernoCurrent(ed) || ed.lastElementChild;
   if(!blk) return;
   caretTo(blk, "fine");
-  dictateInto(blk, btn, function(){ if(ed._salva) ed._salva(); });
+  dictateInto(blk, btn, function(){ if(ed._salva) ed._salva(); cursoreInVistaPresto(ed); });
 }
+
+/* La riga dove scrivi deve restare sopra la tastiera. Su Android la tastiera
+   copre la pagina senza accorciarla, e quando vado a capo a mano il browser
+   non scorre da solo: qui misuro dove sta il cursore e quanto spazio lascia
+   la tastiera, e faccio scorrere la pagina quel tanto che serve. */
+function altezzaTastiera(){
+  var vv = window.visualViewport;
+  if(!vv) return 0;
+  return Math.max(0, Math.round(window.innerHeight - vv.height - vv.offsetTop));
+}
+/* sotto il foglio aggiungo tanto spazio quanto la tastiera: senza, l'ultima
+   riga non potrebbe mai salire sopra la tastiera perche' la pagina finisce */
+function spazioTastiera(){
+  var kb = document.body.classList.contains("kb-scrive") ? altezzaTastiera() : 0;
+  document.documentElement.style.setProperty("--kb", kb + "px");
+}
+function rettCursore(ed){
+  var sel = window.getSelection();
+  if(!sel || !sel.rangeCount || !ed.contains(sel.anchorNode)) return null;
+  var r = sel.getRangeAt(0).cloneRange();
+  r.collapse(false);
+  var rr = r.getClientRects();
+  var rect = rr.length ? rr[rr.length - 1] : null;
+  /* riga vuota: il cursore non ha misure, prendo la riga intera */
+  if(!rect || (!rect.height && !rect.top)){
+    var n = r.endContainer;
+    if(n.nodeType === 3) n = n.parentNode;
+    if(n === ed) n = ed.childNodes[r.endOffset] || ed.childNodes[r.endOffset - 1] || ed;
+    if(n && n.nodeType !== 1) n = n.parentNode;
+    rect = n ? n.getBoundingClientRect() : null;
+  }
+  return rect;
+}
+function cursoreInVista(ed){
+  var rect = rettCursore(ed);
+  if(!rect) return;
+  var vv = window.visualViewport;
+  var cimaVista = vv ? vv.offsetTop : 0;
+  var fondoVista = vv ? vv.offsetTop + vv.height : window.innerHeight;
+  var margine = 72;                         /* circa tre righe libere sotto il cursore */
+  var cima = cimaVista + (parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--mb")) || 0) + 64;
+  if(rect.bottom > fondoVista - margine){
+    window.scrollBy(0, Math.round(rect.bottom - (fondoVista - margine)));
+  } else if(rect.top < cima){
+    window.scrollBy(0, Math.round(rect.top - cima));
+  }
+}
+function cursoreInVistaPresto(ed){
+  spazioTastiera();
+  requestAnimationFrame(function(){ cursoreInVista(ed); });
+}
+(function(){
+  var vv = window.visualViewport;
+  if(!vv) return;
+  var attesa = null;
+  function quandoCambia(){
+    spazioTastiera();
+    var a = document.activeElement;
+    if(!a || !a._collegato) return;
+    clearTimeout(attesa);
+    attesa = setTimeout(function(){ cursoreInVista(a); }, 60);
+  }
+  vv.addEventListener("resize", quandoCambia);
+})();
 
 /* Attacca il comportamento al foglio, una volta sola. onCambio riceve il testo
    già serializzato: chi chiama decide dove salvarlo. */
@@ -4921,7 +4987,17 @@ function quadernoCollega(ed, onCambio, placeholder){
   if(ed._collegato) return;
   ed._collegato = true;
 
-  ed.addEventListener("input", function(){ ed._salva(); });
+  ed.addEventListener("input", function(){ ed._salva(); cursoreInVistaPresto(ed); });
+  ed.addEventListener("focus", function(){
+    document.body.classList.add("kb-scrive");
+    cursoreInVistaPresto(ed);
+    /* la tastiera ci mette un attimo ad aprirsi */
+    setTimeout(function(){ cursoreInVistaPresto(ed); }, 350);
+  });
+  ed.addEventListener("blur", function(){
+    document.body.classList.remove("kb-scrive");
+    spazioTastiera();
+  });
 
   /* Invio: spezzo la riga a mano, così la riga nuova non eredita il titolo */
   ed.addEventListener("keydown", function(e){
@@ -4936,6 +5012,7 @@ function quadernoCollega(ed, onCambio, placeholder){
     ed.insertBefore(nuovo, blk.nextSibling);
     caretTo(nuovo, "inizio");
     ed._salva();
+    cursoreInVistaPresto(ed);
     /* la riga qui sopra e' finita: chi ci tiene puo' farci qualcosa */
     ed.dispatchEvent(new CustomEvent("quaderno-acapo", { detail:blk }));
   });
@@ -4959,6 +5036,7 @@ function quadernoCollega(ed, onCambio, placeholder){
     setBlockText(dopo, dopo.textContent + resto.slice(off));
     caretTo(dopo, "fine");
     ed._salva();
+    cursoreInVistaPresto(ed);
   });
 }
 
