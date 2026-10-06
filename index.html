@@ -295,6 +295,20 @@ button{cursor:pointer; background:none; border:none}
 .notehead{position:sticky; top:var(--mb); z-index:20; background:var(--bg);
   padding-block:10px 8px; display:flex; align-items:center; gap:10px;
   border-bottom:1px solid var(--line)}
+/* titolo e ricerca restano insieme in alto mentre scorri */
+.notestick{position:sticky; top:var(--mb); z-index:20; background:var(--bg);
+  border-bottom:1px solid var(--line); padding-bottom:10px}
+.notestick .notehead{position:static; border-bottom:none; padding-bottom:4px}
+.notefind{display:flex; gap:6px; align-items:center}
+.notefind input{flex:1; padding:9px 11px; border:1px solid var(--line); border-radius:8px;
+  background:var(--surface); font-size:14.5px}
+.nf-count{flex:none; min-width:40px; text-align:center; font-size:12.5px; color:var(--ink-3)}
+.nf-count.zero{color:var(--alert)}
+.nf-step{flex:none; width:36px; height:36px; border-radius:8px; border:1px solid var(--line-strong);
+  display:grid; place-items:center; font-size:18px; line-height:1; color:var(--ink-2)}
+/* le parole trovate: evidenziate senza toccare il testo salvato */
+::highlight(nota-trovato){background-color:rgba(255,196,0,.38); color:inherit}
+::highlight(nota-attuale){background-color:rgba(255,140,0,.85); color:#000}
 .notehead .ptitle{flex:1; min-width:0; font-family:"IBM Plex Sans Condensed","IBM Plex Sans",sans-serif;
   font-weight:600; font-size:19px}
 .tbtn{flex:none; padding:8px 14px; border-radius:8px; border:1px solid var(--line-strong);
@@ -1140,12 +1154,23 @@ table.labtab td.pname .namebtn:hover{text-decoration-color:var(--accent); color:
 </div>
 
 <div class="shell" id="noteShell" hidden>
+  <div class="notestick" id="noteTop">
   <header class="notehead">
     <div class="ptitle" id="noteTitle">Note</div>
     <button class="tbtn" id="noteH">Titolo</button>
     <button class="mic-sm" id="noteMic" aria-label="detta"></button>
     <span class="notesaved" id="noteSaved"></span>
   </header>
+  <div class="notefind">
+    <div class="searchwrap">
+      <input id="noteFind" type="text" enterkeyhint="search" placeholder="Cerca nelle note…" autocomplete="off">
+      <button class="sx" id="noteFindX" aria-label="Cancella la ricerca" hidden></button>
+    </div>
+    <span class="nf-count mono" id="noteFindN" hidden></span>
+    <button class="nf-step" id="noteFindUp" aria-label="precedente" hidden></button>
+    <button class="nf-step" id="noteFindDown" aria-label="successivo" hidden></button>
+  </div>
+  </div>
   <div id="noteArea" class="notearea" contenteditable="true" role="textbox" aria-multiline="true"></div>
 </div>
 
@@ -1368,6 +1393,8 @@ var ICONS = {
   mic:'<rect x="9" y="2.6" width="6" height="11" rx="3"/><path d="M5.3 10.6a6.7 6.7 0 0 0 13.4 0"/><path d="M12 17.9v3.5"/>',
   check:'<path d="M4.8 12.4 9.6 17.2 19.2 6.9"/>',
   x:'<path d="M6.5 6.5 17.5 17.5M17.5 6.5 6.5 17.5"/>',
+  su:'<path d="M6 14.5 12 8.5l6 6"/>',
+  giu:'<path d="M6 9.5l6 6 6-6"/>',
   gear:'<path d="M3.5 8h9M16.5 8h4M3.5 16h4M11.5 16h9"/><circle cx="14.5" cy="8" r="2.3"/><circle cx="9.5" cy="16" r="2.3"/>',
   camera:'<path d="M3.4 8.8h3.3l1.5-2.4h7.6l1.5 2.4h3.3v9.8H3.4Z"/><circle cx="12" cy="13.6" r="3.4"/>',
   image:'<rect x="3.2" y="5.4" width="17.6" height="13.2" rx="2.2"/><path d="m3.8 16 4.5-4.1 3.3 2.9 2.9-2.5 5.7 4.9"/><circle cx="8.7" cy="9.7" r="1.25"/>',
@@ -2671,6 +2698,7 @@ Object.assign(I18N.it, {
   noteH:"Titolo",
   notePlaceholder:"Quello che impari, giorno per giorno…",
   noteSavedHint:"salvato",
+  noteFind:"Cerca nelle note…", noteFindX:"Cancella la ricerca",
   patients:"Pazienti", patSearch:"Cerca…", patOff:"Dimessi",
   patEmpty:"Nessun paziente. Tocca + per aggiungerne uno.",
   patEmptyDay:"Nessuno in reparto in questo giorno.",
@@ -2804,6 +2832,7 @@ Object.assign(I18N.de, {
   noteH:"Überschrift",
   notePlaceholder:"Was du lernst, Tag für Tag…",
   noteSavedHint:"gespeichert",
+  noteFind:"In Notizen suchen…", noteFindX:"Suche löschen",
   patients:"Patienten", patSearch:"Suchen…", patOff:"Entlassen",
   patEmpty:"Keine Patienten. Mit + einen anlegen.",
   patEmptyDay:"An diesem Tag war niemand auf Station.",
@@ -4950,7 +4979,9 @@ function cursoreInVista(ed){
   var cimaVista = vv ? vv.offsetTop : 0;
   var fondoVista = vv ? vv.offsetTop + vv.height : window.innerHeight;
   var margine = 72;                         /* circa tre righe libere sotto il cursore */
-  var cima = cimaVista + (parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--mb")) || 0) + 64;
+  var testa = ed._testa && ed._testa();
+  var cima = testa ? Math.max(cimaVista, testa.getBoundingClientRect().bottom) + 8
+    : cimaVista + (parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--mb")) || 0) + 64;
   if(rect.bottom > fondoVista - margine){
     window.scrollBy(0, Math.round(rect.bottom - (fondoVista - margine)));
   } else if(rect.top < cima){
@@ -5057,7 +5088,10 @@ function renderNote(){
   $("modeNoteName").textContent = t("mNote");
   $("noteTitle").textContent = t("mNote");
   $("noteH").textContent = t("noteH");
+  $("noteFind").placeholder = t("noteFind");
+  $("noteFindX").setAttribute("aria-label", t("noteFindX"));
   quadernoRiempi(noteEd(), S.notebook, t("notePlaceholder"));
+  notaCercaAggiorna(false);
 }
 
 /* Anche qui valgono i due segni: *così* fa un compito, "M:" fa una morale.
@@ -5103,8 +5137,131 @@ function convertiQuaderno(){
   avvisaTutto(tot);
 }
 
+/* ------------------------------------------------------ ricerca nelle note
+   Cerca in tutte le righe senza badare a maiuscole e accenti ("cefalo"
+   trova anche "Cefalosporine"). Le parole trovate si colorano senza toccare
+   il testo: il colore non entra mai nel salvataggio. */
+var notaCerca = { q:"", trovati:[], i:0 };
+/* una lettera alla volta, cosi' le posizioni restano le stesse del testo */
+function piega(s){
+  var out = "";
+  for(var k = 0; k < s.length; k++){
+    var c = s[k];
+    if(c === "\u00a0"){ out += " "; continue; }
+    var b = c.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    out += b ? b[0] : c;
+  }
+  return out;
+}
+/* tutti i punti del foglio dove compare la parola cercata */
+function notaTrova(ed, q){
+  var ago = piega(q.trim());
+  var trovati = [];
+  if(!ago) return trovati;
+  quadernoBlocks(ed).forEach(function(blk){
+    var pezzi = [], testo = "";
+    var w = document.createTreeWalker(blk, NodeFilter.SHOW_TEXT);
+    for(var n = w.nextNode(); n; n = w.nextNode()){
+      pezzi.push({ n:n, da:testo.length });
+      testo += n.nodeValue;
+    }
+    var pagliaio = piega(testo), dove = pagliaio.indexOf(ago);
+    function punto(pos, fine){
+      for(var j = pezzi.length - 1; j >= 0; j--){
+        if(pos > pezzi[j].da || (!fine && pos === pezzi[j].da)) return { n:pezzi[j].n, o:pos - pezzi[j].da };
+      }
+      return { n:pezzi[0].n, o:0 };
+    }
+    while(dove !== -1){
+      var a = punto(dove, false), b = punto(dove + ago.length, true);
+      var r = document.createRange();
+      r.setStart(a.n, a.o); r.setEnd(b.n, b.o);
+      trovati.push(r);
+      dove = pagliaio.indexOf(ago, dove + ago.length);
+    }
+  });
+  return trovati;
+}
+function notaColora(){
+  if(!window.CSS || !CSS.highlights || typeof Highlight === "undefined") return;
+  CSS.highlights.delete("nota-trovato");
+  CSS.highlights.delete("nota-attuale");
+  var tutti = notaCerca.trovati;
+  if(!tutti.length) return;
+  CSS.highlights.set("nota-trovato", new Highlight(...tutti));
+  CSS.highlights.set("nota-attuale", new Highlight(tutti[notaCerca.i]));
+}
+/* porta la parola trovata un po' sotto la ricerca, sopra la tastiera */
+function notaMostra(){
+  var r = notaCerca.trovati[notaCerca.i];
+  if(!r) return;
+  var rect = r.getBoundingClientRect();
+  var vv = window.visualViewport;
+  var fondo = vv ? vv.offsetTop + vv.height : window.innerHeight;
+  var cima = $("noteTop").getBoundingClientRect().bottom;
+  var meta = cima + Math.max(40, (fondo - cima) / 3);
+  if(rect.top < cima + 8 || rect.bottom > fondo - 16) window.scrollBy(0, Math.round(rect.top - meta));
+}
+function notaContatore(){
+  var q = notaCerca.q.trim(), n = notaCerca.trovati.length;
+  var cnt = $("noteFindN");
+  cnt.hidden = !q;
+  cnt.textContent = n ? (notaCerca.i + 1) + "/" + n : "0";
+  cnt.classList.toggle("zero", !!q && !n);
+  $("noteFindUp").hidden = $("noteFindDown").hidden = n < 2;
+  $("noteFindX").hidden = !notaCerca.q;
+}
+/* ricalcola; salta=true porta alla prima parola trovata */
+function notaCercaAggiorna(salta){
+  var ed = noteEd();
+  if(!ed) return;
+  var prima = notaCerca.trovati[notaCerca.i];
+  notaCerca.trovati = notaTrova(ed, notaCerca.q);
+  if(salta || notaCerca.i >= notaCerca.trovati.length) notaCerca.i = 0;
+  notaContatore();
+  notaColora();
+  if(salta) notaMostra();
+}
+function notaPasso(d){
+  var n = notaCerca.trovati.length;
+  if(!n) return;
+  notaCerca.i = (notaCerca.i + d + n) % n;
+  notaContatore(); notaColora(); notaMostra();
+}
+function initNotaCerca(){
+  var inp = $("noteFind");
+  $("noteFindX").appendChild(svgIcon("x", 16, 2));
+  inp.addEventListener("input", function(){
+    notaCerca.q = inp.value;
+    notaCercaAggiorna(true);
+  });
+  inp.addEventListener("keydown", function(e){
+    if(e.key === "Enter"){ e.preventDefault(); notaPasso(e.shiftKey ? -1 : 1); }
+    if(e.key === "Escape"){ inp.value = ""; notaCerca.q = ""; notaCercaAggiorna(false); }
+  });
+  inp.addEventListener("focus", function(){ document.body.classList.add("kb-scrive"); spazioTastiera(); });
+  inp.addEventListener("blur", function(){ document.body.classList.remove("kb-scrive"); spazioTastiera(); });
+  $("noteFindX").onclick = function(){
+    inp.value = ""; notaCerca.q = "";
+    notaCercaAggiorna(false);
+    inp.focus();
+  };
+  $("noteFindUp").appendChild(svgIcon("su", 18, 2));
+  $("noteFindDown").appendChild(svgIcon("giu", 18, 2));
+  /* toccare frecce e X non deve chiudere la tastiera della ricerca */
+  ["noteFindUp", "noteFindDown", "noteFindX"].forEach(function(id){
+    $(id).addEventListener("pointerdown", function(e){ e.preventDefault(); });
+  });
+  $("noteFindUp").onclick = function(){ notaPasso(-1); };
+  $("noteFindDown").onclick = function(){ notaPasso(1); };
+  /* scrivendo nel foglio la ricerca resta aggiornata */
+  noteEd().addEventListener("input", function(){ if(notaCerca.q) notaCercaAggiorna(false); });
+}
+
 function initNote(){
   var ed = noteEd();
+  ed._testa = function(){ return $("noteTop"); };
+  initNotaCerca();
   $("modeNote").onclick = function(){ setMode("note"); };
   $("noteH").onclick = function(){ quadernoTitolo(ed); };
   $("noteMic").appendChild(svgIcon("mic", 15));
