@@ -140,7 +140,7 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
     <button class="tile" data-go="abx" data-k="antibiotici antibiotico antibiose abx schema cefazolin flucloxacillin penicillin ampicillin unacid sulbactam piperacillin tazobac tazobactam meropenem ceftriaxon clarithromycin linezolid rifampicin daptomycin gentamicin metronidazol clindamycin vancomycin profilassi polmonite pneumonia urinario hwi addome sepsi mediastinite sternale mrsa mssa stafilococchi enterococco endocardite"><span class="k inf">Infezione</span><span class="t">Antibiotici</span><span class="s">Schemi per patogeno · dosi · GFR &lt; 30</span></button>
     <button class="tile" data-go="neuro" data-k="ictus stroke schlaganfall neuro check vorhalteversuch epilessia crisi midazolam levetiracetam lipid"><span class="k neu">Neuro</span><span class="t">Ictus · Crisi epilettica</span><span class="s">Neuro-check · midazolam</span></button>
     <button class="tile" data-go="ana" data-k="anafilassi allergia adrenalina salbutamolo ipratropio cortisone broncospasmo bpco inalatori spiolto trelegy trimbow"><span class="k emo">Emergenza</span><span class="t">Anafilassi · Bronchi</span><span class="s">Adrenalina · salbutamolo · inalatori</span></button>
-    <button class="tile" data-go="sed" data-k="analgosedazione sedazione etomidato propofol midazolam noradrenalina bolo cardioversione digiuno nüchtern tee"><span class="k pro">Procedura</span><span class="t">Analgosedazione</span><span class="s">Digiuno · etomidato · propofol</span></button>
+    <button class="tile" data-go="sed" data-k="analgosedazione sedazione etomidato etomidat propofol midazolam fentanyl esketamin ketanest noradrenalina bolo cardioversione defibrillazione shock pacing esterno transcutaneo schrittmacher digiuno nüchtern tee"><span class="k pro">Procedura</span><span class="t">Analgosedazione</span><span class="s">Pacing · cardioversione · TEE</span></button>
     <button class="tile" data-go="ak" data-k="anticoagulazione clexane enoxaparina eparina pausa pre operatoria intervento"><span class="k pro">Procedura</span><span class="t">Anticoag. pre-OP</span><span class="s">Pause Clexane · eparina</span></button>
     <button class="tile" data-go="ms" data-k="magensonde sondino naso gastrico"><span class="k pro">Procedura</span><span class="t">Sondino gastrico</span><span class="s">Controindicazioni</span></button>
     <button class="tile" data-go="el" data-k="potassio ipokaliemia iperkaliemia ipercaliemia kcl magnesio elettroliti calcio gluconato cloruro bicarbonato insulina glucosio salbutamolo lokelma dialisi"><span class="k met">Metabolico</span><span class="t">Potassio · Magnesio</span><span class="s">Ipo- e iperkaliemia · calcio · bicarbonato</span></button>
@@ -431,7 +431,7 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
 
 <!-- ============ SEDAZIONE ============ -->
 <section class="page" id="sed" data-t="Analgosedazione">
-  <div class="ph"><h2>Analgosedazione</h2><span class="cat">Due strade</span></div>
+  <div class="ph"><h2>Analgosedazione</h2><span class="cat">Pacing · Cardioversione · TEE</span></div>
   <div class="grid">
     <div class="blk alert">
       <h3>Digiuno (TEE, sedazione)</h3>
@@ -440,6 +440,51 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
         <dt>Liquidi chiari</dt><dd>ok fino a 2 h prima</dd>
         <dt>Farmaci</dt><dd>sì, con un sorso d'acqua</dd>
       </dl>
+    </div>
+    <div class="blk">
+      <h3>Pacing esterno (transcutaneo)</h3>
+      <p class="prep"><b>Ha i fili epicardici?</b> Stimola da lì: non fa male, niente sedazione.</p>
+      <ol class="steps">
+        <li><div class="nm">Fentanyl 50 µg e.v. = 5 ml</div>
+          <div class="prep">0,1 mg/2 ml ad 10 ml NaCl → 10 µg/ml. Poi 25 µg = 2,5 ml ogni 5 min se sente dolore. BtM: cassaforte.</div>
+          <div class="ren same">invariato · oppioide di scelta con GFR &lt; 30</div></li>
+        <li><div class="nm">Midazolam 1 mg e.v.</div>
+          <div class="prep">Dormicum 5 mg/5 ml → 1 ml (fiala 5 mg/1 ml: diluisci ad 5 ml). Ripeti 1 mg ogni 5 min, max 3 mg.</div>
+          <div class="ren">dose singola ok · ripetute −50 %</div></li>
+        <li><div class="nm">Stimola</div>
+          <div class="prep">frequenza 70/min · alza i mA fino alla cattura con polso femorale palpabile, poi +10 %.</div></li>
+      </ol>
+      <div class="rx"><div class="nm">PA sist. &lt; 90: Esketamin al posto del Fentanyl</div>
+        <div class="dose">0,25 mg/kg = <span class="c" data-c="eskeP"></span></div>
+        <div class="prep">Ketanest S 50 mg/2 ml ad 10 ml NaCl → 5 mg/ml · manca nel koffer</div>
+        <div class="ren same">invariata</div></div>
+      <p class="prep" style="margin-top:6px">Oltre Fentanyl 0,1 mg o Midazolam 3 mg ancora dolore → Anestesia / PIT: il pacing esterno è solo un ponte.</p>
+    </div>
+    <div class="blk">
+      <h3>Cardioversione / shock da sveglio</h3>
+      <p class="prep"><span class="tag haus">reparto</span> Stabile/elettiva: chiama l'Anestesia. Instabile e sei sola: così.</p>
+      <ol class="steps">
+        <li><div class="nm">Fentanyl 50 µg e.v. = 5 ml</div>
+          <div class="prep">diluito come sopra (10 µg/ml) · aspetta 2 min · riduce anche le mioclonie</div>
+          <div class="ren same">invariato</div></li>
+        <li><div class="nm">Etomidat 0,15 mg/kg</div>
+          <div class="dose"><span class="c" data-c="eto015"></span> in 30 s</div>
+          <div class="prep">Etomidat-Lipuro 20 mg/10 ml (2 mg/ml), non diluito. Riflesso ciliare ancora presente dopo 1 min: + 0,05 mg/kg = <span data-c="eto005"></span>.</div>
+          <div class="ren same">invariato</div></li>
+        <li><div class="nm">SYNC acceso → shock</div>
+          <div class="prep">controlla i marker sulle R · dopo ogni shock riattiva SYNC · resta col paziente fino a quando è sveglio</div></li>
+      </ol>
+      <div class="fixbox"><b>Senza polso</b> (FV / TV senza polso): niente sedazione, shock subito. Dopo cardiochirurgia: 3 shock di fila, poi RCP e resternotomia entro 5 min.</div>
+    </div>
+    <div class="blk alert">
+      <h3>Pronto prima di iniziare</h3>
+      <ul class="l">
+        <li>O₂, Ambu con maschera, aspiratore</li>
+        <li>SpO₂ continua, meglio con capnografia</li>
+        <li>Accesso minimo VERDE (18 G) che scorre</li>
+        <li>Noradrenalina a boli pronta ↓</li>
+        <li>Naloxon 0,1 mg · Flumazenil 0,2 mg → <a class="x" href="#nk">koffer</a></li>
+      </ul>
     </div>
     <div class="blk">
       <h3>1 · Etomidato</h3>
@@ -1085,6 +1130,9 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
     lipB:function(w){return n(1.5*w)+' ml';},
     lipInf:function(w){return n(15*w)+' ml/h';},
     lipMax:function(w){return n(12*w)+' ml';},
+    eto015:function(w){return n(0.15*w,1)+' mg = '+n(0.075*w,1)+' ml';},
+    eto005:function(w){return n(0.05*w,1)+' mg = '+n(0.025*w,1)+' ml';},
+    eskeP:function(w){return n(0.25*w,1)+' mg = '+n(0.05*w,1)+' ml';},
     eto03:function(w){return n(0.3*w,1)+' mg = '+n(0.15*w,1)+' ml';},
     prop2:function(w){return n(r(2*w,10))+' mg = '+n(r(2*w,10)/10)+' ml';},
     prop1:function(w){return n(r(w,10))+' mg = '+n(r(w,10)/10)+' ml';},
@@ -1126,7 +1174,7 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
     ['Eparina e.v.','terap. 12–18 IE/kg/h, pTT · stop 4–6 h pre-OP','invariata (preferita)',0,'ak'],
     ['Eparina s.c.','5000 IE 2–3×/d · pausa 6 h','invariata',0,'ak'],
     ['Esmololo','bolo 0,5 mg/kg · 50–300 µg/kg/min','invariato',0,'sam'],
-    ['Etomidato','sedazione 0,1 mg/kg · RSI 0,3 mg/kg (2 mg/ml)','invariato',0,'sed'],
+    ['Etomidato','sedazione 0,1 mg/kg · cardioversione 0,15 mg/kg · RSI 0,3 mg/kg (2 mg/ml)','invariato',0,'sed'],
     ['Fenilefrina','bolo 50–100 (–200) µg ogni 2 min · 0,15–0,5 µg/kg/min','invariata',0,'sam'],
     ['Fidaxomicina','200 mg 1-0-1 × 10 gg','invariata',0,'dia'],
     ['Glucagone (GlucaGen)','1 mg i.m.','invariato',0,'glu'],
@@ -1164,7 +1212,7 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
     ['Rocuronio (manca)','RSI 1,2 mg/kg','invariato',0,'nk'],
     ['Sugammadex (manca)','16 mg/kg dopo RSI','sconsigliato, in emergenza sì',1,'nk'],
     ['Esketamina (manca)','1 mg/kg (shock 0,5)','invariata',0,'nk'],
-    ['Fentanyl (manca)','2 µg/kg','invariato',0,'nk'],
+    ['Fentanyl (manca)','pacing / cardioversione 50 µg (10 µg/ml) · RSI 2 µg/kg','invariato',0,'sed'],
     ['Adenosina (manca)','6 → 12 → 12 mg rapido','invariata',0,'nk'],
     ['Calcio gluconato 10 % (manca)','iperK: 30 ml e.v. in 10 min (6,8 mmol)','invariato',0,'el'],
     ['Calcio cloruro 10 %','arresto/ZVK: 10 ml (6,8 mmol)','invariato',0,'el'],
