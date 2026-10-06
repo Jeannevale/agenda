@@ -139,6 +139,7 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
     <button class="tile" data-go="dia" data-k="diarrea clostridium difficile vancomicina loperamide fidaxomicina"><span class="k inf">Infezione</span><span class="t">Diarrea · C. diff</span><span class="s">Vanco p.o. · loperamide</span></button>
     <button class="tile" data-go="abx" data-k="antibiotici antibiotico antibiose abx schema cefazolin flucloxacillin penicillin ampicillin unacid sulbactam piperacillin tazobac tazobactam meropenem ceftriaxon clarithromycin linezolid rifampicin daptomycin gentamicin metronidazol clindamycin vancomycin profilassi polmonite pneumonia urinario hwi addome sepsi mediastinite sternale mrsa mssa stafilococchi enterococco endocardite"><span class="k inf">Infezione</span><span class="t">Antibiotici</span><span class="s">Schemi per patogeno · dosi · GFR &lt; 30</span></button>
     <button class="tile" data-go="neuro" data-k="ictus stroke schlaganfall neuro check vorhalteversuch epilessia crisi midazolam levetiracetam lipid"><span class="k neu">Neuro</span><span class="t">Ictus · Crisi epilettica</span><span class="s">Neuro-check · midazolam</span></button>
+    <button class="tile" data-go="delir" data-k="delir delirium delirio delirante agitiert agitato unruhe psychose psicosi psychotisch panik panico panikattacke beruhigen haloperidol haldol dexmedetomidin dexdor clonidin catapresan quetiapin seroquel melperon olanzapin zyprexa lorazepam tavor flumazenil anexate"><span class="k neu">Psyche</span><span class="t">Delir</span><span class="s">Haloperidol · Dexdor · Psychose · Panik</span></button>
     <button class="tile" data-go="ana" data-k="anafilassi allergia adrenalina salbutamolo ipratropio cortisone broncospasmo bpco inalatori spiolto trelegy trimbow"><span class="k emo">Emergenza</span><span class="t">Anafilassi · Bronchi</span><span class="s">Adrenalina · salbutamolo · inalatori</span></button>
     <button class="tile" data-go="sed" data-k="analgosedazione sedazione etomidato etomidat propofol midazolam fentanyl esketamin ketanest noradrenalina bolo cardioversione defibrillazione shock pacing esterno transcutaneo schrittmacher digiuno nüchtern tee"><span class="k pro">Procedura</span><span class="t">Analgosedazione</span><span class="s">Pacing · cardioversione · TEE</span></button>
     <button class="tile" data-go="ak" data-k="anticoagulazione clexane enoxaparina eparina pausa pre operatoria intervento"><span class="k pro">Procedura</span><span class="t">Anticoag. pre-OP</span><span class="s">Pause Clexane · eparina</span></button>
@@ -1088,6 +1089,85 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
   </div>
 </section>
 
+<!-- ============ DELIR ============ -->
+<section class="page" id="delir" data-t="Delir">
+  <div class="ph"><h2>Delir · Psychose · Panik</h2><span class="cat">Akut beruhigen</span></div>
+  <div class="grid">
+    <div class="blk alert">
+      <h3>Zuerst Ursachen prüfen</h3>
+      <ul class="l">
+        <li>BGA: Hypoxie, Hyperkapnie</li>
+        <li>BZ · Na⁺ · Ca²⁺</li>
+        <li>Schmerz · Harnverhalt (Blasenscan)</li>
+        <li>Hypotonie, Low Output, Blutung (Drainagen)</li>
+        <li>Entzug: Alkohol, Benzodiazepine</li>
+        <li>QTc vor jedem Antipsychotikum: &gt; 500 ms → kein Haloperidol (Amiodaron verlängert QT)</li>
+      </ul>
+    </div>
+
+    <div class="blk">
+      <h3>Delir, agitiert</h3>
+      <div class="rx"><div class="nm">Haloperidol (Haldol 5 mg/1 ml)</div>
+        <div class="dose">1 mg i.v. langsam · ≥ 75 J.: 0,5 mg</div>
+        <div class="prep">1 Amp. ad 10 ml NaCl 0,9 % (0,5 mg/ml) → 2 ml. Wiederholung nach 30 min, max. 5 mg/24 h. i.v. nur am Monitor. Kein Haloperidol bei Parkinson.</div>
+        <div class="ren same">unverändert</div></div>
+      <div class="rx"><div class="nm">Dexmedetomidin (Dexdor 200 µg/2 ml) · nur Intensiv</div>
+        <div class="dose">Start 0,7 µg/kg/h = <span class="c" data-c="dexS"></span> · max. 1,4 µg/kg/h = <span class="c" data-c="dexM"></span></div>
+        <div class="prep">200 µg (2 ml) ad 50 ml NaCl 0,9 % → 4 µg/ml · kein Bolus · Bradykardie, Hypotonie · atemneutral, gut im Weaning</div>
+        <div class="ren same">unverändert</div></div>
+      <div class="rx"><div class="nm">Clonidin (Catapresan 0,15 mg/1 ml)</div>
+        <div class="dose">75 µg i.v. in 5 min</div>
+        <div class="prep">1 Amp. ad 10 ml NaCl 0,9 % (15 µg/ml) → 5 ml · vegetative Unruhe, Entzug · Bradykardie, Hypotonie</div>
+        <div class="ren">Einzeldosis ok · Wiederholung: halbieren</div></div>
+      <div class="rx"><div class="nm">Quetiapin (Seroquel)</div>
+        <div class="dose">25 mg p.o. zur Nacht</div>
+        <div class="prep">wenn schlucken möglich</div>
+        <div class="ren same">unverändert</div></div>
+      <div class="rx"><div class="nm">Melperon</div>
+        <div class="dose">25 mg p.o. zur Nacht</div>
+        <div class="prep">ältere Patienten</div>
+        <div class="ren same">unverändert</div></div>
+      <p class="fixbox">Benzodiazepine nur bei Alkohol- oder Benzodiazepin-Entzug: sonst verschlechtern sie das Delir.</p>
+    </div>
+
+    <div class="blk">
+      <h3>Psychotische Krise</h3>
+      <div class="rx"><div class="nm">Lorazepam (Tavor)</div>
+        <div class="dose">kooperativ: Tavor Expidet 2,5 mg auf die Zunge · sonst 2 mg i.m.</div>
+        <div class="prep">Tavor pro injectione 2 mg/1 ml · i.v.: 1 ml + 1 ml NaCl 0,9 %, langsam</div>
+        <div class="ren">1 mg</div></div>
+      <div class="rx"><div class="nm">Haloperidol (Haldol 5 mg/1 ml)</div>
+        <div class="dose">5 mg i.m. · ≥ 75 J.: 1 mg</div>
+        <div class="prep">1 ml unverdünnt i.m. · Wiederholung nach 30 min, max. 20 mg/24 h</div>
+        <div class="ren same">unverändert</div></div>
+      <div class="rx"><div class="nm">Schwere Krise</div>
+        <div class="dose">Haloperidol 5 mg + Lorazepam 2 mg i.m.</div></div>
+      <div class="rx"><div class="nm">Alternative: Olanzapin (Zyprexa)</div>
+        <div class="dose">10 mg: Velotab auf die Zunge oder i.m.</div>
+        <div class="prep">i.m.: Pulver 10 mg + 2,1 ml Wasser für Inj. → 5 mg/ml, 2 ml · kein parenterales Benzodiazepin innerhalb 1 h</div>
+        <div class="ren same">unverändert</div></div>
+      <p class="prep" style="margin-top:6px">Oberarzt + psychiatrisches Konsil. Zwangsmedikation begründen und dokumentieren · Fixierung &gt; 30 min: richterliche Genehmigung.</p>
+    </div>
+
+    <div class="blk">
+      <h3>Panikattacke</h3>
+      <div class="rx"><div class="nm">Lorazepam (Tavor)</div>
+        <div class="dose">1 mg: Tavor Expidet 1 mg auf die Zunge</div>
+        <div class="prep">i.v.: Tavor 2 mg/1 ml, 0,5 ml + 0,5 ml NaCl 0,9 %, langsam am Monitor · Wiederholung nach 1 h · ≥ 75 J.: 0,5 mg</div>
+        <div class="ren">0,5 mg</div></div>
+      <p class="prep" style="margin-top:6px">Vorher ausschließen: Hypoxie, Rhythmusstörung, Ischämie, Hypoglykämie. Vorsicht mit Opioiden, COPD, Schlafapnoe.</p>
+    </div>
+
+    <div class="blk">
+      <h3>Antidot Benzodiazepine</h3>
+      <div class="rx"><div class="nm">Flumazenil (Anexate 0,5 mg/5 ml)</div>
+        <div class="dose">0,2 mg i.v. in 15 s = 2 ml</div>
+        <div class="prep">dann 0,1 mg (1 ml) jede Minute bis max. 1 mg · kürzer wirksam als Lorazepam: nachbeobachten</div>
+        <div class="ren same">unverändert</div></div>
+    </div>
+  </div>
+</section>
+
 <!-- ============ A–Z ============ -->
 <section class="page" id="az" data-t="Farmaci A–Z">
   <div class="ph"><h2>Farmaci A–Z</h2><span class="cat">Attiva "GFR &lt; 30" in alto per la colonna rene</span></div>
@@ -1157,6 +1237,8 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
     gent3:function(w){return n(r(3*w,10))+' mg';},
     gentRen:function(w){return n(r(2.4*w,10))+' mg ogni 48 h';},
     dapto10:function(w){return n(r(10*w,50))+' mg';},
+    dexS:function(w){return n(0.7*w,0)+' µg/h = '+n(0.7*w/4,1)+' ml/h';},
+    dexM:function(w){return n(1.4*w,0)+' µg/h = '+n(1.4*w/4,1)+' ml/h';},
     daptoR:function(w){return n(r(8*w,50))+'–'+n(r(10*w,50))+' mg';}
   };
   function vl(w){return Math.min(r(30*w,250),3000);}
@@ -1243,6 +1325,12 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
     ['Metronidazol','500 mg ogni 8 h i.v.','invariato',0,'ab6'],
     ['Penicillin G','3 Mio IE ogni 4 h i.v. (endocardite)','GFR 19–29: 5 Mio IE ogni 8 h · < 19: ogni 12 h',1,'ab2'],
     ['Piperacillin/Tazobactam','4,5 g ogni 8 h i.v.','1ª dose piena · GFR 20–29: ogni 8 h · < 20: ogni 12 h',1,'ab3'],
+    ['Haloperidol (Haldol)','Delir 1 mg i.v. (≥ 75 J. 0,5 mg) · Psychose 5 mg i.m. · QTc!','unverändert',0,'delir'],
+    ['Dexmedetomidin (Dexdor)','Start 0,7 µg/kg/h, max. 1,4 µg/kg/h (4 µg/ml) · kein Bolus','unverändert',0,'delir'],
+    ['Lorazepam (Tavor)','Panik 1 mg s.l. · Psychose 2 mg i.m./i.v.','Panik 0,5 mg · Psychose 1 mg',1,'delir'],
+    ['Olanzapin (Zyprexa)','10 mg Velotab oder i.m. · kein Benzo parenteral innerhalb 1 h','unverändert',0,'delir'],
+    ['Quetiapin (Seroquel)','Delir 25 mg p.o. zur Nacht','unverändert',0,'delir'],
+    ['Melperon','Delir 25 mg p.o. zur Nacht','unverändert',0,'delir'],
     ['Rifampicin','450 mg ogni 12 h p.o./i.v. (solo con protesi)','invariato (alcune Fachinfo: max 600 mg/24 h)',0,'ab2']
   ];
   var tb=document.getElementById('aztb');
