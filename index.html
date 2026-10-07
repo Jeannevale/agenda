@@ -3676,7 +3676,14 @@ function renderPatDetail(){
   var tabs = $("pdTabs");
   tabs.textContent = "";
   if(pview.tab === "icu" && !icuTabVisibile(p)) pview.tab = "sys";
-  PTABS.forEach(function(pair){
+  /* finche' il paziente e' in terapia intensiva, la sezione Intensiva viene per prima;
+     tornato in reparto, torna al suo posto in fondo */
+  var ordine = PTABS;
+  if(patInIcu(p, view.day) && !patDimesso(p, view.day)){
+    ordine = PTABS.filter(function(x){ return x[0] === "icu"; })
+      .concat(PTABS.filter(function(x){ return x[0] !== "icu"; }));
+  }
+  ordine.forEach(function(pair){
     if(pair[0] === "icu" && !icuTabVisibile(p)) return;
     var b = document.createElement("button");
     b.className = "ptab" + (pair[0] === "icu" ? " icutab" : "") + (pview.tab === pair[0] ? " on" : "");
