@@ -3550,9 +3550,7 @@ function renderPatList(){
     return pview.showIcu ? (patInIcu(p, view.day) && !patDimesso(p, view.day)) : true;
   });
   var q = pview.q.trim().toLowerCase();
-  var shown = q ? all.filter(function(p){
-    return ((p.alias||"") + " " + (p.room||"") + " " + (p.dx||"") + " " + (p.surgeon||"")).toLowerCase().indexOf(q) >= 0;
-  }) : all;
+  var shown = q ? all.filter(function(p){ return patCerca(p, q); }) : all;
   /* l'ordine e' quello che decidi tu trascinando: qui si tiene solo
      i dimessi in fondo, il resto segue l'ordine dell'elenco */
   var perColore = !!S.settings.patByColor;
@@ -3601,6 +3599,37 @@ function renderPatList(){
   note.className = "labnote"; note.style.marginTop = trascinabile ? "6px" : "14px";
   note.textContent = t("patNote");
   host.appendChild(note);
+}
+
+/* Ricerca dei pazienti "in senso lato".
+   Gli pseudonimi sono scritti come iniziale, punto e consonanti del nome
+   (es. "O.brlndr"), ma si cercano col nome intero, vocali comprese.
+   - punti, spazi, trattini e accenti non contano ("obrlndr" = "O.brlndr");
+   - le vocali non contano nello pseudonimo: "berlinder", "berl" o
+     "Otto Berlinder" trovano tutti "O.brlndr";
+   - stanza, diagnosi e operatore si cercano come prima, ma anche qui senza
+     punti e spazi ("st3" trova "St. 3"). */
+function cercaNorm(s){
+  return String(s || "").toLowerCase()
+    .replace(/ß/g, "ss").normalize("NFD").replace(/[̀-ͯ]/g, "")
+    .replace(/[^a-z0-9]/g, "");
+}
+function cercaScheletro(s){ return cercaNorm(s).replace(/[aeiou]/g, ""); }
+function patCerca(p, q){
+  var nq = cercaNorm(q);
+  if(!nq) return true;
+  var campi = [p.alias, p.room, p.dx, p.surgeon];
+  for(var i = 0; i < campi.length; i++){
+    if(cercaNorm(campi[i]).indexOf(nq) >= 0) return true;
+  }
+  /* lo pseudonimo senza vocali, intero e senza l'iniziale prima del punto */
+  var alias = String(p.alias || "");
+  var dopoPunto = alias.indexOf(".") >= 0 ? alias.slice(alias.indexOf(".") + 1) : alias;
+  var sq = cercaScheletro(q);
+  var sa = cercaScheletro(alias), sn = cercaScheletro(dopoPunto);
+  if(sq && (sa.indexOf(sq) >= 0 || sn.indexOf(sq) >= 0)) return true;   /* "berl" -> "brl" */
+  if(sn.length >= 2 && sq.indexOf(sn) >= 0) return true;                 /* "Otto Berlinder" */
+  return false;
 }
 
 /* Riordinare le schede: tieni premuto, poi trascina su e giu'.
