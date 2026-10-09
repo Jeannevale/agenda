@@ -3292,10 +3292,31 @@ function confrontaStanza(a, b){
   /* stesso numero: "12a" prima di "12b" */
   return String(a.room || "").localeCompare(String(b.room || ""), undefined, { numeric:true });
 }
-/* un paziente nuovo si infila al suo posto, non in fondo */
+/* un paziente nuovo (o con la stanza cambiata) si infila al suo posto, non in fondo.
+   Prima si scorreva tutto l'elenco cercando la prima stanza piu' grande: ma
+   nell'elenco restano anche i dimessi (invisibili, con le loro vecchie stanze),
+   chi e' in intensiva e le schede spostate a mano, quindi la scheda nuova finiva
+   accanto a un paziente che non si vede. Ora si guarda solo chi e' in lista
+   adesso, in reparto, con un numero di stanza: la scheda va subito dopo la stanza
+   piu' vicina che viene prima della sua (o prima di tutte, se la sua e' la piu' bassa). */
 function inserisciPerStanza(np){
-  var arr = patients(), i = 0;
-  while(i < arr.length && confrontaStanza(arr[i], np) <= 0) i++;
+  var arr = patients();
+  var g = view.day || todayStr();
+  if(numStanza(np.room) === null){ arr.push(np); return arr.length - 1; }
+  var visti = arr.filter(function(x){
+    return x !== np && patPresente(x, g) && !patDimesso(x, g) && !patInIcu(x, g) &&
+      numStanza(x.room) !== null;
+  });
+  var prima = null, dopo = null;
+  visti.forEach(function(x){
+    if(confrontaStanza(x, np) <= 0){
+      if(!prima || confrontaStanza(x, prima) >= 0) prima = x;   /* la piu' alta fra le piu' basse */
+    } else if(!dopo || confrontaStanza(x, dopo) < 0) dopo = x;  /* la piu' bassa fra le piu' alte */
+  });
+  var i;
+  if(prima) i = arr.indexOf(prima) + 1;
+  else if(dopo) i = arr.indexOf(dopo);
+  else i = arr.length;
   arr.splice(i, 0, np);
   return i;
 }
@@ -6492,6 +6513,13 @@ function initPat(){
     ordinaPerStanza();
     S.settings.patOrdered = true;
     S.settings.patStanze = 1;
+    save();
+  }
+  /* una volta sola (09.10.2026): rimette in ordine di stanza le schede finite
+     fuori posto con il vecchio inserimento, che si confondeva con i dimessi */
+  if(!S.settings.patStanze2){
+    ordinaPerStanza();
+    S.settings.patStanze2 = 1;
     save();
   }
 

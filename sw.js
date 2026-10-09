@@ -1,7 +1,7 @@
 /* Agenda di turno: l'app resta salvata sul telefono e si apre subito, anche
    senza rete. A ogni apertura controlla in sottofondo se c'e' una versione
    nuova: se c'e', la salva e avvisa la pagina. */
-const CACHE = "agenda-v17";
+const CACHE = "agenda-v18";
 const CORE = ["./", "./index.html", "./medis.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png"];
 /* true quando la pagina aperta e' piu' vecchia di quella appena scaricata */
 let nuova = false;
