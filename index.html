@@ -677,6 +677,35 @@ table.labtab td.pname .namebtn:hover{text-decoration-color:var(--accent); color:
   .myval .mv-u,.myval .mv-n{width:48px}
 }
 
+/* ================= elenchi di proposte (Impostazioni) ================= */
+.sgnav{display:flex; flex-direction:column; border:1px solid var(--line); border-radius:9px;
+  overflow:hidden; background:var(--surface)}
+.sgnav button{display:flex; align-items:center; gap:10px; padding:11px 12px; text-align:left;
+  border-top:1px solid var(--line); color:var(--ink); background:none; width:100%}
+.sgnav button:first-child{border-top:none}
+.sgnav button:hover{background:var(--surface-2)}
+.sgnav .sg-t{flex:1; min-width:0}
+.sgnav .sg-name{display:block; font-size:14.5px; font-weight:600}
+.sgnav .sg-where{display:block; font-size:12px; color:var(--ink-3); margin-top:2px; line-height:1.35}
+.sgnav .sg-n{flex:none; font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--ink-3)}
+.sgnav .sg-chev{flex:none; color:var(--ink-3); font-size:20px; line-height:1}
+.sglist{display:flex; flex-direction:column; gap:6px; margin-top:4px}
+.sgitem{display:flex; gap:6px; align-items:center; background:var(--surface);
+  border:1px solid var(--line); border-radius:8px; padding:4px 4px 4px 2px; touch-action:pan-y}
+.sgitem.placeholder{opacity:.22; filter:grayscale(1); border-style:dashed}
+.sgitem.ghost{position:fixed; z-index:70; margin:0; pointer-events:none; opacity:.97;
+  transform:scale(1.02); box-shadow:0 14px 34px -10px rgba(18,37,42,.5)}
+.sgitem .vgrip{width:28px; min-height:34px}
+.sgitem input{flex:1; min-width:0; padding:7px 8px; border:1px solid transparent; border-radius:6px;
+  background:transparent; color:var(--ink); font-size:15px}
+.sgitem input:focus{border-color:var(--accent); background:var(--surface)}
+.sgitem .mx{flex:none; width:32px; height:32px; display:grid; place-items:center; border-radius:7px;
+  color:var(--ink-3)}
+.sgitem .mx:hover{background:var(--surface-2); color:var(--alert)}
+.sgadd{display:flex; gap:8px; margin-top:12px}
+.sgadd input{flex:1; min-width:0; padding:10px 11px; border:1px solid var(--line-strong);
+  border-radius:8px; background:var(--surface); color:var(--ink); font-size:15px}
+
 /* ================= colleghi ================= */
 /* il foglio di scrittura dentro una sezione: stesso quaderno, più basso */
 .notearea.qsmall{min-height:32dvh; margin-top:0; margin-bottom:0; font-size:15px}
@@ -787,6 +816,34 @@ table.labtab td.pname .namebtn:hover{text-decoration-color:var(--accent); color:
 @media (prefers-color-scheme:dark){ :root:not([data-theme="light"]) .minichip.icu,
   :root:not([data-theme="light"]) .ghostsm.icubtn.on{ color:#1a1020; } }
 :root[data-theme="dark"] .minichip.icu, :root[data-theme="dark"] .ghostsm.icubtn.on{ color:#1a1020; }
+/* colori delle schede scelti a mano: tenui, il testo resta nero e leggibile */
+:root{ --crit:#C8641E; --crit-soft:#FDEEDF; --dim:#3A8DBF; --dim-soft:#EAF5FC; }
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
+  --crit:#F2A35E; --crit-soft:#33230F; --dim:#7FC4EA; --dim-soft:#132936; } }
+:root[data-theme="dark"]{ --crit:#F2A35E; --crit-soft:#33230F; --dim:#7FC4EA; --dim-soft:#132936; }
+.patcard.col-crit{ border-left-color:var(--crit); background:var(--crit-soft); }
+.patcard.col-dim{ border-left-color:var(--dim); background:var(--dim-soft); }
+.minichip.crit{ background:transparent; border-color:var(--crit); color:var(--crit); }
+.minichip.dim{ background:transparent; border-color:var(--dim); color:var(--dim); }
+/* il pallino per cambiare colore, direttamente nella lista */
+.patcard .pc-side{flex:none; display:flex; flex-direction:column; align-items:center; gap:10px}
+.colordot{width:34px; height:34px; margin:-6px -6px 0 0; display:grid; place-items:center;
+  border-radius:50%; touch-action:manipulation}
+.colordot i{display:block; width:17px; height:17px; border-radius:50%;
+  border:1.5px dashed var(--line-strong); background:transparent}
+.colordot.c-crit i{border:none; background:var(--crit)}
+.colordot.c-dim i{border:none; background:var(--dim)}
+.colordot.c-icu i{border:none; background:var(--icu)}
+.colordot:active{background:var(--surface-2)}
+.colpick{display:flex; flex-direction:column; gap:8px; margin-top:6px}
+.colpick button{display:flex; align-items:center; gap:12px; padding:12px 12px; border-radius:9px;
+  border:1px solid var(--line); background:var(--surface); text-align:left; font-size:15px}
+.colpick button.on{border-color:var(--accent); box-shadow:inset 0 0 0 1px var(--accent)}
+.colpick .cpsw{flex:none; width:22px; height:22px; border-radius:50%; border:1.5px dashed var(--line-strong)}
+.colpick .cpsw.crit{border:none; background:var(--crit)}
+.colpick .cpsw.dim{border:none; background:var(--dim)}
+.colpick .cp-t{flex:1; min-width:0}
+.colpick .cp-sub{display:block; font-size:12px; color:var(--ink-3); margin-top:1px}
 #modebar{height:var(--mb)}
 .shell{padding-top:var(--mb)}
 .topbar{top:var(--mb)}
@@ -1131,6 +1188,7 @@ table.labtab td.pname .namebtn:hover{text-decoration-color:var(--accent); color:
         <button class="sx" id="patSearchX" aria-label="Cancella la ricerca" hidden></button>
       </div>
       <button class="ghostsm" id="patShowOff">Dimessi</button>
+      <button class="ghostsm" id="patSortCol">Colori</button>
     </div>
     </div>
     <main class="patlist" id="patList"></main>
@@ -2449,6 +2507,8 @@ function openSettings(){
     };
     sheet.appendChild(moIn);
 
+    suggSettingsBlock(sheet, close);
+
     sheet.appendChild(labelEl(t("pinChange")));
     var pinRow = document.createElement("div"); pinRow.className = "sheet-actions";
     pinRow.style.marginTop = "4px";
@@ -3460,6 +3520,9 @@ function renderPatList(){
   $("patShowOff").textContent = t("icuBtn");
   $("patShowOff").classList.add("icubtn");
   $("patShowOff").classList.toggle("on", pview.showIcu);
+  $("patSortCol").textContent = "⇅ " + t("sortColBtn");
+  $("patSortCol").title = t("sortColHint");
+  $("patSortCol").classList.toggle("on", !!S.settings.patByColor);
 
   var all = patients().filter(function(p){
     if(!patPresente(p, view.day)) return false;
@@ -3471,9 +3534,22 @@ function renderPatList(){
   }) : all;
   /* l'ordine e' quello che decidi tu trascinando: qui si tiene solo
      i dimessi in fondo, il resto segue l'ordine dell'elenco */
+  var perColore = !!S.settings.patByColor;
   shown.sort(function(a,b){
-    /* in reparto, poi terapia intensiva, poi dimessi */
-    function rango(x){ return patDimesso(x, view.day) ? 2 : (patInIcu(x, view.day) ? 1 : 0); }
+    /* in reparto, poi terapia intensiva, poi dimessi.
+       Con "Colori" acceso: arancioni (da controllare) in cima, poi quelli
+       senza colore, poi gli azzurri (in dimissione), poi intensiva e dimessi.
+       Dentro ogni gruppo resta l'ordine scelto trascinando. */
+    function rango(x){
+      if(patDimesso(x, view.day)) return 9;
+      if(perColore){
+        if(x.color === "crit") return 0;
+        if(x.color === "dim") return 2;
+        if(patInIcu(x, view.day)) return 3;
+        return 1;
+      }
+      return patInIcu(x, view.day) ? 1 : 0;
+    }
     return rango(a) - rango(b);
   });
 
@@ -3592,7 +3668,11 @@ function salvaOrdine(host){
 function patCard(p){
   var b = document.createElement("button");
   var inIcu = patInIcu(p, view.day) && !patDimesso(p, view.day);
-  b.className = "patcard" + (patDimesso(p, view.day) ? " off" : "") + (inIcu ? " icu" : (patHasWarn(p) ? " warn" : ""));
+  var dimesso = patDimesso(p, view.day);
+  /* il colore scelto a mano vince sul viola dell'intensiva (il chip Intensiva resta) */
+  var col = (!dimesso && PCOL[p.color]) ? p.color : null;
+  b.className = "patcard" + (dimesso ? " off" : "") +
+    (col ? " col-" + col : (inIcu ? " icu" : (patHasWarn(p) ? " warn" : "")));
   var main = document.createElement("div"); main.className = "pc-main";
 
   var al = document.createElement("div"); al.className = "pc-alias";
@@ -3605,6 +3685,7 @@ function patCard(p){
   var chips = document.createElement("div"); chips.className = "pc-chips";
   if(p.room) chips.appendChild(miniChip(p.room, ""));
   if(inIcu) chips.appendChild(miniChip(t("icuChip"), "icu"));
+  if(col) chips.appendChild(miniChip(t(PCOL[col].chip), col));
   if(p.dischargedOn === view.day) chips.appendChild(miniChip(t("dischargedToday"), ""));
   else if(patDimesso(p, view.day)) chips.appendChild(miniChip(t("patOff") + " " + fmtDayShort(p.dischargedOn), ""));
   var op = opWords(p.opDate);
@@ -3619,8 +3700,29 @@ function patCard(p){
   main.appendChild(chips);
 
   b.appendChild(main);
+  var side = document.createElement("span"); side.className = "pc-side";
   var ch = document.createElement("span"); ch.className = "chev"; ch.textContent = "›";
-  b.appendChild(ch);
+  side.appendChild(ch);
+  /* pallino colore: si cambia da qui, senza aprire il paziente.
+     La scheda e' gia' un pulsante, quindi questo e' uno span con ruolo di pulsante
+     che non lascia passare il tocco (ne' l'apertura ne' il trascinamento). */
+  if(!dimesso){
+    var dot = document.createElement("span");
+    dot.className = "colordot" + (col ? " c-" + col : (inIcu ? " c-icu" : ""));
+    dot.setAttribute("role", "button");
+    dot.setAttribute("aria-label", t("colPick"));
+    dot.title = t("colPick");
+    dot.appendChild(document.createElement("i"));
+    ["pointerdown", "pointerup", "touchstart"].forEach(function(ev){
+      dot.addEventListener(ev, function(e){ e.stopPropagation(); }, { passive:true });
+    });
+    dot.addEventListener("click", function(e){
+      e.stopPropagation(); e.preventDefault();
+      openColorSheet(p);
+    });
+    side.appendChild(dot);
+  }
+  b.appendChild(side);
   b.dataset.pid = p.id;
   b.onclick = function(){
     if(patDragged) return;            /* stavi spostando la scheda, non aprendola */
@@ -3635,6 +3737,63 @@ function miniChip(text, cls){
   s.className = "minichip" + (cls ? " " + cls : "");
   s.textContent = text;
   return s;
+}
+
+/* ------------------------------------------------------------- colore della scheda
+   Un colore scelto a mano per ogni paziente, valido finche' non lo cambi:
+   arancione = critico, da controllare; azzurro = in dimissione.
+   Il viola dell'intensiva resta automatico (passaggio in terapia intensiva). */
+var PCOL = {
+  crit:{ name:"colCrit", sub:"colCritSub", chip:"colCritChip" },
+  dim:{ name:"colDim", sub:"colDimSub", chip:"colDimChip" }
+};
+Object.assign(I18N.it, {
+  colPick:"Cambia colore", colTitle:"Colore della scheda",
+  colNone:"Nessun colore", colNoneSub:"Scheda normale (viola se è in terapia intensiva)",
+  colCrit:"Arancione", colCritSub:"Critico, da controllare", colCritChip:"da controllare",
+  colDim:"Azzurro", colDimSub:"In dimissione", colDimChip:"in dimissione",
+  sortColBtn:"Colori", sortColHint:"Ordina per colore: da controllare in cima, poi gli altri, poi in dimissione"
+});
+Object.assign(I18N.de, {
+  colPick:"Farbe ändern", colTitle:"Farbe der Karte",
+  colNone:"Keine Farbe", colNoneSub:"Normale Karte (lila, wenn auf Intensiv)",
+  colCrit:"Orange", colCritSub:"Kritisch, kontrollieren", colCritChip:"kontrollieren",
+  colDim:"Hellblau", colDimSub:"Vor der Entlassung", colDimChip:"Entlassung",
+  sortColBtn:"Farben", sortColHint:"Nach Farbe sortieren: Kontrollieren oben, dann die anderen, dann Entlassung"
+});
+function openColorSheet(p){
+  openSheet(function(sheet, close){
+    var h = document.createElement("h2"); h.textContent = t("colTitle");
+    sheet.appendChild(h);
+    var sub = document.createElement("p"); sub.className = "sub";
+    sub.textContent = p.alias + (p.room ? " · " + p.room : "");
+    sheet.appendChild(sub);
+    var box = document.createElement("div"); box.className = "colpick";
+    [[null, "colNone", "colNoneSub"], ["crit", "colCrit", "colCritSub"], ["dim", "colDim", "colDimSub"]]
+      .forEach(function(o){
+        var b = document.createElement("button");
+        if((p.color || null) === o[0]) b.className = "on";
+        var sw = document.createElement("span"); sw.className = "cpsw" + (o[0] ? " " + o[0] : "");
+        var tx = document.createElement("span"); tx.className = "cp-t";
+        tx.textContent = t(o[1]);
+        var s2 = document.createElement("span"); s2.className = "cp-sub"; s2.textContent = t(o[2]);
+        tx.appendChild(s2);
+        b.appendChild(sw); b.appendChild(tx);
+        b.onclick = function(){
+          var y = window.scrollY || 0;
+          if(o[0]) p.color = o[0]; else delete p.color;
+          save(); close(); renderPatList();
+          window.scrollTo(0, y);   /* la lista resta dov'eri */
+        };
+        box.appendChild(b);
+      });
+    sheet.appendChild(box);
+    var acts = document.createElement("div"); acts.className = "sheet-actions";
+    var cn = document.createElement("button"); cn.className = "btn btn-ghost";
+    cn.textContent = t("cancel"); cn.onclick = close;
+    acts.appendChild(cn);
+    sheet.appendChild(acts);
+  });
 }
 
 /* ------------------------------------------------------------- scheda */
@@ -5804,7 +5963,193 @@ function copyString(s){
   setTimeout(function(){ ta.remove(); }, 300);
 }
 
-/* ------------------------------------------------------------- proposte */
+/* ------------------------------------------------------------- elenchi di proposte
+   Ogni punto dell'app che propone parole già pronte ha il suo elenco in
+   S.settings.sugg, che si cambia dalle Impostazioni: aggiungere, togliere,
+   correggere, riordinare trascinando. Una parola nuova scritta a mano entra
+   da sola in fondo al suo elenco. I nomi del laboratorio hanno già il loro
+   foglio ("I miei valori"): dalle Impostazioni si apre quello. */
+Object.assign(I18N.it, {
+  suggLabel:"Proposte",
+  suggNote:"Le parole che l'app ti propone mentre scrivi. Tocca un elenco per cambiarlo.",
+  suggSurg:"Operatore", suggSurgWhere:"Scheda del paziente, campo Operatore",
+  suggIcu:"Titoli Intensiva", suggIcuWhere:"Nuova voce nella cartella Intensiva",
+  suggLab:"Nomi del laboratorio", suggLabWhere:"Inserimento dei valori di laboratorio",
+  suggEditNote:"Trascina dalla maniglia per cambiare l'ordine, tocca una parola per correggerla. Quello che scrivi a mano altrove entra da solo in fondo all'elenco.",
+  suggEmpty:"L'elenco è vuoto.",
+  suggAddPh:"Nuova proposta…", suggAdd:"Aggiungi",
+  suggDup:"C'è già nell'elenco", suggReset:"Ripristina l'elenco iniziale",
+  suggResetDone:"Elenco ripristinato", suggMove:"Sposta"
+});
+Object.assign(I18N.de, {
+  suggLabel:"Vorschläge",
+  suggNote:"Die Wörter, die dir die App beim Schreiben vorschlägt. Tippe auf eine Liste, um sie zu ändern.",
+  suggSurg:"Operateur", suggSurgWhere:"Patientenkarte, Feld Operateur",
+  suggIcu:"Titel Intensiv", suggIcuWhere:"Neuer Eintrag im Abschnitt Intensiv",
+  suggLab:"Labornamen", suggLabWhere:"Eingabe der Laborwerte",
+  suggEditNote:"Am Griff ziehen, um die Reihenfolge zu ändern; auf ein Wort tippen, um es zu korrigieren. Was du anderswo von Hand schreibst, kommt automatisch ans Ende der Liste.",
+  suggEmpty:"Die Liste ist leer.",
+  suggAddPh:"Neuer Vorschlag…", suggAdd:"Hinzufügen",
+  suggDup:"Steht schon in der Liste", suggReset:"Ursprüngliche Liste wiederherstellen",
+  suggResetDone:"Liste wiederhergestellt", suggMove:"Verschieben"
+});
+
+var SUGG = {
+  surg:{ name:"suggSurg", where:"suggSurgWhere" },
+  icu:{ name:"suggIcu", where:"suggIcuWhere" }
+};
+/* l'elenco di partenza: per l'operatore i nomi già scritti nelle schede,
+   per l'intensiva i titoli soliti nella lingua dell'interfaccia */
+function suggDefault(kind){
+  var out = [];
+  function metti(s){
+    s = String(s || "").trim();
+    if(s && out.map(labKey).indexOf(labKey(s)) < 0) out.push(s);
+  }
+  if(kind === "surg") (S.patients || []).forEach(function(x){ metti(x.surgeon); });
+  if(kind === "icu") t("icuSugg").split("|").forEach(metti);
+  return out;
+}
+function suggList(kind){
+  var s = S.settings.sugg || (S.settings.sugg = {});
+  if(!Array.isArray(s[kind])){ s[kind] = suggDefault(kind); save(); }
+  return s[kind];
+}
+/* una parola scritta a mano che non c'è ancora va in fondo all'elenco */
+function suggRemember(kind, val){
+  val = String(val || "").trim();
+  if(!val) return;
+  var l = suggList(kind);
+  if(l.map(labKey).indexOf(labKey(val)) < 0){ l.push(val); save(); }
+}
+
+/* il pezzo dentro le Impostazioni: un elenco per ogni punto che propone */
+function suggSettingsBlock(sheet, closeSettings){
+  sheet.appendChild(labelEl(t("suggLabel")));
+  var n = document.createElement("p");
+  n.style.cssText = "font-size:12.5px; color:var(--ink-3); line-height:1.5; margin:0 0 8px";
+  n.textContent = t("suggNote");
+  sheet.appendChild(n);
+  var nav = document.createElement("div"); nav.className = "sgnav";
+  function voce(nome, dove, quanti, apri){
+    var b = document.createElement("button");
+    var tx = document.createElement("span"); tx.className = "sg-t";
+    var a = document.createElement("span"); a.className = "sg-name"; a.textContent = nome;
+    var w = document.createElement("span"); w.className = "sg-where"; w.textContent = dove;
+    tx.appendChild(a); tx.appendChild(w);
+    var c = document.createElement("span"); c.className = "sg-n"; c.textContent = quanti;
+    var ch = document.createElement("span"); ch.className = "sg-chev"; ch.textContent = "›";
+    b.appendChild(tx); b.appendChild(c); b.appendChild(ch);
+    b.onclick = apri;
+    nav.appendChild(b);
+  }
+  Object.keys(SUGG).forEach(function(k){
+    voce(t(SUGG[k].name), t(SUGG[k].where), suggList(k).length,
+      function(){ closeSettings(); openSuggSheet(k); });
+  });
+  voce(t("suggLab"), t("suggLabWhere"), labNames().length,
+    function(){ closeSettings(); openMyValuesSheet(); });
+  sheet.appendChild(nav);
+}
+
+function openSuggSheet(kind){
+  openSheet(function(sheet, close){
+    var h = document.createElement("h2"); h.textContent = t(SUGG[kind].name);
+    sheet.appendChild(h);
+    var sub = document.createElement("p"); sub.className = "sub"; sub.textContent = t(SUGG[kind].where);
+    sheet.appendChild(sub);
+    var nt = document.createElement("p"); nt.className = "labnote";
+    nt.style.margin = "0 0 10px"; nt.textContent = t("suggEditNote");
+    sheet.appendChild(nt);
+
+    var host = document.createElement("div"); host.className = "sglist";
+    sheet.appendChild(host);
+    var vuoto = document.createElement("p"); vuoto.className = "emptysm"; vuoto.textContent = t("suggEmpty");
+    sheet.appendChild(vuoto);
+
+    /* l'elenco salvato è sempre quello che si vede, nell'ordine in cui si vede */
+    function salva(){
+      var out = [];
+      Array.prototype.forEach.call(host.querySelectorAll(".sgitem input"), function(i){
+        var v = i.value.trim();
+        if(v && out.map(labKey).indexOf(labKey(v)) < 0) out.push(v);
+      });
+      S.settings.sugg = S.settings.sugg || {};
+      S.settings.sugg[kind] = out;
+      save();
+      vuoto.hidden = out.length > 0;
+    }
+    function riga(val){
+      var r = document.createElement("div"); r.className = "sgitem";
+      var g = document.createElement("button"); g.className = "vgrip";
+      g.setAttribute("aria-label", t("suggMove"));
+      g.appendChild(svgIcon("grip", 16, 1.9));
+      var i = document.createElement("input");
+      i.value = val; i.autocomplete = "off";
+      var vecchio = val;
+      i.onchange = function(){
+        if(!i.value.trim()) i.value = vecchio;   /* vuoto: torna com'era, per togliere c'è il cestino */
+        vecchio = i.value.trim();
+        salva();
+      };
+      i.onkeydown = function(e){ if(e.key === "Enter"){ e.preventDefault(); i.blur(); } };
+      var x = document.createElement("button"); x.className = "mx";
+      x.setAttribute("aria-label", t("del"));
+      x.appendChild(svgIcon("trash", 15));
+      x.onclick = function(){
+        var dopo = r.nextSibling;
+        r.remove(); salva();
+        showToast(t("deleted"), t("undo"), function(){
+          if(dopo && dopo.parentNode === host) host.insertBefore(r, dopo); else host.appendChild(r);
+          salva();
+        });
+      };
+      r.appendChild(g); r.appendChild(i); r.appendChild(x);
+      attachDragHandle(r, g, "sgitem", salva);
+      return r;
+    }
+    function disegna(){
+      host.textContent = "";
+      suggList(kind).forEach(function(v){ host.appendChild(riga(v)); });
+      vuoto.hidden = suggList(kind).length > 0;
+    }
+    disegna();
+
+    var add = document.createElement("div"); add.className = "sgadd";
+    var ai = document.createElement("input");
+    ai.placeholder = t("suggAddPh"); ai.autocomplete = "off";
+    var ab = document.createElement("button"); ab.className = "btn"; ab.style.background = "var(--accent)";
+    ab.textContent = t("suggAdd");
+    function aggiungi(){
+      var v = ai.value.trim();
+      if(!v){ ai.focus(); return; }
+      if(suggList(kind).map(labKey).indexOf(labKey(v)) >= 0){ showToast(t("suggDup")); return; }
+      host.appendChild(riga(v)); salva();
+      ai.value = ""; ai.focus();
+    }
+    ab.onclick = aggiungi;
+    ai.onkeydown = function(e){ if(e.key === "Enter"){ e.preventDefault(); aggiungi(); } };
+    add.appendChild(ai); add.appendChild(ab);
+    sheet.appendChild(add);
+
+    var acts = document.createElement("div"); acts.className = "sheet-actions";
+    var cl = document.createElement("button"); cl.className = "btn"; cl.style.background = "var(--accent)";
+    cl.textContent = t("close");
+    cl.onclick = function(){ close(); openSettings(); };
+    var rs = document.createElement("button"); rs.className = "btn btn-ghost";
+    rs.textContent = t("suggReset");
+    rs.onclick = function(){
+      var prima = suggList(kind).slice();
+      S.settings.sugg[kind] = suggDefault(kind); save(); disegna();
+      showToast(t("suggResetDone"), t("undo"), function(){
+        S.settings.sugg[kind] = prima; save(); disegna();
+      });
+    };
+    acts.appendChild(cl); acts.appendChild(rs);
+    sheet.appendChild(acts);
+  });
+}
+
 /* ------------------------------------------------------------- anagrafica */
 function openPatSheet(p){
   openSheet(function(sheet, close){
@@ -5814,13 +6159,10 @@ function openPatSheet(p){
     var fR = fieldEl(t("fRoom"), t("roomPh"), p ? p.room : "");
     var fD = fieldEl(t("fDx"), t("fDxPh"), p ? p.dx : "");
     var fS = fieldEl(t("fSurg"), t("fSurgPh"), p ? p.surgeon : "");
-    /* propone i nomi degli operatori gia' usati */
+    /* propone i nomi dell'elenco "Operatore" (si cambia dalle Impostazioni) */
     var surgList = document.createElement("datalist"); surgList.id = "surgNames";
-    var giaVisti = {};
-    (S.patients||[]).forEach(function(x){
-      var n = (x.surgeon||"").trim();
-      if(n && !giaVisti[n.toLowerCase()]){ giaVisti[n.toLowerCase()] = 1;
-        var o = document.createElement("option"); o.value = n; surgList.appendChild(o); }
+    suggList("surg").forEach(function(n){
+      var o = document.createElement("option"); o.value = n; surgList.appendChild(o);
     });
     fS.input.setAttribute("list", "surgNames");
     fS.wrap.appendChild(surgList);
@@ -5846,6 +6188,7 @@ function openPatSheet(p){
           var ix = patients().indexOf(p);
           if(ix >= 0){ patients().splice(ix, 1); inserisciPerStanza(p); }
         }
+        if(fS.input.value.trim() !== (p.surgeon || "")) suggRemember("surg", fS.input.value);
         p.surgeon = fS.input.value.trim();
         p.opDate = fO.get() || null;
         creati = convertiMarcati(p, "dx", "dxTasks", p) + convertiMorali(p, "dx", "dxMorals", { pid:p.id });
@@ -5853,6 +6196,7 @@ function openPatSheet(p){
         var np = { id:uid(), alias:alias, room:fR.input.value.trim(), dx:fD.input.value.trim(),
           surgeon:fS.input.value.trim(), opDate:fO.get() || null, admDate:view.day, dischargedOn:null,
           created:Date.now(), meds:[], labs:[], notes:[], files:[], proposals:[], summary:null };
+        suggRemember("surg", np.surgeon);
         inserisciPerStanza(np);
         pview.id = np.id; pview.tab = "sys";
         creati = convertiMarcati(np, "dx", "dxTasks", np) + convertiMorali(np, "dx", "dxMorals", { pid:np.id });
@@ -6186,6 +6530,7 @@ function initPat(){
     $("patSearch").focus();
   };
   $("patShowOff").onclick = function(){ pview.showIcu = !pview.showIcu; renderPatList(); };
+  $("patSortCol").onclick = function(){ S.settings.patByColor = !S.settings.patByColor; save(); renderPatList(); };
   $("pinOk").onclick = tryPin;
   $("pinInput").addEventListener("keydown", function(e){ if(e.key === "Enter") tryPin(); });
 
@@ -6647,6 +6992,7 @@ function icuCard(p, v){
       annulla: renderPat,
       salva: function(nuovo, titolo){
         v.text = nuovo;
+        if((titolo || "") !== (v.titolo || "")) suggRemember("icu", titolo);
         v.titolo = titolo || "";
         var r = convertiTutto(v, "text", p, { pid:p.id });
         save(); render(); renderPat();
@@ -6687,15 +7033,14 @@ function openIcuSheet(p){
     tit.type = "text"; tit.autocomplete = "off";
     tit.className = "verlwhen-in"; tit.placeholder = t("icuHeadPh");
     sheet.appendChild(tit);
-    /* i titoli: prima quelli che hai gia' usato per questo paziente, poi i soliti */
-    var usati = [];
-    icuVoci(p).forEach(function(v){ if(v.titolo && usati.indexOf(v.titolo) < 0) usati.push(v.titolo); });
-    t("icuSugg").split("|").forEach(function(s){
-      if(usati.map(labKey).indexOf(labKey(s)) < 0) usati.push(s);
-    });
+    /* i titoli: l'elenco "Titoli Intensiva" delle Impostazioni, nel suo ordine;
+       quelli gia' usati per questo paziente sono evidenziati */
+    var giaQui = icuVoci(p).map(function(v){ return labKey(v.titolo); });
     var chips = document.createElement("div"); chips.className = "chiprow"; chips.style.marginTop = "8px";
-    usati.forEach(function(s){
-      var b = document.createElement("button"); b.className = "namechip"; b.textContent = s;
+    suggList("icu").forEach(function(s){
+      var b = document.createElement("button");
+      b.className = "namechip" + (giaQui.indexOf(labKey(s)) >= 0 ? " mine" : "");
+      b.textContent = s;
       b.onclick = function(){ tit.value = s; ta.focus(); };
       chips.appendChild(b);
     });
@@ -6722,6 +7067,7 @@ function openIcuSheet(p){
       var v = { id:uid(), day:view.day || todayStr(), time:nowTime(), ts:Date.now(),
         titolo:ti, text:txt, tasks:[], morals:[] };
       icuVoci(p).push(v);
+      suggRemember("icu", ti);
       var r = convertiTutto(v, "text", p, { pid:p.id });
       save(); stopDictation(); close(); render(); renderPat();
       if(!avvisaTutto(r)) showToast(t("icuSaved"));
