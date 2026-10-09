@@ -6176,9 +6176,13 @@ function openPatSheet(p){
     var acts = document.createElement("div"); acts.className = "sheet-actions";
     var ok = document.createElement("button"); ok.className = "btn"; ok.style.background = "var(--accent)";
     ok.textContent = t("saveBtn");
-    ok.onclick = function(){
+    /* salva i campi del foglio. Lo usano "Salva" e anche i tasti di passaggio
+       (di nuovo in reparto, in terapia intensiva, dimetti, riammetti): quello
+       che hai appena scritto — per esempio la stanza nuova — non va perso, e la
+       scheda si sposta al suo posto nella lista. Restituisce false se manca il nome. */
+    function salvaCampi(){
       var alias = fA.input.value.trim();
-      if(!alias){ err.textContent = t("aliasNeeded"); err.hidden = false; fA.input.focus(); return; }
+      if(!alias){ err.textContent = t("aliasNeeded"); err.hidden = false; fA.input.focus(); return false; }
       var creati = 0;
       if(p){
         var stanzaPrima = p.room || "";
@@ -6201,20 +6205,29 @@ function openPatSheet(p){
         pview.id = np.id; pview.tab = "sys";
         creati = convertiMarcati(np, "dx", "dxTasks", np) + convertiMorali(np, "dx", "dxMorals", { pid:np.id });
       }
-      save(); close(); render(); renderPat();
-      avvisaCompiti(creati);
+      save();
+      return { creati:creati };
+    }
+    ok.onclick = function(){
+      var r = salvaCampi();
+      if(!r) return;
+      close(); render(); renderPat();
+      avvisaCompiti(r.creati);
     };
     acts.appendChild(ok);
     if(p){
       var dc = document.createElement("button"); dc.className = "btn btn-ghost";
       dc.textContent = p.dischargedOn ? t("readmit") : t("discharge");
       dc.onclick = function(){
+        var r = salvaCampi();
+        if(!r) return;
         if(p.dischargedOn){
           p.dischargedOn = null; delete p.active;
           save(); close(); render(); renderPat(); showToast(t("readmitted"));
         } else {
           close(); dimetti(p);
         }
+        if(r.creati) setTimeout(function(){ avvisaCompiti(r.creati); }, 3100);
       };
       acts.appendChild(dc);
       if(!p.dischargedOn){
@@ -6222,7 +6235,13 @@ function openPatSheet(p){
         var aperta = !!icuAperta(p);
         ic.textContent = aperta ? t("icuBack") : t("icuSend");
         ic.style.color = "var(--icu)"; ic.style.borderColor = "var(--icu)";
-        ic.onclick = function(){ close(); if(aperta) riportaDaIcu(p); else mandaInIcu(p); };
+        ic.onclick = function(){
+          var r = salvaCampi();
+          if(!r) return;
+          close();
+          if(aperta) riportaDaIcu(p); else mandaInIcu(p);
+          if(r.creati) setTimeout(function(){ avvisaCompiti(r.creati); }, 3100);
+        };
         acts.appendChild(ic);
       }
     }
