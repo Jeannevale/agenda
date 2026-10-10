@@ -3556,16 +3556,17 @@ function renderPatList(){
   var perColore = !!S.settings.patByColor;
   shown.sort(function(a,b){
     /* in reparto, poi terapia intensiva, poi dimessi.
-       Con "Colori" acceso: arancioni (da controllare) in cima, poi quelli
-       senza colore, poi gli azzurri (in dimissione), poi intensiva e dimessi.
+       Con "Colori" acceso: prima i colorati (arancioni da controllare,
+       poi azzurri in dimissione), poi quelli senza colore, poi la terapia
+       intensiva (sempre ultima, anche se ha un colore) e i dimessi.
        Dentro ogni gruppo resta l'ordine scelto trascinando. */
     function rango(x){
       if(patDimesso(x, view.day)) return 9;
       if(perColore){
-        if(x.color === "crit") return 0;
-        if(x.color === "dim") return 2;
         if(patInIcu(x, view.day)) return 3;
-        return 1;
+        if(x.color === "crit") return 0;
+        if(x.color === "dim") return 1;
+        return 2;
       }
       return patInIcu(x, view.day) ? 1 : 0;
     }
@@ -3802,14 +3803,14 @@ Object.assign(I18N.it, {
   colNone:"Nessun colore", colNoneSub:"Scheda normale (viola se è in terapia intensiva)",
   colCrit:"Arancione", colCritSub:"Critico, da controllare", colCritChip:"da controllare",
   colDim:"Azzurro", colDimSub:"In dimissione", colDimChip:"in dimissione",
-  sortColBtn:"Colori", sortColHint:"Ordina per colore: da controllare in cima, poi gli altri, poi in dimissione"
+  sortColBtn:"Colori", sortColHint:"Ordina per colore: da controllare, poi in dimissione, poi senza colore, terapia intensiva per ultima"
 });
 Object.assign(I18N.de, {
   colPick:"Farbe ändern", colTitle:"Farbe der Karte",
   colNone:"Keine Farbe", colNoneSub:"Normale Karte (lila, wenn auf Intensiv)",
   colCrit:"Orange", colCritSub:"Kritisch, kontrollieren", colCritChip:"kontrollieren",
   colDim:"Hellblau", colDimSub:"Vor der Entlassung", colDimChip:"Entlassung",
-  sortColBtn:"Farben", sortColHint:"Nach Farbe sortieren: Kontrollieren oben, dann die anderen, dann Entlassung"
+  sortColBtn:"Farben", sortColHint:"Nach Farbe sortieren: Kontrollieren, dann Entlassung, dann ohne Farbe, Intensiv zuletzt"
 });
 function openColorSheet(p){
   openSheet(function(sheet, close){
