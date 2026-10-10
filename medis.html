@@ -52,7 +52,7 @@ h3{font-size:12px;text-transform:uppercase;letter-spacing:.07em;color:var(--mute
 .blk{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:11px 13px;min-width:0}
 .blk.alert{border-color:var(--accent)}
 .blk p{margin:0 0 6px}.blk p:last-child{margin-bottom:0}
-ul.l{margin:0;padding-left:18px}ul.l li{margin:2px 0}
+ul.l,ol.l{margin:0;padding-left:18px}ul.l li,ol.l li{margin:2px 0}
 .rx{padding:8px 0;border-top:1px solid var(--line);min-width:0}
 .rx:first-of-type{border-top:0;padding-top:2px}
 .nm{font-weight:600}
@@ -133,7 +133,7 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
     <button class="tile" data-go="nk" data-k="notfallkoffer valigetta emergenza rianimazione intubazione rsi adrenalina atropina akrinor suxametonio rocuronio sugammadex bridion esketamina adenosina nitro ass"><span class="k emo">Emergenza</span><span class="t">Notfallkoffer</span><span class="s">Tutti i farmaci · cosa manca</span></button>
     <button class="tile" data-go="hzv" data-k="low output lattato diurese vti noradrenalina dobutamina perfusor"><span class="k emo">Emodinamica</span><span class="t">Low Output</span><span class="s">Lattato · diurese · VTI · perfusori</span></button>
     <button class="tile" data-go="sam" data-k="mitrale insufficienza lvot fenilefrina esmolol volume"><span class="k emo">Emodinamica</span><span class="t">SAM · Insuff. mitralica</span><span class="s">Volume · fenilefrina · stop dobu</span></button>
-    <button class="tile" data-go="rr" data-k="ipertensione hypertonie pressione urapidil ebrantil clonidina clonidin catapresan clevidipin cleviprex metoprololo perfusor candesartan ramipril amlodipin bisoprolol nebivolol doxazosin spironolacton torasemid hydrochlorothiazid moxonidin nitrendipin bayotensin"><span class="k emo">Emodinamica</span><span class="t">Ipertensione</span><span class="s">Boli · Perfusor · orali con dosi max</span></button>
+    <button class="tile" data-go="rr" data-k="ipertensione hypertonie pressione urapidil ebrantil clonidina clonidin catapresan clevidipin cleviprex metoprololo perfusor candesartan ramipril amlodipin bisoprolol nebivolol doxazosin spironolacton torasemid hydrochlorothiazid moxonidin nitrendipin bayotensin antidoto ipotensione pressione bassa crollo betabloccante overdose glucagon glucagen milrinon corotrop adrenalin suprarenin noradrenalin calciumchlorid"><span class="k emo">Emodinamica</span><span class="t">Ipertensione</span><span class="s">Boli · Perfusor · orali · se crolla: antidoti</span></button>
     <button class="tile" data-go="vhf" data-k="fibrillazione atriale vorhofflimmern amiodarone cordarex anticoagulazione cardioversione landiolol landiololo rapibloc frequenza"><span class="k rit">Ritmo</span><span class="t">Fibrillazione atriale</span><span class="s">Amiodarone · Landiolol · anticoag.</span></button>
     <button class="tile" data-go="endo" data-k="endocardite vancomicina emocolture tdm livello"><span class="k inf">Infezione</span><span class="t">Endocardite</span><span class="s">Emocolture · vancomicina + livelli</span></button>
     <button class="tile" data-go="dia" data-k="diarrea clostridium difficile vancomicina loperamide fidaxomicina"><span class="k inf">Infezione</span><span class="t">Diarrea · C. diff</span><span class="s">Vanco p.o. · loperamide</span></button>
@@ -671,6 +671,36 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
         <div class="prep">Phiole in den Mund ausdrücken und schlucken · Wiederholung nach 30 min</div>
         <div class="ren same">unverändert</div></div>
       <p class="fixbox">Vor jeder Steigerung: Schmerz, Unruhe, Harnverhalt, Überwässerung, Manschettengröße.</p>
+    </div>
+    <div class="blk alert">
+      <h3>Zu viel gesenkt · Betablocker zu stark</h3>
+      <ol class="l">
+        <li><b>Stopp</b> Betablocker/Perfusor · Beine hoch · Jonosteril 250 ml in 10 min, wenn volumenreagibel</li>
+        <li><b>Echo:</b> Tamponade, Blutung, Hypovolämie ausschließen</li>
+        <li><b>Epikardiale Drähte:</b> AAI/DDD 90/min</li>
+      </ol>
+      <div class="rx"><div class="nm">1 · Noradrenalin · Brücke</div>
+        <div class="dose">Bolus 5 µg · Perfusor 0,1 µg/kg/min = <span class="c" data-c="nor01"></span></div>
+        <div class="prep">Bolus: 1 mg ad 200 ml NaCl 0,9 % (5 µg/ml) → 1 ml · Perfusor: 5 mg ad 50 ml NaCl 0,9 % (100 µg/ml)</div>
+        <div class="ren same">unverändert</div></div>
+      <div class="rx"><div class="nm">2 · Adrenalin (Suprarenin 1 mg/1 ml) · Inotropie</div>
+        <div class="dose">Start 0,05 µg/kg/min = <span class="c" data-c="adrS"></span> · max. 0,2 µg/kg/min = <span class="c" data-c="adrM"></span></div>
+        <div class="prep">5 mg ad 50 ml NaCl 0,9 % (100 µg/ml) · überwindet die Betablockade</div>
+        <div class="ren same">unverändert</div></div>
+      <div class="rx"><div class="nm">2 · Milrinon (Corotrop 10 mg/10 ml) · Inotropie</div>
+        <div class="dose">0,375 µg/kg/min = <span class="c" data-c="milS"></span> · kein Bolus</div>
+        <div class="prep">20 mg (2 Amp.) + 30 ml NaCl 0,9 % = 50 ml (400 µg/ml) · wirkt am Betarezeptor vorbei · Vasodilatation → immer mit Noradrenalin</div>
+        <div class="ren">0,3 µg/kg/min = <span class="c" data-c="milR"></span></div></div>
+      <div class="rx"><div class="nm">3 · Glucagon (GlucaGen 1 mg) · nur refraktär</div>
+        <div class="dose">5 mg i.v. in 2 min · dann 3 mg/h</div>
+        <div class="prep">5 Kits, je in 1 ml Lösungsmittel · Wiederholung nach 10 min · Erbrechen (Atemweg schützen), Hyperglykämie, Hypokaliämie · teuer, wenig vorrätig → Apotheke/Intensiv früh anrufen</div>
+        <div class="ren same">unverändert</div></div>
+      <div class="rx"><div class="nm">+ Calciumchlorid 10 %</div>
+        <div class="dose">10 ml (6,8 mmol) i.v. in 10 min über ZVK</div>
+        <div class="prep">wenn ionisiertes Ca niedrig (BGA) · peripher: Calciumgluconat 10 % 30 ml in 10 min</div>
+        <div class="ren same">unverändert</div></div>
+      <p class="fixbox">Nicht zuerst Phenylephrin (Nachlast ↑, Auswurf ↓), Ephedrin oder Akrinor (Beta-Anteil blockiert). Landiolol ist nach 10–15 min weg, Amiodaron-Hypotonie nach &lt; 1 h: Bolus langsamer laufen lassen.</p>
+      <p class="fixbox">Refraktär: Hochdosis-Insulin mit Glukose → Intensiv + Giftnotruf.</p>
     </div>
   </div>
 </section>
@@ -1328,6 +1358,10 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
     dexS:function(w){return n(0.7*w,0)+' µg/h = '+n(0.7*w/4,1)+' ml/h';},
     dexM:function(w){return n(1.4*w,0)+' µg/h = '+n(1.4*w/4,1)+' ml/h';},
     daptoR:function(w){return n(r(8*w,50))+'–'+n(r(10*w,50))+' mg';},
+    adrS:function(w){return n(0.05*w*60/100,1)+' ml/h';},
+    adrM:function(w){return n(0.2*w*60/100,1)+' ml/h';},
+    milS:function(w){return n(0.375*w*60/400,1)+' ml/h';},
+    milR:function(w){return n(0.3*w*60/400,1)+' ml/h';},
     landS:function(w){return n(0.01*w,1)+' ml/h';},
     landM:function(w){return n(0.1*w,1)+' ml/h';}
   };
@@ -1422,6 +1456,9 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
     ['Quetiapin (Seroquel)','Delir 25 mg p.o. zur Nacht','unverändert',0,'delir'],
     ['Midazolam Sofort-Sedierung','2 mg i.v. (≥ 75 J. 1 mg) · ohne Zugang 5 mg i.m. · Perfusor 1 mg/h nur Intensiv','Nachdosen 0,5 mg · Perfusor 0,5 mg/h',1,'delir'],
     ['Melperon','Delir 25 mg p.o. zur Nacht','unverändert',0,'delir'],
+    ['Adrenalin Perfusor','5 mg/50 ml · 0,05–0,2 µg/kg/min (Betablocker zu stark)','unverändert',0,'rr'],
+    ['Milrinon (Corotrop)','20 mg/50 ml · 0,375 µg/kg/min · kein Bolus · mit Noradrenalin','0,3 µg/kg/min',1,'rr'],
+    ['Glucagon (Betablocker-Antidot)','5 mg i.v. in 2 min · dann 3 mg/h · nur refraktär','unverändert',0,'rr'],
     ['Landiolol (Rapibloc)','300 mg/50 ml · Start 1 µg/kg/min, max. 10 µg/kg/min · kein Bolus · nur IMC','unverändert',0,'vhf'],
     ['Urapidil Perfusor','100 mg/50 ml · Start 4,5 ml/h (9 mg/h), max. 15 ml/h · nur IMC','unverändert',0,'rr'],
     ['Clonidin Perfusor','0,75 mg/50 ml (15 µg/ml) · Start 2 ml/h, max. 8 ml/h · nur IMC','Start 1 ml/h · max. 4 ml/h',1,'rr'],
