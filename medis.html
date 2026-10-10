@@ -134,6 +134,7 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
     <button class="tile" data-go="hzv" data-k="low output lattato diurese vti noradrenalina dobutamina perfusor"><span class="k emo">Emodinamica</span><span class="t">Low Output</span><span class="s">Lattato · diurese · VTI · perfusori</span></button>
     <button class="tile" data-go="sam" data-k="mitrale insufficienza lvot fenilefrina esmolol volume"><span class="k emo">Emodinamica</span><span class="t">SAM · Insuff. mitralica</span><span class="s">Volume · fenilefrina · stop dobu</span></button>
     <button class="tile" data-go="rr" data-k="ipertensione hypertonie pressione urapidil ebrantil clonidina clonidin catapresan clevidipin cleviprex metoprololo perfusor candesartan ramipril amlodipin bisoprolol nebivolol doxazosin spironolacton torasemid hydrochlorothiazid moxonidin nitrendipin bayotensin antidoto ipotensione pressione bassa crollo betabloccante overdose glucagon glucagen milrinon corotrop adrenalin suprarenin noradrenalin calciumchlorid"><span class="k emo">Emodinamica</span><span class="t">Ipertensione</span><span class="s">Boli · Perfusor · orali · se crolla: antidoti</span></button>
+    <button class="tile" data-go="nitro" data-k="nitro nitrati nitroglicerina glyceroltrinitrat nitrolingual perfusor spray isosorbiddinitrat isoket nitroprussid nipruss no ossido nitrico stickstoffmonoxid inomax edema polmonare lungenödem angina ischemia ipertensione polmonare"><span class="k emo">Emodinamica</span><span class="t">Nitrati · NO</span><span class="s">Glyceroltrinitrat Perfusor · Isoket · nipruss</span></button>
     <button class="tile" data-go="vhf" data-k="fibrillazione atriale vorhofflimmern amiodarone cordarex anticoagulazione cardioversione landiolol landiololo rapibloc frequenza"><span class="k rit">Ritmo</span><span class="t">Fibrillazione atriale</span><span class="s">Amiodarone · Landiolol · anticoag.</span></button>
     <button class="tile" data-go="endo" data-k="endocardite vancomicina emocolture tdm livello"><span class="k inf">Infezione</span><span class="t">Endocardite</span><span class="s">Emocolture · vancomicina + livelli</span></button>
     <button class="tile" data-go="dia" data-k="diarrea clostridium difficile vancomicina loperamide fidaxomicina"><span class="k inf">Infezione</span><span class="t">Diarrea · C. diff</span><span class="s">Vanco p.o. · loperamide</span></button>
@@ -141,6 +142,7 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
     <button class="tile" data-go="neuro" data-k="ictus stroke schlaganfall neuro check vorhalteversuch epilessia crisi midazolam levetiracetam lipid"><span class="k neu">Neuro</span><span class="t">Ictus · Crisi epilettica</span><span class="s">Neuro-check · midazolam</span></button>
     <button class="tile" data-go="delir" data-k="midazolam dormicum sedierung sofort gefährlich perfusor sedazione immediata delir delirium delirio delirante agitiert agitato unruhe psychose psicosi psychotisch panik panico panikattacke beruhigen haloperidol haldol dexmedetomidin dexdor clonidin catapresan quetiapin seroquel melperon olanzapin zyprexa lorazepam tavor flumazenil anexate"><span class="k neu">Psyche</span><span class="t">Delir</span><span class="s">Sofort- und langsame Sedierung · Psychose · Panik</span></button>
     <button class="tile" data-go="ana" data-k="anafilassi allergia adrenalina salbutamolo ipratropio cortisone broncospasmo bpco inalatori spiolto trelegy trimbow"><span class="k emo">Emergenza</span><span class="t">Anafilassi · Bronchi</span><span class="s">Adrenalina · salbutamolo · inalatori</span></button>
+    <button class="tile" data-go="gib" data-k="sanguinamento gastrointestinale emorragia gastrica stomaco esofago ulcera melena ematemesi forrest clip endoscopia gastroscopia pantoprazol erythromycin protamin konakion ppsb beriplex antagonizzare ripresa anticoagulazione eparina heparin clexane apixaban eliquis marcumar ferinject ferro trasfusione blutung magenblutung gi-blutung"><span class="k emo">Emergenza</span><span class="t">Sanguinamento GI</span><span class="s">Subito · antagonisti · ripresa anticoag.</span></button>
     <button class="tile" data-go="sed" data-k="analgosedazione sedazione etomidato etomidat propofol midazolam fentanyl esketamin ketanest noradrenalina bolo cardioversione defibrillazione shock pacing esterno transcutaneo schrittmacher digiuno nüchtern tee"><span class="k pro">Procedura</span><span class="t">Analgosedazione</span><span class="s">Pacing · cardioversione · TEE</span></button>
     <button class="tile" data-go="ak" data-k="anticoagulazione clexane enoxaparina eparina pausa pre operatoria intervento"><span class="k pro">Procedura</span><span class="t">Anticoag. pre-OP</span><span class="s">Pause Clexane · eparina</span></button>
     <button class="tile" data-go="ms" data-k="magensonde sondino naso gastrico"><span class="k pro">Procedura</span><span class="t">Sondino gastrico</span><span class="s">Controindicazioni</span></button>
@@ -1289,6 +1291,169 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
   </div>
 </section>
 
+<!-- ============ NITRATI · NO ============ -->
+<section class="page" id="nitro" data-t="Nitrati · NO">
+  <div class="ph"><h2>Nitrati · NO</h2><span class="cat">Emodinamica</span></div>
+  <div class="grid">
+    <div class="blk alert">
+      <h3>Perfusor · edema polmonare, ischemia, RR alta</h3>
+      <div class="rx"><div class="nm">Glyceroltrinitrat (Nitrolingual infus 50 mg/50 ml)</div>
+        <div class="dose">Start 1 mg/h = 1 ml/h · +1 ml/h ogni 5 min · max. 8 mg/h = 8 ml/h</div>
+        <div class="prep">1 mg/ml puro, non diluire · siringa e linea in PE, non PVC (il PVC assorbe il farmaco) · niente bolo e.v.</div>
+        <div class="prep">Effetto dopo 1–2 min · finisce 5 min dopo lo stop · RR ogni 5 min mentre sali</div>
+        <div class="ren same">invariato</div></div>
+      <p class="fixbox">RR sist. &lt; 100 mmHg → stop. Riparti a metà velocità quando risale.</p>
+    </div>
+
+    <div class="blk">
+      <h3>Subito, mentre prepari il Perfusor</h3>
+      <div class="rx"><div class="nm">Glyceroltrinitrat Spray (Nitrolingual akut 0,4 mg/Hub)</div>
+        <div class="dose">2 Hübe s.l. · ripeti dopo 10 min</div>
+        <div class="prep">solo con RR sist. &gt; 100 mmHg · paziente seduto</div>
+        <div class="ren same">invariato</div></div>
+    </div>
+
+    <div class="blk">
+      <h3>Alternativa · effetto più lento</h3>
+      <div class="rx"><div class="nm">Isosorbiddinitrat (Isoket 0,1 % = 1 mg/ml)</div>
+        <div class="dose">Start 2 mg/h = 2 ml/h · max. 10 mg/h = 10 ml/h</div>
+        <div class="prep">50 mg/50 ml puro · linea PE · emivita ~1 h: meno titolabile del Glyceroltrinitrat</div>
+        <div class="ren same">invariato</div></div>
+    </div>
+
+    <div class="blk">
+      <h3>Solo Intensiv</h3>
+      <div class="rx"><div class="nm">Nitroprussid-Natrium (nipruss 60 mg)</div>
+        <div class="dose">Start 0,3 µg/kg/min = <span class="c" data-c="npS"></span> · max. 3 µg/kg/min = <span class="c" data-c="npM"></span></div>
+        <div class="prep">60 mg in 50 ml Glucose 5 % (1,2 mg/ml) · siringa e linea protette dalla luce · solo con pressione arteriosa cruenta · effetto in 30 s · lattato o acidosi inspiegati → stop (cianuro)</div>
+        <div class="ren">il tiocianato si accumula: dose minima, livello se &gt; 3 Tage</div></div>
+      <div class="rx"><div class="nm">Stickstoffmonoxid inhalativ (INOmax)</div>
+        <div class="dose">20 ppm dal ventilatore</div>
+        <div class="prep">ipertensione polmonare, insufficienza del ventricolo destro · MetHb dopo 1 h, poi 1×/Tag · mai stop di colpo (rebound): scendi a 5 ppm → 1 ppm → stop</div>
+        <div class="ren same">invariato</div></div>
+    </div>
+
+    <div class="blk">
+      <h3>Attenzioni</h3>
+      <ul class="l">
+        <li><b>Mai nitrati</b> dopo Sildenafil o Vardenafil (24 h), Tadalafil (48 h), con Riociguat</li>
+        <li>Ipovolemia o sanguinamento in corso</li>
+        <li>Stenosi aortica severa · HOCM · infarto del ventricolo destro</li>
+        <li>Tolleranza dopo 24 h: con uso continuo, pausa notturna di 8 h</li>
+        <li>Cefalea: Paracetamol 1 g e.v. in 15 min, non è motivo per fermare</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SANGUINAMENTO GI ============ -->
+<section class="page" id="gib" data-t="Sanguinamento GI">
+  <div class="ph"><h2>Sanguinamento gastrointestinale</h2><span class="cat">Emergenza</span></div>
+  <div class="grid">
+    <div class="blk alert">
+      <h3>Subito</h3>
+      <ol class="steps">
+        <li><div class="nm">2 accessi venosi grandi (≥ 18 G) · monitor · digiuno</div>
+          <div class="prep">Prelievo: Hb, piastrine, INR, pTT, fibrinogeno, creatinina, urea, lattato · prova crociata 2 EK</div></li>
+        <li><div class="nm">Stop anticoagulanti</div>
+          <div class="prep">Heparin-Perfusor, Clexane, NOAK fermi → antagonizza solo se sanguina ancora (box sotto) · ASS dopo ACB: continua</div></li>
+        <li><div class="nm">Volume: Ringer-Acetat (Jonosteril) 500 ml in 15 min</div>
+          <div class="prep">ripeti secondo RR · niente Tranexamsäure (nessun beneficio, più trombosi)</div></li>
+        <li><div class="nm">Trasfusione: EK se Hb &lt; 8 g/dl</div>
+          <div class="prep">obiettivo Hb 10 g/dl (cardiopatico) · piastrine &lt; 50/nl → TK · fibrinogeno &lt; 1,5 g/l → Fibrinogen (Haemocomplettan) 2 g e.v. in 10 min</div></li>
+        <li><div class="nm">Pantoprazol 80 mg e.v.</div>
+          <div class="prep">2 flaconcini da 40 mg, ognuno in 10 ml NaCl 0,9 % · e.v. lento in 2 min · poi 40 mg e.v. 1-0-1</div>
+          <div class="ren same">invariato</div></li>
+        <li><div class="nm">Erythromycin 250 mg e.v. 30 min prima della gastroscopia</div>
+          <div class="prep">1 g Pulver + 20 ml Aqua ad inj. (50 mg/ml) → 5 ml in 100 ml NaCl 0,9 % in 30 min · svuota lo stomaco dal sangue · QTc &gt; 500 ms o Amiodaron → non dare</div>
+          <div class="ren same">invariato</div></li>
+        <li><div class="nm">Gastroenterologi: endoscopia entro 24 h</div>
+          <div class="prep">instabile nonostante volume → subito dopo la stabilizzazione</div></li>
+      </ol>
+    </div>
+
+    <div class="blk">
+      <h3>Antagonizzare · solo se sanguina ancora, con Oberarzt</h3>
+      <div class="rx"><div class="nm">Heparin-Perfusor → Protamin ME 1000</div>
+        <div class="dose">1 ml per 1000 IE Heparin delle ultime 2 h</div>
+        <div class="prep">es. 1000 IE/h → 2 ml · 400 IE/h → 0,8 ml · e.v. lento in 10 min · max. 5 ml</div>
+        <div class="ren same">invariato</div></div>
+      <div class="rx"><div class="nm">Clexane → Protamin ME 1000</div>
+        <div class="dose">1 ml per 10 mg Clexane delle ultime 8 h</div>
+        <div class="prep">neutralizza solo in parte (~60 %)</div>
+        <div class="ren same">invariato</div></div>
+      <div class="rx"><div class="nm">Phenprocoumon (Marcumar)</div>
+        <div class="dose">Konakion MM 10 mg + PPSB (Beriplex) 25 IE/kg = <span class="c" data-c="ppsb25"></span></div>
+        <div class="prep">Konakion in 50 ml Glucose 5 % in 20 min · PPSB e.v. in 10 min</div>
+        <div class="ren same">invariato</div></div>
+      <div class="rx"><div class="nm">Apixaban · Rivaroxaban</div>
+        <div class="dose">PPSB (Beriplex) 50 IE/kg = <span class="c" data-c="ppsb50"></span></div>
+        <div class="prep">e.v. in 10 min · max. 5000 IE</div>
+        <div class="ren same">invariato</div></div>
+    </div>
+
+    <div class="blk">
+      <h3>Forrest · rischio di risanguinamento senza terapia</h3>
+      <dl class="kv">
+        <dt>Ia getto · Ib stillicidio</dt><dd>55 %</dd>
+        <dt>IIa vaso visibile</dt><dd>43 %</dd>
+        <dt>IIb coagulo adeso</dt><dd>22 %</dd>
+        <dt>IIc macchia piatta</dt><dd>10 %</dd>
+        <dt>III fondo pulito</dt><dd>5 %</dd>
+      </dl>
+      <p class="prep" style="margin-top:6px">Ia–IIb → terapia endoscopica (clip). Dopo la clip il rischio scende a ~10 %, quasi tutto nelle prime 72 h.</p>
+    </div>
+
+    <div class="blk alert">
+      <h3>Ripresa anticoagulazione</h3>
+      <p class="fixbox">Condizioni per ogni passo: Hb stabile da 24 h · nessun EK nuovo · niente melena o ematemesi · emodinamica stabile.</p>
+      <ol class="steps">
+        <li><div class="nm">24 h dopo l'emostasi: profilassi</div>
+          <div class="dose">Heparin-Perfusor 400 IE/h = 2 ml/h <span class="tag haus">reparto</span></div>
+          <div class="prep">10.000 IE/50 ml NaCl 0,9 % (200 IE/ml)</div>
+          <div class="ren same">invariato</div></li>
+        <li><div class="nm">Tag 3 (72 h): dose piena</div>
+          <div class="dose">Heparin 12 IE/kg/h = <span class="c" data-c="hep12"></span> · senza bolo</div>
+          <div class="prep">pTT dopo 6 h · target 40–50 s, bioprotesi 50–60 s <span class="tag haus">reparto</span></div>
+          <div class="ren same">invariato</div></li>
+        <li><div class="nm">Dopo 48 h stabili: Clexane terapeutico</div>
+          <div class="dose std">1 mg/kg s.c. 1-0-1 = <span class="c" data-c="enoxB"></span></div>
+          <div class="prep">max. 80 mg = 8.000 IE 1-0-1 <span class="tag haus">reparto</span></div>
+          <div class="ren">resta su Heparin-Perfusor</div></li>
+        <li><div class="nm">Alla dimissione (non prima di Tag 7): Apixaban (Eliquis)</div>
+          <div class="dose std">5 mg p.o. 1-0-1</div>
+          <div class="prep">2,5 mg 1-0-1 se ≥ 2 di: età ≥ 80 anni, peso ≤ 60 kg, creatinina ≥ 1,5 mg/dl · prima compressa = stop Perfusor · NOAK + Clopidogrel max. 12 mesi <span class="tag haus">reparto</span></div>
+          <div class="ren">CrCl 15–29 ml/min: 2,5 mg 1-0-1 · CrCl &lt; 15 ml/min: non dare</div></li>
+      </ol>
+      <div class="rx"><div class="nm">Valvola meccanica · LVAD: niente NOAK</div>
+        <div class="dose">Phenprocoumon (Marcumar 3 mg): 6 mg Tag 1 · 6 mg Tag 2 · poi secondo INR</div>
+        <div class="prep">INR target secondo valvola o LVAD · Heparin finché INR in range 2 volte a distanza di 24 h · dose piena da Tag 3 con Oberarzt</div>
+        <div class="ren">invariato · INR più spesso</div></div>
+      <div class="rx"><div class="nm">Flutter o VHF postoperatori</div>
+        <div class="prep" style="color:var(--ink)">Anticoagula 3 mesi, poi rivaluta con ECG/Holter. Vorhofohr chiuso non sostituisce l'anticoagulazione.</div></div>
+    </div>
+
+    <div class="blk">
+      <h3>Dopo · proteggere lo stomaco</h3>
+      <div class="rx"><div class="nm">Pantoprazol</div>
+        <div class="dose">40 mg e.v. 1-0-1 fino a 72 h dopo l'endoscopia</div>
+        <div class="prep">poi 40 mg p.o. 1-0-1 fino a Tag 14 · poi 40 mg p.o. 1-0-0 finché anticoagulato o con ASS/Clopidogrel</div>
+        <div class="ren same">invariato</div></div>
+      <div class="rx"><div class="nm">Controlli</div>
+        <div class="prep" style="color:var(--ink)">Hb ogni 6 h nelle prime 24 h, poi 1-0-1 fino a Tag 3 · Helicobacter pylori: biopsia o antigene fecale, se negativo durante il sanguinamento ripeti più tardi · niente FANS</div></div>
+      <div class="rx"><div class="nm">Ferro: Eisencarboxymaltose (Ferinject)</div>
+        <div class="dose">20 mg/kg = <span class="c" data-c="ferin"></span> · una volta</div>
+        <div class="prep">se ferritina &lt; 100 µg/l · in 250 ml NaCl 0,9 % in 15 min</div>
+        <div class="ren same">invariato</div></div>
+      <div class="rx"><div class="nm">Calcio e magnesio orali: solo quando mangia</div>
+        <div class="dose">Calcium-Sandoz forte 500 mg Brausetablette 1-0-0 · Magnesium Diasporal 300 Granulat 1-0-0</div>
+        <div class="prep">entrambi in 200 ml d'acqua · 2 h di distanza tra i due · il magnesio dà diarrea e confonde la melena</div>
+        <div class="ren">Magnesium orale: non dare</div></div>
+      <p class="fixbox">Risanguinamento → nuova endoscopia · se fallisce: embolizzazione radiologica o chirurgia.</p>
+    </div>
+  </div>
+</section>
+
 <!-- ============ A–Z ============ -->
 <section class="page" id="az" data-t="Farmaci A–Z">
   <div class="ph"><h2>Farmaci A–Z</h2><span class="cat">Attiva "GFR &lt; 30" in alto per la colonna rene</span></div>
@@ -1366,7 +1531,14 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
     milS:function(w){return n(0.375*w*60/400,1)+' ml/h';},
     milR:function(w){return n(0.3*w*60/400,1)+' ml/h';},
     landS:function(w){return n(0.01*w,1)+' ml/h';},
-    landM:function(w){return n(0.1*w,1)+' ml/h';}
+    landM:function(w){return n(0.1*w,1)+' ml/h';},
+    npS:function(w){return n(0.3*w)+' µg/min = '+n(0.015*w,1)+' ml/h';},
+    npM:function(w){return n(3*w)+' µg/min = '+n(0.15*w,1)+' ml/h';},
+    hep12:function(w){return n(r(12*w,50))+' IE/h = '+n(r(12*w,50)/200,1)+' ml/h';},
+    enoxB:function(w){var d=Math.min(r(w,10),80);return n(d)+' mg'+(w>85?' (max. reparto)':'');},
+    ppsb25:function(w){return n(Math.min(r(25*w,250),2500))+' IE';},
+    ppsb50:function(w){return n(Math.min(r(50*w,250),5000))+' IE';},
+    ferin:function(w){return n(Math.min(r(20*w,100),1000))+' mg';}
   };
   function vl(w){return Math.min(r(30*w,250),3000);}
   function vp(w){return Math.min(r(15*w,50),2000);}
@@ -1477,6 +1649,20 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
     ['Hydrochlorothiazid','max. 25 mg 1-0-0','wirkungslos → Torasemid',1,'rr'],
     ['Moxonidin','0,2 mg 1-0-1 · max. 0,3 mg 1-0-1','kontraindiziert',1,'rr'],
     ['Nitrendipin (Bayotensin akut)','5 mg p.o. bei RR sys > 160','unverändert',0,'rr'],
+    ['Glyceroltrinitrat Perfusor (Nitrolingual infus)','1 mg/ml puro · Start 1 ml/h · +1 ml/h ogni 5 min · max. 8 ml/h · linea PE','invariato',0,'nitro'],
+    ['Isosorbiddinitrat Perfusor (Isoket)','1 mg/ml puro · Start 2 ml/h · max. 10 ml/h','invariato',0,'nitro'],
+    ['Nitroprussid-Natrium (nipruss)','60 mg/50 ml Glucose 5 % · 0,3–3 µg/kg/min · solo Intensiv','dose minima · tiocianato se > 3 Tage',1,'nitro'],
+    ['Stickstoffmonoxid inhalativ (INOmax)','20 ppm · solo Intensiv · mai stop di colpo','invariato',0,'nitro'],
+    ['Pantoprazol e.v. (sanguinamento)','80 mg bolo · poi 40 mg 1-0-1 per 72 h · poi p.o.','invariato',0,'gib'],
+    ['Erythromycin (prima della gastroscopia)','250 mg in 100 ml NaCl 0,9 % in 30 min · QTc!','invariato',0,'gib'],
+    ['Protamin ME 1000','1 ml per 1000 IE Heparin delle ultime 2 h · max. 5 ml','invariato',0,'gib'],
+    ['Konakion MM (Phytomenadion)','10 mg in 50 ml Glucose 5 % in 20 min','invariato',0,'gib'],
+    ['PPSB (Beriplex)','Marcumar 25 IE/kg · NOAK 50 IE/kg (max. 5000 IE)','invariato',0,'gib'],
+    ['Apixaban (Eliquis)','5 mg 1-0-1 · 2,5 mg 1-0-1 se ≥ 2 criteri','CrCl 15–29: 2,5 mg 1-0-1 · < 15: non dare',1,'gib'],
+    ['Phenprocoumon (Marcumar)','6 mg Tag 1 · 6 mg Tag 2 · poi secondo INR','invariato · INR più spesso',0,'gib'],
+    ['Eisencarboxymaltose (Ferinject)','20 mg/kg, max. 1000 mg in 250 ml NaCl 0,9 % in 15 min','invariato',0,'gib'],
+    ['Calcium-Sandoz forte 500 mg (dopo sanguinamento)','1-0-0 in 200 ml acqua · 2 h dal magnesio','invariato',0,'gib'],
+    ['Magnesium Diasporal 300 Granulat','1-0-0 in 200 ml acqua','non dare',1,'gib'],
     ['Rifampicin','450 mg ogni 12 h p.o./i.v. (solo con protesi)','invariato (alcune Fachinfo: max 600 mg/24 h)',0,'ab2']
   ];
   var tb=document.getElementById('aztb');
