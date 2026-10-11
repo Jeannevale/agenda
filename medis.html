@@ -63,6 +63,7 @@ ul.l,ol.l{margin:0;padding-left:18px}ul.l li,ol.l li{margin:2px 0}
 .ren::before{content:"GFR < 30 · ";font-weight:700}
 .ren.same{background:transparent;color:var(--muted);padding:2px 0}
 body.renal .ren{display:block}
+body.renal .ren.rin{display:inline;padding:0 4px}
 body.renal .std{text-decoration:line-through;text-decoration-thickness:1px;opacity:.6}
 .tag{display:inline-block;font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;font-weight:700;padding:1px 6px;border-radius:4px;vertical-align:1px;white-space:nowrap}
 .tag.add{background:var(--add-bg);color:var(--add)}
@@ -144,7 +145,7 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
     <button class="tile" data-go="ana" data-k="anafilassi allergia adrenalina salbutamolo ipratropio cortisone broncospasmo bpco inalatori spiolto trelegy trimbow"><span class="k emo">Emergenza</span><span class="t">Anafilassi · Bronchi</span><span class="s">Adrenalina · salbutamolo · inalatori</span></button>
     <button class="tile" data-go="gib" data-k="sanguinamento gastrointestinale emorragia gastrica stomaco esofago ulcera melena ematemesi forrest clip endoscopia gastroscopia pantoprazol erythromycin protamin konakion ppsb beriplex antagonizzare ripresa anticoagulazione eparina heparin clexane apixaban eliquis marcumar ferinject ferro trasfusione blutung magenblutung gi-blutung"><span class="k emo">Emergenza</span><span class="t">Sanguinamento GI</span><span class="s">Subito · antagonisti · ripresa anticoag.</span></button>
     <button class="tile" data-go="sed" data-k="analgosedazione sedazione etomidato etomidat propofol midazolam fentanyl esketamin ketanest noradrenalina bolo cardioversione defibrillazione shock pacing esterno transcutaneo schrittmacher digiuno nüchtern tee"><span class="k pro">Procedura</span><span class="t">Analgosedazione</span><span class="s">Pacing · cardioversione · TEE</span></button>
-    <button class="tile" data-go="ak" data-k="anticoagulazione clexane enoxaparina eparina pausa pre operatoria intervento"><span class="k pro">Procedura</span><span class="t">Anticoag. pre-OP</span><span class="s">Pause Clexane · eparina</span></button>
+    <button class="tile" data-go="ak" data-k="anticoagulazione antikoagulation clexane enoxaparin enoxaparina eparina heparin heparin-natrium perfusor profilassi prophylaxe terapeutica therapeutisch ptt anti-xa hit apixaban eliquis rivaroxaban xarelto noak pausa pre operatoria intervento"><span class="k pro">Procedura</span><span class="t">Anticoagulazione</span><span class="s">Profilassi · terapeutica · Perfusor · pausa</span></button>
     <button class="tile" data-go="ms" data-k="magensonde sondino naso gastrico"><span class="k pro">Procedura</span><span class="t">Sondino gastrico</span><span class="s">Controindicazioni</span></button>
     <button class="tile" data-go="el" data-k="potassio ipokaliemia iperkaliemia ipercaliemia kcl magnesio elettroliti calcio gluconato cloruro bicarbonato insulina glucosio salbutamolo lokelma dialisi"><span class="k met">Metabolico</span><span class="t">Potassio · Magnesio</span><span class="s">Ipo- e iperkaliemia · calcio · bicarbonato</span></button>
     <button class="tile" data-go="ca" data-k="ipocalcemia calcio basso calciumgluconat calciumchlorid calcitriol rocaltrol tetania ipercalcemia calcio alto ca calcemia nacl calcitonina acido zoledronico zoledronato zometa denosumab xgeva prednisolone dialisi qt corto aritmia"><span class="k met">Metabolico</span><span class="t">Calcio: ipo · iper</span><span class="s">Calciumgluconat · NaCl · zoledronato</span></button>
@@ -416,26 +417,93 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
 
 <!-- ============ ANTICOAG ============ -->
 <section class="page" id="ak" data-t="Anticoagulazione">
-  <div class="ph"><h2>Anticoagulazione prima di un intervento</h2><span class="cat">Pausa</span></div>
+  <div class="ph"><h2>Anticoagulazione in reparto</h2><span class="cat">Profilassi · terapeutica · pausa pre-OP</span></div>
   <div class="grid">
     <div class="blk alert">
-      <h3>Clexane (enoxaparina) s.c.</h3>
-      <div class="rx"><div class="nm">Profilattica: 40 mg 1×/d <span class="tag haus">reparto</span></div>
-        <div class="dose std">pausa 12 h</div>
-        <div class="ren">20 mg 1×/d · pausa ≥ 24 h</div></div>
-      <div class="rx"><div class="nm">Terapeutica: 1 mg/kg 2×/d = <span class="c" data-c="enox"></span></div>
-        <div class="dose std">pausa 24 h</div>
-        <div class="ren">1 mg/kg <b>1×/d</b> · pausa ≥ 48 h, meglio anti-Xa. GFR &lt; 15: evita → eparina non frazionata.</div></div>
+      <h3>Profilassi</h3>
+      <div class="rx"><div class="nm">Enoxaparin (Clexane) <span class="tag haus">reparto</span></div>
+        <div class="dose std">40 mg s.c. 1-0-0</div>
+        <div class="prep">Fertigspritze 40 mg/0,4 ml · addome, senza aspirare la bolla d'aria</div>
+        <div class="ren">CrCl 15–29 ml/min: 20 mg s.c. 1-0-0 (Fertigspritze 20 mg/0,2 ml) · CrCl &lt; 15 ml/min: Heparin-Natrium s.c.</div></div>
+      <div class="rx"><div class="nm">Heparin-Natrium s.c.</div>
+        <div class="dose">5.000 IE s.c. 1-1-1</div>
+        <div class="prep">Fertigspritze 5.000 IE/0,2 ml (25.000 IE/ml) · niente pTT</div>
+        <div class="ren same">invariato · scelta con CrCl &lt; 15 ml/min</div></div>
+      <div class="rx"><div class="nm">Heparin-Natrium Perfusor <span class="tag haus">reparto PIT</span></div>
+        <div class="dose">400 IE/h = 2 ml/h</div>
+        <div class="prep">10.000 IE/50 ml NaCl 0,9 % (200 IE/ml) · niente pTT</div>
+        <div class="ren same">invariato</div></div>
     </div>
+
+    <div class="blk alert">
+      <h3>Terapeutica · con Perfusor</h3>
+      <div class="rx"><div class="nm">Heparin-Natrium Perfusor · dopo l'OP <span class="tag haus">reparto</span></div>
+        <div class="dose">12 IE/kg/h = <span class="c" data-c="hep12"></span> · senza bolo</div>
+        <div class="prep">10.000 IE/50 ml NaCl 0,9 % (200 IE/ml) · pTT target 40–50 s, bioprotesi 50–60 s</div>
+        <div class="ren same">invariato · scelta preferita con GFR &lt; 30</div></div>
+      <div class="rx"><div class="nm">Heparin-Natrium Perfusor · trombosi venosa, embolia polmonare</div>
+        <div class="dose">bolo 80 IE/kg = <span class="c" data-c="hepBol"></span> · poi 18 IE/kg/h = <span class="c" data-c="hep18"></span></div>
+        <div class="prep">bolo da Heparin-Natrium 25.000 IE/5 ml (5.000 IE/ml) e.v. · pTT target 60–80 s</div>
+        <div class="ren same">invariato</div></div>
+      <h3 style="margin-top:8px">Adeguare dopo ogni pTT</h3>
+      <div class="tbl"><table>
+        <thead><tr><th>pTT</th><th>Perfusor</th></tr></thead>
+        <tbody>
+          <tr><td class="d">sotto target</td><td class="d">+2 IE/kg/h = <span data-c="hepUp"></span></td></tr>
+          <tr><td class="d">nel target</td><td class="d">invariato</td></tr>
+          <tr><td class="d">sopra target fino a +20 s</td><td class="d">−2 IE/kg/h = <span data-c="hepDn"></span></td></tr>
+          <tr><td class="d">sopra target di &gt; 20 s</td><td class="d">stop 1 h · poi −3 IE/kg/h = <span data-c="hepDn3"></span></td></tr>
+        </tbody>
+      </table></div>
+      <p class="prep" style="margin-top:6px">pTT 6 h dopo l'inizio e dopo ogni modifica · 2× nel target → pTT 1×/Tag · sanguinamento → <a class="x" href="#gib">Protamin</a></p>
+    </div>
+
     <div class="blk">
-      <h3>Eparina non frazionata</h3>
-      <div class="rx"><div class="nm">s.c. 5000 IE 2–3×/d</div><div class="dose">pausa 6 h</div>
-        <div class="prep"><span class="tag haus">reparto</span> in Normalstation non c'è eparina s.c.</div>
-        <div class="ren same">invariata</div></div>
-      <div class="rx"><div class="nm">Perfusor e.v.</div><div class="dose">stop 4–6 h prima, controlla pTT</div>
-        <div class="prep">10.000 IE/50 ml NaCl (200 IE/ml). Profilassi PIT: 2 ml/h = 400 IE/h <span class="tag haus">reparto</span></div>
-        <div class="prep">Terapeutica: inizio 12–18 IE/kg/h = <span class="c" data-c="hepT"></span>, senza bolo nei primi giorni post-OP; pTT ogni 6 h.</div>
-        <div class="ren same">invariata: scelta preferita con GFR &lt; 30</div></div>
+      <h3>Terapeutica · senza Perfusor</h3>
+      <div class="rx"><div class="nm">Enoxaparin (Clexane) <span class="tag haus">reparto</span></div>
+        <div class="dose std">1 mg/kg s.c. 1-0-1 = <span class="c" data-c="enoxB"></span></div>
+        <div class="prep">1 mg = 100 IE · max. 80 mg = 8.000 IE 1-0-1 in reparto · Fertigspritze 40, 60, 80 mg</div>
+        <div class="ren">CrCl 15–29 ml/min: 1 mg/kg s.c. 1-0-0 = <b data-c="enoxB"></b> · Anti-Xa 4 h dopo la 3ª dose, target 0,5–1,0 IE/ml · CrCl &lt; 15 ml/min: Heparin-Natrium Perfusor</div></div>
+      <div class="rx"><div class="nm">Heparin-Natrium s.c.</div>
+        <div class="dose">1ª dose 333 IE/kg = <span class="c" data-c="hepSC1"></span> · poi 250 IE/kg 1-0-1 = <span class="c" data-c="hepSC2"></span></div>
+        <div class="prep">25.000 IE/ml · niente pTT · solo se Perfusor e Enoxaparin non possibili</div>
+        <div class="ren same">invariato</div></div>
+    </div>
+
+    <div class="blk">
+      <h3>Alla dimissione · orale</h3>
+      <div class="rx"><div class="nm">Apixaban (Eliquis) · VHF</div>
+        <div class="dose std">5 mg p.o. 1-0-1</div>
+        <div class="prep">2,5 mg 1-0-1 se ≥ 2 di: età ≥ 80 anni, peso ≤ 60 kg, creatinina ≥ 133 µmol/l · prima compressa = stop Perfusor o al posto della dose di Enoxaparin <span class="tag haus">reparto</span> NOAK solo alla dimissione</div>
+        <div class="ren">CrCl 15–29 ml/min: 2,5 mg p.o. 1-0-1 · CrCl &lt; 15 ml/min: non dare</div></div>
+      <div class="rx"><div class="nm">Rivaroxaban (Xarelto) · VHF</div>
+        <div class="dose std">20 mg p.o. 1-0-0 con il pasto</div>
+        <div class="prep">CrCl 30–49 ml/min: 15 mg p.o. 1-0-0</div>
+        <div class="ren">CrCl 15–49 ml/min: 15 mg p.o. 1-0-0 con il pasto · CrCl &lt; 15 ml/min: non dare</div></div>
+      <div class="rx"><div class="nm">Rivaroxaban 2,5 mg · KHK + pAVK, insieme ad ASS 100 mg</div>
+        <div class="dose">2,5 mg p.o. 1-0-1</div>
+        <div class="ren">CrCl 15–29 ml/min: 2,5 mg p.o. 1-0-1 con cautela · CrCl &lt; 15 ml/min: non dare</div></div>
+      <p class="prep" style="margin-top:6px">Valvola meccanica, LVAD → Phenprocoumon: <a class="x" href="#gib">schema</a> · VHF postoperatorio <span class="tag haus">reparto</span> NOAK + Clopidogrel 75 mg 1-0-0 al posto di ASS, max. 12 mesi</p>
+    </div>
+
+    <div class="blk">
+      <h3>Pausa prima di un intervento</h3>
+      <dl class="kv">
+        <dt>Enoxaparin profilassi</dt><dd><span class="std">12 h</span> <span class="ren rin">≥ 24 h</span></dd>
+        <dt>Enoxaparin terapeutica</dt><dd><span class="std">24 h</span> <span class="ren rin">≥ 48 h · Anti-Xa</span></dd>
+        <dt>Heparin-Natrium s.c.</dt><dd>6 h</dd>
+        <dt>Heparin-Natrium Perfusor</dt><dd>6 h · poi pTT</dd>
+        <dt>Apixaban, Rivaroxaban</dt><dd><span class="std">48 h</span> <span class="ren rin">72 h</span></dd>
+      </dl>
+    </div>
+
+    <div class="blk">
+      <h3>Controlli</h3>
+      <ul class="l">
+        <li><b>Piastrine</b> ogni 2–3 giorni dal Tag 5 al Tag 14 di Heparin-Natrium · calo &gt; 50 % → sospetto HIT: stop tutte le eparine, anche i lavaggi, e chiama l'Oberarzt</li>
+        <li><b>K⁺</b> 2×/settimana con Heparin-Natrium &gt; 7 Tage: l'eparina abbassa l'aldosterone (attenzione con diabete, ACE-inibitori, Kalinor)</li>
+        <li>Hb e segni di sanguinamento ogni giorno con dose terapeutica</li>
+      </ul>
     </div>
   </div>
 </section>
@@ -1534,6 +1602,13 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
     landM:function(w){return n(0.1*w,1)+' ml/h';},
     npS:function(w){return n(0.3*w)+' µg/min = '+n(0.015*w,1)+' ml/h';},
     npM:function(w){return n(3*w)+' µg/min = '+n(0.15*w,1)+' ml/h';},
+    hep18:function(w){var d=r(18*w,50);return n(d)+' IE/h = '+n(d/200,1)+' ml/h';},
+    hepBol:function(w){var d=r(80*w,500);return n(d)+' IE = '+n(d/5000,1)+' ml';},
+    hepUp:function(w){return '+'+n(2*w/200,1)+' ml/h';},
+    hepDn:function(w){return '−'+n(2*w/200,1)+' ml/h';},
+    hepDn3:function(w){return '−'+n(3*w/200,1)+' ml/h';},
+    hepSC1:function(w){var d=r(333*w,500);return n(d)+' IE = '+n(d/25000,2)+' ml';},
+    hepSC2:function(w){var d=r(250*w,500);return n(d)+' IE = '+n(d/25000,2)+' ml';},
     hep12:function(w){return n(r(12*w,50))+' IE/h = '+n(r(12*w,50)/200,1)+' ml/h';},
     enoxB:function(w){var d=Math.min(r(w,10),80);return n(d)+' mg'+(w>85?' (max. reparto)':'');},
     ppsb25:function(w){return n(Math.min(r(25*w,250),2500))+' IE';},
@@ -1547,13 +1622,14 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
   var AZ = [
     ['Adrenalina','i.m. 0,5 mg · e.v. 50 µg ogni 2 min (1 mg/20 ml)','invariata',0,'ana'],
     ['Amiodarone','bolo 5 mg/kg in 250 ml G5 % ≥ 30 min · 900 mg/24 h · poi 200 mg 1-1-1','invariato',0,'vhf'],
-    ['Clexane (enoxaparina)','profil. 40 mg 1×/d · terap. 1 mg/kg 2×/d · pausa 12 h / 24 h','profil. 20 mg 1×/d · terap. 1 mg/kg 1×/d · pausa ≥ 24 h / ≥ 48 h · GFR < 15 evita',1,'ak'],
+    ['Enoxaparin (Clexane)','profilassi 40 mg s.c. 1-0-0 · terap. 1 mg/kg s.c. 1-0-1 (max. 80 mg) · pausa 12 h / 24 h','profilassi 20 mg 1-0-0 · terap. 1 mg/kg 1-0-0 + Anti-Xa · pausa ≥ 24 h / ≥ 48 h · CrCl < 15: Heparin-Natrium',1,'ak'],
     ['Clonidina','75 µg e.v. in 5 min (0,15 mg ad 10 ml → 5 ml)','singola ok · ripetute dimezza',1,'rr'],
     ['Diazepam rettale','10 mg','invariato',0,'neuro'],
     ['Dimetinden','0,1 mg/kg e.v. lento','invariato',0,'ana'],
     ['Dobutamina','2,5–10 µg/kg/min (250 mg/50 ml)','invariata',0,'hzv'],
-    ['Eparina e.v.','terap. 12–18 IE/kg/h, pTT · stop 4–6 h pre-OP','invariata (preferita)',0,'ak'],
-    ['Eparina s.c.','5000 IE 2–3×/d · pausa 6 h','invariata',0,'ak'],
+    ['Heparin-Natrium Perfusor','10.000 IE/50 ml · profilassi 400 IE/h · post-OP 12 IE/kg/h senza bolo · TVP/EP bolo 80 IE/kg + 18 IE/kg/h · pausa 6 h','invariato (preferito)',0,'ak'],
+    ['Heparin-Natrium s.c.','profilassi 5.000 IE 1-1-1 · terap. 333 IE/kg, poi 250 IE/kg 1-0-1 · pausa 6 h','invariato',0,'ak'],
+    ['Rivaroxaban (Xarelto)','VHF 20 mg 1-0-0 con il pasto · KHK + pAVK 2,5 mg 1-0-1 + ASS','VHF: CrCl 15–49: 15 mg 1-0-0 · < 15: non dare',1,'ak'],
     ['Esmololo','bolo 0,5 mg/kg · 50–300 µg/kg/min','invariato',0,'sam'],
     ['Etomidato','sedazione 0,1 mg/kg · cardioversione 0,15 mg/kg · RSI 0,3 mg/kg (2 mg/ml)','invariato',0,'sed'],
     ['Fenilefrina','bolo 50–100 (–200) µg ogni 2 min · 0,15–0,5 µg/kg/min','invariata',0,'sam'],
