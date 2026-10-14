@@ -1828,8 +1828,18 @@ function attachLongPress(el, fn){
   el.addEventListener("contextmenu", function(e){ e.preventDefault(); });
 }
 
+/* La modifica di un compito blocca le altre finche' e' aperta. Ma se il
+   riquadro sparisce senza passare da X o da ✓ (cambi giorno, apri un
+   paziente, la scheda si ridisegna) il blocco restava acceso per sempre e il
+   doppio tocco non apriva piu' niente fino al riavvio. Ora, se il riquadro
+   non c'e' piu', il blocco si spegne da solo. */
+function inModifica(){
+  if(editingId && !document.getElementById("ed-" + editingId)) editingId = null;
+  return !!editingId;
+}
+
 function startEdit(it, txtEl){
-  if(editingId) return;
+  if(inModifica()) return;
   editingId = it.id;
 
   var box = document.createElement("div");
@@ -2762,7 +2772,7 @@ function tick(){
     }
   });
   if(view.day !== todayStr() && view._wasToday){ view.day = todayStr(); changed = true; }
-  if(changed){ save(); if(!editingId && !modificaAperta && !sysScrive()) render(); }
+  if(changed){ save(); if(!inModifica() && !modificaAperta && !sysScrive()) render(); }
 }
 
 /* ---------------------------------------------------------------- wiring */
@@ -4655,7 +4665,7 @@ function secNotes(host, p){
     var nfr = hasPhotos(n) ? photoRow(n, renderPat, { add:false }) : null;
     if(!n.text) tx.style.minHeight = "22px";
     attaccaModifica(tx, function(){
-      if(nfr && !modificaAperta && !editingId) nfr.hidden = true;
+      if(nfr && !modificaAperta && !inModifica()) nfr.hidden = true;
       modificaTesto(tx, n.text, {
         foto: n,
         annulla: renderPat,
@@ -6836,7 +6846,7 @@ function initPat(){
 var modificaAperta = false;
 
 function modificaTesto(txEl, testo, opts){
-  if(modificaAperta || editingId) return;
+  if(modificaAperta || inModifica()) return;
   modificaAperta = true;
 
   var box = document.createElement("div"); box.className = "edit-box";
@@ -7095,7 +7105,7 @@ function verlCard(p, v){
   /* in modifica le miniature stanno dentro il riquadro di modifica */
   var fr = hasPhotos(v) ? photoRow(v, renderPat, { add:false }) : null;
   function apri(){
-    if(fr && !modificaAperta && !editingId) fr.hidden = true;
+    if(fr && !modificaAperta && !inModifica()) fr.hidden = true;
     var o = {
       foto: v,
       annulla: renderPat,
