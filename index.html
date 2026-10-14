@@ -1330,7 +1330,8 @@ function registraOffline(){
   navigator.serviceWorker.addEventListener("message", function(e){
     if(e.data === "agenda-nuova" && !avvisoNuova){
       avvisoNuova = true;
-      showToast(t("updReady"), t("updNow"), function(){ location.reload(); });
+      /* l'avviso di aggiornamento resta 20 secondi, cosi' c'e' il tempo di toccarlo */
+      showToast(t("updReady"), t("updNow"), function(){ location.reload(); }, 20000);
     }
   });
   try{ navigator.serviceWorker.startMessages(); }catch(e){}
@@ -2142,7 +2143,7 @@ function addFromCompose(){
 }
 
 /* ---------------------------------------------------------------- toast */
-function showToast(msg, actionLabel, action){
+function showToast(msg, actionLabel, action, durata){
   var old = document.querySelector(".toast"); if(old) old.remove();
   clearTimeout(toastTimer);
   var el = document.createElement("div");
@@ -2155,7 +2156,7 @@ function showToast(msg, actionLabel, action){
     el.appendChild(b);
   }
   document.body.appendChild(el);
-  toastTimer = setTimeout(function(){ el.remove(); }, 3000);
+  toastTimer = setTimeout(function(){ el.remove(); }, durata || 3000);
 }
 
 /* ---------------------------------------------------------------- swipe */
