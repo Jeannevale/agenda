@@ -623,6 +623,15 @@ table.labtab td.ref{color:var(--ink-3); font-size:11px}
 .noteitem .ntime{font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--ink-3)}
 .noteitem .ntext{font-size:14.5px; white-space:pre-wrap; overflow-wrap:anywhere; margin-top:2px;
   cursor:text; touch-action:manipulation; -webkit-user-select:none; user-select:none}
+/* note "attuali": giallino tenue, il testo resta nero */
+:root{ --hot:#D4A20A; --hot-soft:#FFF7D1; }
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){ --hot:#E9C649; --hot-soft:#332B0C; } }
+:root[data-theme="dark"]{ --hot:#E9C649; --hot-soft:#332B0C; }
+.noteitem .nside{flex:none; display:flex; flex-direction:column; align-items:center; gap:6px}
+.noteitem.hot{background:var(--hot-soft); border-left:3px solid var(--hot); border-top-color:transparent;
+  border-radius:8px; padding:9px 4px 9px 10px; margin:4px 0}
+.noteitem.hot + .noteitem{border-top-color:transparent}
+.colordot.c-hot i{border:none; background:var(--hot)}
 .filecard{display:flex; gap:10px; align-items:center; border:1px solid var(--line); border-radius:8px;
   padding:8px 10px; margin-top:7px; background:var(--surface-2)}
 .filecard .fmeta{flex:1; min-width:0}
@@ -2872,6 +2881,7 @@ Object.assign(I18N.it, {
   todoAlsoShift:"I compiti che aggiungi qui compaiono anche nell'agenda del turno.",
   notesTitle:"Note e documenti", addNote:"Scrivi una nota", addFile:"Allega",
   noteEditHint:"Per correggere una nota o aggiungerle foto: toccala due volte, o tienila premuta.",
+  noteHot:"Nota attuale (giallo)",
   notesEmpty:"Nessuna nota.", notePh:"es. il paziente è diventato giallo",
   noteSaved:"Nota salvata", fileWarnPdf:"Un referto del sistema dell'ospedale porta stampati nome e data di nascita, anche nei dati interni del file. Se lo alleghi così, lo pseudonimo non serve più a niente. Meglio: fotografalo e copri l'intestazione nel passaggio successivo.",
   redTitle:"Copri i dati", redText:"Trascina il dito sulle parti da coprire: nome, data di nascita, numero del caso. Viene salvata solo la versione coperta, l'originale non entra nell'app.",
@@ -3007,6 +3017,7 @@ Object.assign(I18N.de, {
   todoAlsoShift:"Was du hier einträgst, steht auch im Dienst-Tagebuch.",
   notesTitle:"Notizen und Dokumente", addNote:"Notiz schreiben", addFile:"Anhängen",
   noteEditHint:"Zum Ändern oder für Fotos eine Notiz doppelt antippen oder gedrückt halten.",
+  noteHot:"Aktuelle Notiz (gelb)",
   notesEmpty:"Keine Notiz.", notePh:"z. B. der Patient ist ikterisch geworden",
   noteSaved:"Notiz gespeichert", fileWarnPdf:"Ein Befund aus dem Klinik-System trägt Name und Geburtsdatum aufgedruckt — auch in den internen Daten der Datei. So angehängt ist das Pseudonym wertlos. Besser: abfotografieren und im nächsten Schritt den Kopf abdecken.",
   redTitle:"Daten abdecken", redText:"Mit dem Finger über die Stellen ziehen, die weg sollen: Name, Geburtsdatum, Fallnummer. Gespeichert wird nur die abgedeckte Version, das Original kommt nicht in die App.",
@@ -4635,7 +4646,7 @@ function secNotes(host, p){
     c.appendChild(e);
   }
   notes.forEach(function(n){
-    var it = document.createElement("div"); it.className = "noteitem";
+    var it = document.createElement("div"); it.className = "noteitem" + (n.hot ? " hot" : "");
     var b = document.createElement("div"); b.className = "nbody";
     var tm = document.createElement("div"); tm.className = "ntime";
     tm.textContent = fmtDayShort(n.day) + " " + (n.time || "");
@@ -4664,7 +4675,23 @@ function secNotes(host, p){
     x.onclick = function(){
       p.notes = p.notes.filter(function(z){ return z.id !== n.id; }); save(); renderPat();
     };
-    it.appendChild(b); it.appendChild(x);
+    /* pallino: un tocco = nota attuale (giallino), un altro tocco = torna normale */
+    var dot = document.createElement("button");
+    dot.className = "colordot" + (n.hot ? " c-hot" : "");
+    dot.style.margin = "0";
+    dot.setAttribute("aria-label", t("noteHot"));
+    dot.title = t("noteHot");
+    dot.appendChild(document.createElement("i"));
+    dot.onclick = function(ev){
+      ev.stopPropagation();
+      var y = window.scrollY || 0;
+      if(n.hot) delete n.hot; else n.hot = true;
+      save(); renderPat();
+      window.scrollTo(0, y);   /* resti dove eri */
+    };
+    var side = document.createElement("div"); side.className = "nside";
+    side.appendChild(dot); side.appendChild(x);
+    it.appendChild(b); it.appendChild(side);
     c.appendChild(it);
   });
   files.forEach(function(f){ c.appendChild(fileCard(p, f)); });
