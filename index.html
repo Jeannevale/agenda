@@ -376,6 +376,11 @@ body.kb-scrive{padding-bottom:var(--kb,0px)}
   letter-spacing:.01em; overflow-wrap:anywhere}
 .patcard .pc-dx{font-size:13.5px; color:var(--ink-2); margin-top:3px; line-height:1.35;
   overflow-wrap:anywhere}
+.patcard .pc-top{display:flex; align-items:flex-start; gap:8px}
+.patcard .pc-top .pc-alias{flex:1; min-width:0}
+.patcard .pc-allerg{flex:0 1 auto; max-width:58%; margin-top:1px; font-size:11.5px; font-weight:600;
+  line-height:1.3; padding:2px 7px; border-radius:5px; background:var(--alert-soft); color:var(--alert);
+  overflow-wrap:anywhere; text-align:right}
 .patcard .pc-chips{display:flex; flex-wrap:wrap; gap:6px; margin-top:7px}
 .patcard .chev{flex:none; color:var(--ink-3); font-size:20px; line-height:1; margin-top:2px}
 .minichip{font-family:"IBM Plex Mono",monospace; font-size:11px; padding:2px 7px; border-radius:5px;
@@ -2782,6 +2787,7 @@ Object.assign(I18N.it, {
   fDxPh:"es. AKE per stenosi aortica",
   fSurg:"Operatore", fSurgPh:"es. Prof. Rossi",
   fOp:"Data intervento",
+  fAllerg:"Allergie", fAllergPh:"es. Penicillina, mezzo di contrasto",
   fActive:"In reparto", saveBtn:"Salva", discharge:"Dimetti", readmit:"Riporta in reparto",
   aliasNeeded:"Serve almeno lo pseudonimo.",
   tTher:"Terapia", tLab:"Laboratorio", tTodo:"Da fare", tNotes:"Note", tSum:"Riassunto", tProp:"Proposte",
@@ -2916,6 +2922,7 @@ Object.assign(I18N.de, {
   fDxPh:"z. B. AKE bei Aortenklappenstenose",
   fSurg:"Operateur", fSurgPh:"z. B. Prof. Müller",
   fOp:"OP-Datum",
+  fAllerg:"Allergien", fAllergPh:"z. B. Penicillin, Kontrastmittel",
   fActive:"Auf Station", saveBtn:"Speichern", discharge:"Entlassen", readmit:"Zurück auf Station",
   aliasNeeded:"Das Pseudonym fehlt.",
   tTher:"Therapie", tLab:"Labor", tTodo:"Zu tun", tNotes:"Notizen", tSum:"Zusammenfassung", tProp:"Vorschläge",
@@ -3731,9 +3738,19 @@ function patCard(p){
     (col ? " col-" + col : (inIcu ? " icu" : (patHasWarn(p) ? " warn" : "")));
   var main = document.createElement("div"); main.className = "pc-main";
 
+  var top = document.createElement("div"); top.className = "pc-top";
   var al = document.createElement("div"); al.className = "pc-alias";
   al.textContent = p.alias || "—";
-  main.appendChild(al);
+  top.appendChild(al);
+  /* allergie: solo se scritte; se il campo e' vuoto non compare niente */
+  var allerg = (p.allergies || "").trim();
+  if(allerg){
+    var ag = document.createElement("span"); ag.className = "pc-allerg";
+    ag.textContent = "⚠ " + allerg;
+    ag.title = t("fAllerg") + ": " + allerg;
+    top.appendChild(ag);
+  }
+  main.appendChild(top);
 
   if(p.dx){ var dx = document.createElement("div"); dx.className = "pc-dx"; dx.textContent = p.dx; main.appendChild(dx); }
   if(p.surgeon){ var su = document.createElement("div"); su.className = "pc-dx"; su.textContent = t("fSurg") + ": " + p.surgeon; main.appendChild(su); }
@@ -6275,7 +6292,9 @@ function openPatSheet(p){
     fS.input.setAttribute("list", "surgNames");
     fS.wrap.appendChild(surgList);
     var fO = dateFieldEl(t("fOp"), p ? p.opDate : "", true);
-    [fA, fR, fD, fS, fO].forEach(function(f){ sheet.appendChild(f.wrap); });
+    /* allergie: se scritte, compaiono in alto a destra sulla scheda della lista */
+    var fAl = fieldEl(t("fAllerg"), t("fAllergPh"), p ? (p.allergies || "") : "");
+    [fA, fR, fD, fS, fO, fAl].forEach(function(f){ sheet.appendChild(f.wrap); });
 
     var err = document.createElement("p");
     err.style.cssText = "color:var(--alert); font-size:13px; margin:10px 0 0"; err.hidden = true;
@@ -6303,10 +6322,12 @@ function openPatSheet(p){
         if(fS.input.value.trim() !== (p.surgeon || "")) suggRemember("surg", fS.input.value);
         p.surgeon = fS.input.value.trim();
         p.opDate = fO.get() || null;
+        p.allergies = fAl.input.value.trim();
         creati = convertiMarcati(p, "dx", "dxTasks", p) + convertiMorali(p, "dx", "dxMorals", { pid:p.id });
       } else {
         var np = { id:uid(), alias:alias, room:fR.input.value.trim(), dx:fD.input.value.trim(),
-          surgeon:fS.input.value.trim(), opDate:fO.get() || null, admDate:view.day, dischargedOn:null,
+          surgeon:fS.input.value.trim(), opDate:fO.get() || null, allergies:fAl.input.value.trim(),
+          admDate:view.day, dischargedOn:null,
           created:Date.now(), meds:[], labs:[], notes:[], files:[], proposals:[], summary:null };
         suggRemember("surg", np.surgeon);
         inserisciPerStanza(np);
