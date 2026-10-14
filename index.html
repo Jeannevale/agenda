@@ -525,6 +525,10 @@ body.kb-scrive{padding-bottom:var(--kb,0px)}
   border:1px solid var(--accent); background:var(--accent-soft); color:var(--accent);
   font-size:26px; font-weight:700; line-height:1; display:grid; place-items:center}
 .dotkey.on{visibility:visible}
+/* foglio del paziente: Salva da solo a sinistra, gli altri tasti di lato */
+.pat-acts{display:flex; align-items:flex-start; gap:10px; margin:4px 0 8px}
+.pat-acts > .btn{flex:none; align-self:flex-start; padding-inline:18px}
+.pat-acts-side{flex:1; min-width:0; display:flex; flex-wrap:wrap; justify-content:flex-end; gap:8px}
 .tplrow{display:flex; align-items:center; gap:10px; width:100%; text-align:left;
   padding:11px 12px; margin-top:8px; border:1px solid var(--line); border-radius:9px;
   background:var(--surface)}
@@ -4537,7 +4541,14 @@ function mkNum(v){
 
 /* ------------------------------------------------------------- to-do paziente */
 function secTodo(host, p){
-  var c = secCard(host, "todoTitle", t("addTodo"), function(){ openTodoSheet(p); });
+  /* "Aggiungi" come in Note e Verlauf: tasto largo e centrato sotto il titolo */
+  var c = secCard(host, "todoTitle");
+  var addTd = document.createElement("button");
+  addTd.className = "btn btn-ghost";
+  addTd.style.cssText = "width:100%; margin-bottom:10px";
+  addTd.textContent = t("addTodo");
+  addTd.onclick = function(){ openTodoSheet(p); };
+  c.appendChild(addTd);
   var mine = patTodos(p.id);
   var open = mine.filter(function(i){ return i.stage !== "done"; });
   var done = mine.filter(function(i){ return i.stage === "done"; })
@@ -6430,12 +6441,18 @@ function openPatSheet(p){
       acts.appendChild(cn);
     }
     /* i tasti stanno in alto, subito sotto il titolo: si toccano senza scorrere.
-       Il messaggio "manca il nome" sta subito sotto, dove si vede. */
-    acts.style.marginTop = "4px";
-    var ultimaRiga = riga2 || acts;
-    ultimaRiga.style.marginBottom = "6px";
+       Salva sta da solo nella sua colonna a sinistra — sotto non c'e' niente,
+       cosi' non si tocca un altro tasto per sbaglio — e tutti gli altri gli
+       stanno di lato, a destra. Il messaggio "manca il nome" sta subito sotto. */
+    var lato = document.createElement("div"); lato.className = "pat-acts-side";
+    Array.prototype.slice.call(acts.children).forEach(function(b){ if(b !== ok) lato.appendChild(b); });
+    if(riga2){
+      Array.prototype.slice.call(riga2.children).forEach(function(b){ lato.appendChild(b); });
+      riga2.remove(); riga2 = null;
+    }
+    acts.className = "pat-acts";
+    acts.appendChild(lato);
     sheet.insertBefore(acts, fA.wrap);
-    if(riga2) sheet.insertBefore(riga2, fA.wrap);
     err.style.margin = "4px 0 6px";
     sheet.insertBefore(err, fA.wrap);
 
