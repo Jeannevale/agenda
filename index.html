@@ -6861,7 +6861,15 @@ function salvaOrdineVerlauf(p, host){
 }
 
 function secVerlauf(host, p){
-  var c = secCard(host, "verlTitle", t("verlAdd"), function(){ openVerlSheet(p); });
+  /* "Aggiungi" come nelle Note: tasto largo e centrato sotto il titolo,
+     non piu' piccolo in alto a destra */
+  var c = secCard(host, "verlTitle");
+  var addBtn = document.createElement("button");
+  addBtn.className = "btn btn-ghost";
+  addBtn.style.cssText = "width:100%; margin-bottom:10px";
+  addBtn.textContent = t("verlAdd");
+  addBtn.onclick = function(){ openVerlSheet(p); };
+  c.appendChild(addBtn);
   var lista = verlauf(p);
   if(!lista.length){
     var e = document.createElement("p"); e.className = "emptysm"; e.textContent = t("verlEmpty");
