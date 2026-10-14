@@ -497,6 +497,11 @@ body.kb-scrive{padding-bottom:var(--kb,0px)}
 .chkitem{display:flex; align-items:flex-start; gap:10px; width:100%; text-align:left;
   padding:8px 0; border-bottom:1px solid var(--line)}
 .chkitem:last-of-type{border-bottom:none}
+/* una riga del modello: uno o piu' quadratini affiancati */
+.chkline{display:flex; flex-wrap:wrap; gap:8px 18px; padding:8px 0; border-bottom:1px solid var(--line)}
+.chkline:last-child{border-bottom:none}
+.chkline .chkitem{padding:0; border-bottom:none; flex:1 1 100%}
+.chkline.multi .chkitem{flex:1 1 130px; width:auto}
 .chkmark{flex:none; width:22px; height:22px; margin-top:1px; border-radius:6px;
   border:1.5px solid var(--line-strong); background:var(--surface); display:grid; place-items:center;
   color:#fff; transition:background .12s ease, border-color .12s ease}
@@ -2872,9 +2877,9 @@ Object.assign(I18N.it, {
   myTplNote:"I modelli valgono per tutta l'app, non per un paziente solo. Modificarne uno non cambia le checklist già aggiunte ai pazienti.",
   myTplEmpty:"Ancora nessun modello.",
   tplNew:"Nuovo modello", tplEdit:"Modifica il modello",
-  tplNote:"Dai un nome al modello e scrivi una voce per riga: ogni riga diventa un quadratino da crocettare.",
+  tplNote:"Dai un nome al modello e scrivi una voce per riga: ogni riga diventa un quadratino da crocettare. Per avere più quadratini sulla stessa riga separa le voci con due o più spazi (es. «Angiografia immagini   Angiografia referto»).",
   tplName:"Nome del modello", tplNamePh:"es. Controlli prima della dimissione",
-  tplItems:"Le voci, una per riga", tplItemsPh:"Prima voce\\nSeconda voce\\nTerza voce",
+  tplItems:"Le voci, una per riga", tplItemsPh:"Prima voce\nAngiografia immagini   Angiografia referto\nTerza voce",
   tplNeedName:"Manca il nome del modello.", tplNeedItems:"Scrivi almeno una voce.",
   dateNone:"Nessuna data", dateClear:"Togli la data",
   taskMade1:"Compito creato nel turno", taskMadeN:"N compiti creati nel turno",
@@ -3006,9 +3011,9 @@ Object.assign(I18N.de, {
   myTplNote:"Vorlagen gelten für die ganze App, nicht für einen Patienten. Eine Vorlage zu ändern verändert die schon hinzugefügten Checklisten nicht.",
   myTplEmpty:"Noch keine Vorlage.",
   tplNew:"Neue Vorlage", tplEdit:"Vorlage bearbeiten",
-  tplNote:"Gib der Vorlage einen Namen und schreib einen Punkt pro Zeile: jede Zeile wird ein Kästchen zum Abhaken.",
+  tplNote:"Gib der Vorlage einen Namen und schreib einen Punkt pro Zeile: jede Zeile wird ein Kästchen zum Abhaken. Für mehrere Kästchen in derselben Zeile die Punkte mit zwei oder mehr Leerzeichen trennen (z. B. «Angiographie Bilder   Angiographie Befund»).",
   tplName:"Name der Vorlage", tplNamePh:"z. B. Kontrollen vor der Entlassung",
-  tplItems:"Die Punkte, einer pro Zeile", tplItemsPh:"Erster Punkt\\nZweiter Punkt\\nDritter Punkt",
+  tplItems:"Die Punkte, einer pro Zeile", tplItemsPh:"Erster Punkt\nAngiographie Bilder   Angiographie Befund\nDritter Punkt",
   tplNeedName:"Der Name fehlt.", tplNeedItems:"Schreib mindestens einen Punkt.",
   dateNone:"Kein Datum", dateClear:"Datum entfernen",
   taskMade1:"Aufgabe im Dienst angelegt", taskMadeN:"N Aufgaben im Dienst angelegt",
@@ -5631,6 +5636,45 @@ function hasPhotos(o){ return !!(o && o.photos && o.photos.length); }
    paziente. Quando ne aggiungi uno a un paziente ne viene fatta una copia:
    se poi modifichi il modello, le checklist gia' aggiunte restano com'erano. */
 function checkTpls(){ return S.settings.checklists || (S.settings.checklists = []); }
+/* Una riga del modello si divide dove ci sono due o piu' spazi (o un tab):
+   "Angiografia immagini   Angiografia referto" = due quadratini sulla stessa riga. */
+function chkParts(line){
+  return String(line || "").split(/\s{2,}|\t+/).map(function(x){ return x.trim(); })
+    .filter(function(x){ return x.length > 0; });
+}
+/* la voce di una checklist del paziente: semplice, oppure con piu' quadratini */
+function chkMakeItem(line){
+  var parts = chkParts(line);
+  if(parts.length > 1){
+    return { text:parts.join(" · "), parts:parts.map(function(x){ return { text:x, done:false, at:null }; }) };
+  }
+  return { text:parts[0] || String(line || "").trim(), done:false, at:null };
+}
+/* tutti i quadratini, riga per riga, per contare fatti/totali */
+function chkBoxes(cl){
+  var out = [];
+  (cl.items || []).forEach(function(it){
+    if(it.parts && it.parts.length) it.parts.forEach(function(q){ out.push(q); });
+    else out.push(it);
+  });
+  return out;
+}
+/* checklist aggiunte prima di questa novita': se una voce ha i doppi spazi
+   la divido adesso (se era gia' crocettata, restano crocettati tutti) */
+function chkMigra(cl){
+  var cambiato = false;
+  (cl.items || []).forEach(function(it){
+    if(it.parts) return;
+    var parts = chkParts(it.text);
+    if(parts.length > 1){
+      it.parts = parts.map(function(x){ return { text:x, done:!!it.done, at:it.done ? (it.at || Date.now()) : null }; });
+      it.text = parts.join(" · ");
+      delete it.done; delete it.at;
+      cambiato = true;
+    }
+  });
+  return cambiato;
+}
 
 function secCheck(host, p){
   var c = secCard(host, "checkTitle", t("myTpl"), function(){ openTplsSheet(); });
@@ -5652,12 +5696,14 @@ function secCheck(host, p){
 function checkCard(p, cl){
   var box = document.createElement("div"); box.className = "chkbox";
 
+  if(chkMigra(cl)) save();
   var head = document.createElement("div"); head.className = "chkhead";
   var nm = document.createElement("div"); nm.className = "chkname"; nm.textContent = cl.name;
-  var done = cl.items.filter(function(i){ return i.done; }).length;
+  var boxes = chkBoxes(cl);
+  var done = boxes.filter(function(i){ return i.done; }).length;
   var cnt = document.createElement("span");
-  cnt.className = "chkcount" + (cl.items.length && done === cl.items.length ? " full" : "");
-  cnt.textContent = done + "/" + cl.items.length;
+  cnt.className = "chkcount" + (boxes.length && done === boxes.length ? " full" : "");
+  cnt.textContent = done + "/" + boxes.length;
   var x = document.createElement("button"); x.className = "mx";
   x.setAttribute("aria-label", t("del"));
   x.appendChild(svgIcon("trash", 15));
@@ -5665,19 +5711,30 @@ function checkCard(p, cl){
   head.appendChild(nm); head.appendChild(cnt); head.appendChild(x);
   box.appendChild(head);
 
-  cl.items.forEach(function(it){
-    var row = document.createElement("button");
-    row.className = "chkitem" + (it.done ? " on" : "");
+  /* ogni riga del modello e' una riga qui: con uno o piu' quadratini affiancati */
+  function quadratino(q){
+    var b = document.createElement("button");
+    b.className = "chkitem" + (q.done ? " on" : "");
     var mark = document.createElement("span"); mark.className = "chkmark";
-    if(it.done) mark.appendChild(svgIcon("check", 14, 2.8));
-    var tx = document.createElement("span"); tx.className = "chktext"; tx.textContent = it.text;
-    row.appendChild(mark); row.appendChild(tx);
-    row.onclick = function(){
-      it.done = !it.done; it.at = it.done ? Date.now() : null;
+    if(q.done) mark.appendChild(svgIcon("check", 14, 2.8));
+    var tx = document.createElement("span"); tx.className = "chktext"; tx.textContent = q.text;
+    b.appendChild(mark); b.appendChild(tx);
+    b.onclick = function(){
+      q.done = !q.done; q.at = q.done ? Date.now() : null;
       save(); renderPat();
     };
-    box.appendChild(row);
+    return b;
+  }
+  var righe = document.createElement("div"); righe.className = "chklines";
+  cl.items.forEach(function(it){
+    var line = document.createElement("div");
+    var multi = !!(it.parts && it.parts.length > 1);
+    line.className = "chkline" + (multi ? " multi" : "");
+    if(it.parts && it.parts.length) it.parts.forEach(function(q){ line.appendChild(quadratino(q)); });
+    else line.appendChild(quadratino(it));
+    righe.appendChild(line);
   });
+  box.appendChild(righe);
 
   var ta = document.createElement("textarea");
   ta.className = "chkcomment"; ta.placeholder = t("checkCommentPh");
@@ -5697,7 +5754,7 @@ function addChecklist(p, tp){
   p.checklists = p.checklists || [];
   p.checklists.push({
     id:uid(), tplId:tp.id, name:tp.name, added:Date.now(), comment:"",
-    items:tp.items.map(function(txt){ return { text:txt, done:false, at:null }; })
+    items:tp.items.map(chkMakeItem)
   });
   save();
 }
@@ -5726,7 +5783,7 @@ function openPickTplSheet(p){
       var b = document.createElement("button"); b.className = "tplrow";
       var nm = document.createElement("span"); nm.className = "tplname"; nm.textContent = tp.name;
       var n = document.createElement("span"); n.className = "tpln";
-      n.textContent = tp.items.length + " " + t("checkNItems");
+      n.textContent = tp.items.reduce(function(a, l){ return a + Math.max(1, chkParts(l).length); }, 0) + " " + t("checkNItems");
       b.appendChild(nm); b.appendChild(n);
       b.onclick = function(){ addChecklist(p, tp); close(); renderPat(); showToast(t("checkAdded")); };
       sheet.appendChild(b);
@@ -5761,7 +5818,7 @@ function openTplsSheet(){
       var b = document.createElement("button"); b.className = "tplrow";
       var nm = document.createElement("span"); nm.className = "tplname"; nm.textContent = tp.name;
       var n = document.createElement("span"); n.className = "tpln";
-      n.textContent = tp.items.length + " " + t("checkNItems");
+      n.textContent = tp.items.reduce(function(a, l){ return a + Math.max(1, chkParts(l).length); }, 0) + " " + t("checkNItems");
       b.appendChild(nm); b.appendChild(n);
       b.onclick = function(){ close(); openTplSheet(tp, openTplsSheet); };
       sheet.appendChild(b);
@@ -8172,6 +8229,7 @@ var SYS_TXT = {
     dren:["Drenaggi", "Drenaggi e accessi", "Drenaggi e quanto perdono, CVC, arteria, catetere vescicale: da quando ci sono, quando toglierli…"],
     elett:["Elettroliti", "Elettroliti", "Potassio, magnesio, sodio, calcio — e cosa stai sostituendo…"],
     coag:["Coagulazione", "Coagulazione e anticoagulazione", "Anticoagulante e obiettivo, INR, piastrine, perdite, trasfusioni…"],
+    ormoni:["Ormoni", "Ormoni", "Tiroide (TSH, fT3, fT4), BNP / NT-proBNP, cortisolo…"],
     mobil:["Mobilità", "Mobilizzazione e gambe", "Mobilizzazione, fisioterapia, edemi, gambe…"]
   },
   de:{
@@ -8186,6 +8244,7 @@ var SYS_TXT = {
     dren:["Drainagen", "Drainagen und Zugänge", "Drainagen und Fördermenge, ZVK, Arterie, Blasenkatheter: seit wann, wann ziehen…"],
     elett:["Elektrolyte", "Elektrolyte", "Kalium, Magnesium, Natrium, Calcium — und was du substituierst…"],
     coag:["Gerinnung", "Gerinnung und Antikoagulation", "Antikoagulans und Ziel, INR, Thrombozyten, Blutverlust, Transfusionen…"],
+    ormoni:["Hormone", "Hormone", "Schilddrüse (TSH, fT3, fT4), BNP / NT-proBNP, Cortisol…"],
     mobil:["Mobilität", "Mobilisation und Beine", "Mobilisation, Physiotherapie, Ödeme, Beine…"]
   }
 };
@@ -8235,7 +8294,15 @@ var SYS_REL = [
   ["neuro","elett", "Un Na⁺ alterato può dare confusione",
                     "Ein gestörtes Na⁺ kann Verwirrtheit machen"],
   ["resp","mobil",  "Mobilizzare presto aiuta a respirare meglio",
-                    "Frühe Mobilisation hilft der Atmung"]
+                    "Frühe Mobilisation hilft der Atmung"],
+  ["ormoni","ritmo","Un ipertiroidismo può scatenare o mantenere la FA; l'amiodarone altera la funzione tiroidea",
+                    "Eine Hyperthyreose kann VHF auslösen oder unterhalten; Amiodaron verändert die Schilddrüsenfunktion"],
+  ["ormoni","fluidi","Un NT-proBNP in salita indica sovraccarico di volume e stress della parete cardiaca",
+                    "Ein steigendes NT-proBNP zeigt Volumenbelastung und Wandstress des Herzens an"],
+  ["ormoni","reni", "Con eGFR ridotto l'NT-proBNP sale anche senza scompenso: va letto insieme alla funzione renale",
+                    "Bei eingeschränkter eGFR steigt das NT-proBNP auch ohne Dekompensation: immer mit der Nierenfunktion lesen"],
+  ["ormoni","glic", "Stress chirurgico, cortisolo e steroidi fanno salire la glicemia",
+                    "Operationsstress, Cortisol und Steroide lassen den Blutzucker steigen"]
 ];
 
 /* Il disegno. Coordinate nel riquadro 364 x 520 (da x = -2).
@@ -8307,6 +8374,14 @@ var SYS_DEF = [
     hit:[[246,316,11]], vb:[230,300,32,32],
     halo:'<circle cx="246" cy="317" r="15"/>',
     art:'<path class="fl" d="M246 303 C246 303 238.5 312.5 238.5 318 A7.5 7.5 0 0 0 253.5 318 C253.5 312.5 246 303 246 303 Z"/>' },
+  /* ormoni: una tiroide a farfalla sulla gamba destra del disegno */
+  { id:"ormoni", side:"R", ly:392, lead:[219,391], c:[204,391],
+    hit:[[204,391,16]], vb:[184,370,40,42],
+    halo:'<ellipse cx="204" cy="391" rx="21" ry="20"/>',
+    art:'<g transform="translate(204 391) scale(1.3) translate(-204 -391)">' +
+        '<path class="fl" d="M201.8 389 C200 381 196.5 378.5 194.5 380 C191.5 382.5 191.5 391 193.5 396 C195 400 198.5 401.5 201 399.5 C202.6 398.2 203 395.5 202.6 393 Z"/>' +
+        '<path class="fl" d="M206.2 389 C208 381 211.5 378.5 213.5 380 C216.5 382.5 216.5 391 214.5 396 C213 400 209.5 401.5 207 399.5 C205.4 398.2 205 395.5 205.4 393 Z"/>' +
+        '<path class="fl" d="M202.4 392 C203.6 393.4 204.4 393.4 205.6 392 V396 C204.4 397.2 203.6 397.2 202.4 396 Z"/></g>' },
   { id:"mobil", side:"R", ly:470, lead:[253,468], c:[240,476],
     hit:[[234,464,10],[246,489,10]], vb:[220,448,40,56],
     halo:'<ellipse cx="240" cy="476" rx="17" ry="26"/>',
