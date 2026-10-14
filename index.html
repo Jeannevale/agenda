@@ -2772,7 +2772,7 @@ function tick(){
     }
   });
   if(view.day !== todayStr() && view._wasToday){ view.day = todayStr(); changed = true; }
-  if(changed){ save(); if(!inModifica() && !modificaAperta && !sysScrive()) render(); }
+  if(changed){ save(); if(!inModifica() && !notaInModifica() && !sysScrive()) render(); }
 }
 
 /* ---------------------------------------------------------------- wiring */
@@ -4664,8 +4664,9 @@ function secNotes(host, p){
     tx.appendChild(textWithMorals(n.text, n.tasks, n.morals));
     var nfr = hasPhotos(n) ? photoRow(n, renderPat, { add:false }) : null;
     if(!n.text) tx.style.minHeight = "22px";
-    attaccaModifica(tx, function(){
-      if(nfr && !modificaAperta && !inModifica()) nfr.hidden = true;
+    var apriNota = function(){
+      if(!tx.parentNode) return;
+      if(nfr && !notaInModifica() && !inModifica()) nfr.hidden = true;
       modificaTesto(tx, n.text, {
         foto: n,
         annulla: renderPat,
@@ -4676,6 +4677,15 @@ function secNotes(host, p){
           avvisaTutto(r);
         }
       });
+    };
+    attaccaModifica(tx, apriNota);
+    /* doppio tocco in qualunque punto della casella (anche sull'ora o nello
+       spazio vuoto), tranne su foto, pallino e cestino */
+    attachLongPress(tm, apriNota);
+    it.addEventListener("dblclick", function(e){
+      if(tx.contains(e.target)) return;                 /* ci pensa gia' il testo */
+      if(e.target.closest && e.target.closest(".photorow, .nside, .edit-box")) return;
+      e.preventDefault(); apriNota();
     });
     b.appendChild(tm); b.appendChild(tx);
     if(nfr) b.appendChild(nfr);
@@ -5071,7 +5081,7 @@ function textWithTasks(text, tasks){
       e.stopPropagation();
       clearTimeout(salto);
       salto = setTimeout(function(){
-        if(modificaAperta) return;
+        if(notaInModifica()) return;
         vaiAlCompito(mk.task.itemId);
       }, 280);
     };
@@ -6843,13 +6853,20 @@ function initPat(){
    di un collega — dove si puo' cambiare anche il giorno.
    Gli asterischi continuano a funzionare: se ne aggiungi mentre correggi,
    nascono i compiti nel turno. */
-var modificaAperta = false;
+var modificaAperta = false, modificaBox = null;
+/* come per i compiti: se il riquadro di modifica e' sparito senza X o ✓,
+   il blocco si spegne da solo invece di bloccare ogni doppio tocco */
+function notaInModifica(){
+  if(modificaAperta && !(modificaBox && document.body.contains(modificaBox))) modificaAperta = false;
+  return modificaAperta;
+}
 
 function modificaTesto(txEl, testo, opts){
-  if(modificaAperta || inModifica()) return;
+  if(notaInModifica() || inModifica()) return;
   modificaAperta = true;
 
   var box = document.createElement("div"); box.className = "edit-box";
+  modificaBox = box;
   var ta = document.createElement("textarea");
   ta.className = "edit-text"; ta.value = testo || "";
   ta.setAttribute("enterkeyhint", "enter");
@@ -7105,7 +7122,7 @@ function verlCard(p, v){
   /* in modifica le miniature stanno dentro il riquadro di modifica */
   var fr = hasPhotos(v) ? photoRow(v, renderPat, { add:false }) : null;
   function apri(){
-    if(fr && !modificaAperta && !inModifica()) fr.hidden = true;
+    if(fr && !notaInModifica() && !inModifica()) fr.hidden = true;
     var o = {
       foto: v,
       annulla: renderPat,
@@ -8133,7 +8150,7 @@ function spezzaPerMorali(testo, moraliDiQui){
       e.stopPropagation();
       clearTimeout(salto);
       salto = setTimeout(function(){
-        if(modificaAperta) return;
+        if(notaInModifica()) return;
         vaiAllaMorale(mk.mor.moralId);
       }, 280);
     };
