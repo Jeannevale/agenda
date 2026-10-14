@@ -6293,13 +6293,23 @@ function openPatSheet(p){
           if(aperta) riportaDaIcu(p); else mandaInIcu(p);
           if(r.creati) setTimeout(function(){ avvisaCompiti(r.creati); }, 3100);
         };
-        acts.appendChild(ic);
       }
     }
+    sheet.appendChild(acts);
+    /* Annulla non sta più sotto Salva: va nella seconda riga, a destra di
+       "Terapia intensiva". Se quel tasto non c'è (paziente nuovo o dimesso)
+       resta nella prima riga accanto agli altri. */
     var cn = document.createElement("button"); cn.className = "btn btn-ghost";
     cn.textContent = t("cancel"); cn.onclick = close;
-    acts.appendChild(cn);
-    sheet.appendChild(acts);
+    if(ic){
+      var riga2 = document.createElement("div"); riga2.className = "sheet-actions";
+      riga2.style.cssText = "margin-top:8px; flex-wrap:nowrap";
+      riga2.appendChild(ic);
+      riga2.appendChild(cn);
+      sheet.appendChild(riga2);
+    } else {
+      acts.appendChild(cn);
+    }
 
     if(p){
       var dl = document.createElement("button");
