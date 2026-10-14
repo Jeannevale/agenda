@@ -6429,6 +6429,15 @@ function openPatSheet(p){
     } else {
       acts.appendChild(cn);
     }
+    /* i tasti stanno in alto, subito sotto il titolo: si toccano senza scorrere.
+       Il messaggio "manca il nome" sta subito sotto, dove si vede. */
+    acts.style.marginTop = "4px";
+    var ultimaRiga = riga2 || acts;
+    ultimaRiga.style.marginBottom = "6px";
+    sheet.insertBefore(acts, fA.wrap);
+    if(riga2) sheet.insertBefore(riga2, fA.wrap);
+    err.style.margin = "4px 0 6px";
+    sheet.insertBefore(err, fA.wrap);
 
     if(p){
       var dl = document.createElement("button");
