@@ -519,6 +519,12 @@ body.kb-scrive{padding-bottom:var(--kb,0px)}
   border:1px solid var(--line); border-radius:8px; background:var(--surface-2); color:var(--ink);
   font-size:14px; line-height:1.4; resize:none}
 .chkcomment::placeholder{color:var(--ink-3)}
+/* tasto "·" nell'etichetta di un campo (diagnosi) */
+.sheet-label.lab-dot{display:flex; align-items:flex-end; justify-content:space-between; gap:8px}
+.dotkey{visibility:hidden; flex:none; min-width:44px; height:30px; margin:-6px 0 -2px; border-radius:8px;
+  border:1px solid var(--accent); background:var(--accent-soft); color:var(--accent);
+  font-size:26px; font-weight:700; line-height:1; display:grid; place-items:center}
+.dotkey.on{visibility:visible}
 .tplrow{display:flex; align-items:center; gap:10px; width:100%; text-align:left;
   padding:11px 12px; margin-top:8px; border:1px solid var(--line); border-radius:9px;
   background:var(--surface)}
@@ -2570,6 +2576,39 @@ function openSettings(){
     acts.appendChild(cl);
     sheet.appendChild(acts);
   });
+}
+/* Il tasto "·" sopra un campo: compare mentre ci scrivi e mette il puntino
+   centrale come separatore dove sta il cursore, senza dover cercare il simbolo
+   sulla tastiera. Non toglie il fuoco al campo: la tastiera resta aperta. */
+function tastoPuntino(f){
+  var lab = f.wrap.querySelector(".sheet-label");
+  if(!lab) return;
+  lab.classList.add("lab-dot");
+  var b = document.createElement("button");
+  b.type = "button"; b.className = "dotkey";
+  b.textContent = "·";
+  b.setAttribute("aria-label", "·");
+  lab.appendChild(b);
+  var inp = f.input;
+  inp.addEventListener("focus", function(){ b.classList.add("on"); });
+  inp.addEventListener("blur", function(){ b.classList.remove("on"); });
+  /* pointerdown senza effetto: il campo non perde il fuoco */
+  b.addEventListener("pointerdown", function(e){ e.preventDefault(); });
+  b.addEventListener("mousedown", function(e){ e.preventDefault(); });
+  b.onclick = function(e){
+    e.preventDefault();
+    var v = inp.value;
+    var a = inp.selectionStart == null ? v.length : inp.selectionStart;
+    var z = inp.selectionEnd == null ? v.length : inp.selectionEnd;
+    var prima = v.slice(0, a).replace(/\s+$/, "");
+    var dopo = v.slice(z).replace(/^\s+/, "");
+    var ins = (prima ? " " : "") + "· ";
+    inp.value = prima + ins + dopo;
+    var pos = prima.length + ins.length;
+    inp.focus();
+    try{ inp.setSelectionRange(pos, pos); }catch(err){}
+    inp.dispatchEvent(new Event("input", { bubbles:true }));
+  };
 }
 function labelEl(text){
   var d = document.createElement("div"); d.className = "sheet-label"; d.textContent = text; return d;
@@ -6283,6 +6322,7 @@ function openPatSheet(p){
     var fA = fieldEl(t("fAlias"), t("fAliasPh"), p ? p.alias : "");
     var fR = fieldEl(t("fRoom"), t("roomPh"), p ? p.room : "");
     var fD = fieldEl(t("fDx"), t("fDxPh"), p ? p.dx : "");
+    tastoPuntino(fD);
     var fS = fieldEl(t("fSurg"), t("fSurgPh"), p ? p.surgeon : "");
     /* propone i nomi dell'elenco "Operatore" (si cambia dalle Impostazioni) */
     var surgList = document.createElement("datalist"); surgList.id = "surgNames";
