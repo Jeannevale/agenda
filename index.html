@@ -369,6 +369,9 @@ body.kb-scrive{padding-bottom:var(--kb,0px)}
   border-left-color:var(--accent); transform:scale(1.02);
   box-shadow:0 14px 34px -10px rgba(18,37,42,.5)}
 .patcard:hover{border-color:var(--line-strong)}
+/* presa a sinistra per riordinare (come nel Verlauf) */
+.patcard.hasgrip{padding-left:3px; gap:7px}
+.patcard .pgrip{margin:-11px 0; min-height:44px}
 .patcard.off{border-left-color:var(--line-strong); background:var(--surface-2); opacity:.75}
 .patcard.warn{border-left-color:var(--alert)}
 .patcard .pc-main{flex:1; min-width:0}
@@ -2842,7 +2845,7 @@ Object.assign(I18N.it, {
   icuBtn:"Terapia intensiva", icuChip:"Terapia intensiva", icuSend:"In terapia intensiva",
   icuBack:"Di nuovo in reparto", icuSent:"In terapia intensiva dal", icuBackDone:"Di nuovo in reparto dal",
   icuEmpty:"Nessuno in terapia intensiva in questo giorno.",
-  dragHint:"Per cambiare l'ordine: tieni premuta una scheda e trascinala su o giù.",
+  dragHint:"Per cambiare l'ordine trascina una scheda dalla presa a sinistra (oppure tienila premuta). Anche con il filtro Terapia intensiva.",
   patEmptyFilter:"Nessun paziente con questo testo.",
   newPat:"Nuovo paziente", editPat:"Modifica paziente",
   fAlias:"Pseudonimo", fAliasPh:"es. Rosa, M1, Quercia",
@@ -2978,7 +2981,7 @@ Object.assign(I18N.de, {
   icuBtn:"Intensiv", icuChip:"Intensiv", icuSend:"Auf Intensiv",
   icuBack:"Zurück auf Station", icuSent:"Auf Intensiv seit", icuBackDone:"Zurück auf Station am",
   icuEmpty:"An diesem Tag niemand auf Intensiv.",
-  dragHint:"Zum Umsortieren: eine Karte gedrückt halten und nach oben oder unten ziehen.",
+  dragHint:"Zum Umsortieren eine Karte am Griff links ziehen (oder gedrückt halten). Auch mit dem Intensiv-Filter.",
   patEmptyFilter:"Kein Patient mit diesem Text.",
   newPat:"Neuer Patient", editPat:"Patient bearbeiten",
   fAlias:"Pseudonym", fAliasPh:"z. B. Rosa, M1, Eiche",
@@ -3663,7 +3666,7 @@ function renderPatList(){
   var trascinabile = !q && shown.length > 1;
   shown.forEach(function(p){
     var card = patCard(p);
-    if(trascinabile) attachPatDrag(card);
+    if(trascinabile){ attachPatGrip(card); attachPatDrag(card); }
     host.appendChild(card);
   });
 
@@ -3777,6 +3780,31 @@ function attachPatDrag(card){
     salvaOrdine(card.parentNode);
     setTimeout(function(){ patDragged = false; }, 80);
   }
+}
+/* La presa a sinistra della scheda (15.10.2026): come nelle caselle del
+   Verlauf, premendo li' la scheda parte subito, senza attesa. Vale nella lista
+   intera e con il filtro Terapia intensiva acceso (li' si riordinano fra loro
+   solo le schede in intensiva). La pressione lunga sul resto della scheda resta.
+   La scheda e' un <button>: la presa e' uno span, e non lascia arrivare il tocco
+   alla scheda, cosi' non parte anche il trascinamento a pressione lunga. */
+function attachPatGrip(card){
+  var g = document.createElement("span");
+  g.className = "vgrip pgrip";
+  g.setAttribute("role", "button");
+  g.setAttribute("aria-label", t("verlMove"));
+  g.title = t("verlMove");
+  g.appendChild(svgIcon("grip", 16, 1.9));
+  ["pointerdown", "touchstart"].forEach(function(ev){
+    g.addEventListener(ev, function(e){ e.stopPropagation(); }, { passive:true });
+  });
+  g.addEventListener("pointerdown", function(){ patDragged = true; });
+  g.addEventListener("click", function(e){ e.stopPropagation(); e.preventDefault(); });
+  card.insertBefore(g, card.firstChild);
+  card.classList.add("hasgrip");
+  attachDragHandle(card, g, "patcard", function(hostEl){
+    salvaOrdine(hostEl);
+    setTimeout(function(){ patDragged = false; }, 80);
+  });
 }
 /* l'ordine delle schede sullo schermo diventa l'ordine dell'elenco */
 function salvaOrdine(host){
