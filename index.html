@@ -370,8 +370,10 @@ body.kb-scrive{padding-bottom:var(--kb,0px)}
   box-shadow:0 14px 34px -10px rgba(18,37,42,.5)}
 .patcard:hover{border-color:var(--line-strong)}
 /* presa a sinistra per riordinare (come nel Verlauf) */
-.patcard.hasgrip{padding-left:3px; gap:7px}
-.patcard .pgrip{margin:-11px 0; min-height:44px}
+.patcard.hasgrip{padding-left:1px; gap:8px}
+/* presa stretta, tutta sul bordo sinistro: il resto della scheda serve a scorrere */
+.patcard .pgrip{margin:-11px 0; min-height:44px; width:17px}
+.patcard .pgrip svg{width:15px; height:15px}
 .patcard.off{border-left-color:var(--line-strong); background:var(--surface-2); opacity:.75}
 .patcard.warn{border-left-color:var(--alert)}
 .patcard .pc-main{flex:1; min-width:0}
