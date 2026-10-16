@@ -4048,10 +4048,11 @@ function tabCount(p, tab){
   if(tab === "lab") return (p.labs || []).length;
   if(tab === "check") return (p.checklists || []).length;
   if(tab === "todo") return patOpenTodos(p.id).length;
-  if(tab === "notes") return (p.notes || []).length + (p.files || []).length;
+  /* nella barra conto solo le note gialle (attuali) e i sistemi gialli/rossi */
+  if(tab === "notes") return (p.notes || []).filter(function(n){ return n.hot; }).length;
   if(tab === "verl") return (p.verlauf || []).length;
   if(tab === "icu") return (p.icu || []).length;
-  if(tab === "sys") return sysCount(p);
+  if(tab === "sys") return SYS_DEF.filter(function(d){ var s = sysGet(p, d.id); return !!(s && (s.status === "watch" || s.status === "bad")); }).length;
   return 0;
 }
 function secCard(host, titleKey, actionLabel, action){
