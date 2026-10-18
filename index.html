@@ -1697,7 +1697,9 @@ function renderChrome(){
   paintDayLabel($("dayName"), $("dayDate"), $("todayBtn"));
   $("nextDay").disabled = false;
 
-  var counts = { todo:itemsFor("todo").length, result:itemsFor("result").length, done:itemsFor("done").length };
+  /* nel numero di "Da fare" contano solo i compiti normali: i gialli (sole)
+     e i verdi (cuore) restano in lista ma non pesano sul conto */
+  var counts = { todo:itemsFor("todo").filter(function(i){ return !gruppoFondo(i); }).length, result:itemsFor("result").length, done:itemsFor("done").length };
   var names = { todo:t("rTodo"), result:t("rResult"), done:t("rDone") };
   Array.prototype.forEach.call(document.querySelectorAll(".rail-tab"), function(b){
     var r = b.dataset.rail;
