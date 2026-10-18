@@ -351,6 +351,7 @@ body.kb-scrive{padding-bottom:var(--kb,0px)}
   display:grid; place-items:center; font-size:24px; line-height:1;
   -webkit-tap-highlight-color:transparent; touch-action:manipulation}
 #ntkPall{font-size:32px}
+.ntk.ntk-tx{font-family:"IBM Plex Sans Condensed","IBM Plex Sans",sans-serif; font-size:15px; font-weight:600; letter-spacing:.02em}
 .ntk .ntk-sw{width:20px; height:20px; border-radius:50%; background:var(--nb-grigio)}
 .ntk.on{border-color:var(--accent); background:var(--accent-soft); box-shadow:inset 0 0 0 1px var(--accent)}
 
@@ -1274,7 +1275,6 @@ table.labtab td.pname .namebtn:hover{text-decoration-color:var(--accent); color:
   <div class="notestick" id="noteTop">
   <header class="notehead">
     <div class="ptitle" id="noteTitle">Note</div>
-    <button class="tbtn" id="noteH">Titolo</button>
     <button class="mic-sm" id="noteMic" aria-label="detta"></button>
     <span class="notesaved" id="noteSaved"></span>
   </header>
@@ -1288,6 +1288,7 @@ table.labtab td.pname .namebtn:hover{text-decoration-color:var(--accent); color:
     <button class="nf-step" id="noteFindDown" aria-label="successivo" hidden></button>
   </div>
   <div class="notetools" id="noteTools">
+    <button class="ntk ntk-tx" id="noteH">Titolo</button>
     <button class="ntk" id="ntkPall" aria-label="Elenco puntato">•</button>
     <button class="ntk" id="ntkGrigio" aria-label="Testo grigio scuro"><span class="ntk-sw"></span></button>
     <button class="ntk" id="ntkAllinea" aria-label="Allinea dopo l'uguale"></button>
@@ -5620,11 +5621,12 @@ function fissaTasti(){
 }
 /* i tasti si accendono secondo dove sta il cursore */
 function quadernoTasti(ed){
-  var bg = $("ntkGrigio"), ba = $("ntkAllinea");
+  var bg = $("ntkGrigio"), ba = $("ntkAllinea"), bt = $("noteH");
   if(!bg || ed !== noteEd()) return;
   bg.classList.toggle("on", !!grigioDi(ed));
   var blk = quadernoCurrent(ed);
   ba.classList.toggle("on", !!(blk && blk.classList.contains("nb-al")));
+  bt.classList.toggle("on", !!(blk && blk.classList.contains("md-h")));
 }
 
 /* il tasto Titolo: la riga del cursore diventa grande, o torna normale */
@@ -5995,13 +5997,12 @@ function initNote(){
   ed._testa = function(){ return $("noteTools"); };
   initNotaCerca();
   $("modeNote").onclick = function(){ setMode("note"); };
-  $("noteH").onclick = function(){ quadernoTitolo(ed); };
   $("noteMic").appendChild(svgIcon("mic", 15));
   $("noteMic").onclick = function(){ quadernoDetta(ed, $("noteMic")); };
 
   /* mini-tastiera in alto: compare solo mentre scrivi nel foglio */
   $("ntkAllinea").appendChild(iconaAllinea());
-  [["ntkPall", quadernoPallino], ["ntkGrigio", quadernoGrigio], ["ntkAllinea", quadernoAllineaRiga]].forEach(function(k){
+  [["noteH", quadernoTitolo], ["ntkPall", quadernoPallino], ["ntkGrigio", quadernoGrigio], ["ntkAllinea", quadernoAllineaRiga]].forEach(function(k){
     var b = $(k[0]);
     /* toccare il tasto non deve togliere il cursore dal foglio né chiudere la tastiera */
     b.addEventListener("pointerdown", function(e){ e.preventDefault(); });
