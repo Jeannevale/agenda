@@ -985,6 +985,10 @@ table.labtab td.pname .namebtn:hover{text-decoration-color:var(--accent); color:
 .scnv::placeholder{color:var(--ink-3); font-family:"IBM Plex Sans",sans-serif; font-size:13px}
 .scnv:focus{border-color:var(--accent); background:var(--surface)}
 .catchips{display:flex; flex-wrap:wrap; gap:6px}
+/* filtri per categoria sotto la ricerca */
+.scnfilt{display:flex; gap:6px; overflow-x:auto; margin-top:8px; padding-bottom:2px; scrollbar-width:none}
+.scnfilt::-webkit-scrollbar{display:none}
+.scnfilt .catchip{flex:none; padding:6px 11px; font-size:12.5px}
 .catchip{padding:7px 11px; border-radius:999px; border:1px solid var(--line-strong); background:var(--surface);
   font-size:13px; color:var(--cc); font-weight:600}
 .catchip.on{background:var(--cc); border-color:var(--cc); color:var(--surface)}
@@ -9107,7 +9111,7 @@ Object.assign(I18N.it, {
   scnItemsNote:"Dopo la barra | puoi scrivere un suggerimento per il valore.",
   scnNeedName:"Scrivi il nome dello scenario.", scnNeedItems:"Scrivi almeno una parola chiave.",
   scnDel:"Elimina scenario", scnDeleted:"Scenario eliminato", scnEmpty:"Nessuno scenario con questo testo.",
-  scnAdd:"Nuovo"
+  scnAdd:"Nuovo", scnSortCol:"Colori", scnAll:"Tutti"
 });
 Object.assign(I18N.de, {
   mScn:"Szenarien", scnTitle:"Szenarien", scnSearch:"Suchen…", scnNew:"Neues Szenario",
@@ -9120,19 +9124,28 @@ Object.assign(I18N.de, {
   scnItemsNote:"Nach dem Strich | kannst du einen Hinweis für den Wert schreiben.",
   scnNeedName:"Schreib den Namen des Szenarios.", scnNeedItems:"Schreib mindestens ein Stichwort.",
   scnDel:"Szenario löschen", scnDeleted:"Szenario gelöscht", scnEmpty:"Kein Szenario mit diesem Text.",
-  scnAdd:"Neu"
+  scnAdd:"Neu", scnSortCol:"Farben", scnAll:"Alle"
 });
 
 var SCN_CAT = [
-  { id:"emo", it:"Emodinamica", de:"Hämodynamik" },
-  { id:"isc", it:"Ischemia",    de:"Ischämie" },
-  { id:"rit", it:"Ritmo",       de:"Rhythmus" },
-  { id:"inf", it:"Infezione",   de:"Infektion" },
-  { id:"ren", it:"Reni",        de:"Niere" },
-  { id:"neu", it:"Neuro",       de:"Neuro" },
-  { id:"met", it:"Metabolico",  de:"Stoffwechsel" },
-  { id:"alt", it:"Altro",       de:"Sonstiges" }
+  { id:"emo", it:"Emodinamica", de:"Hämodynamik", al:"emodinamico emodinamica circolo sanguinamento haemodynamik hamodynamik kreislauf blutung" },
+  { id:"isc", it:"Ischemia",    de:"Ischämie", al:"ischemico ischemica infarto ischamie" },
+  { id:"rit", it:"Ritmo",       de:"Rhythmus", al:"aritmia aritmie ritmico rhythmusstorung" },
+  { id:"inf", it:"Infezione",   de:"Infektion", al:"infettivo infettiva infezioni sepsi" },
+  { id:"ren", it:"Reni",        de:"Niere", al:"rene renale nefro nieren" },
+  { id:"neu", it:"Neuro",       de:"Neuro", al:"neurologico neurologica neurologia neurologie ictus stroke" },
+  { id:"met", it:"Metabolico",  de:"Stoffwechsel", al:"metabolica metabolismo elettroliti" },
+  { id:"alt", it:"Altro",       de:"Sonstiges", al:"altri vario" }
 ];
+/* ordine dei colori = ordine di SCN_CAT (rossi primi, poi ischemie, ...) */
+function scnCatRank(id){
+  for(var i = 0; i < SCN_CAT.length; i++) if(SCN_CAT[i].id === id) return i;
+  return SCN_CAT.length - 1;
+}
+/* toglie accenti e segni: "Hämodynamik" -> "hamodynamik" */
+function scnNorm(x){
+  return String(x || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+}
 function scnCatName(id){
   var c = SCN_CAT.filter(function(x){ return x.id === id; })[0] || SCN_CAT[SCN_CAT.length - 1];
   return c[S.settings.ui] || c.it;
@@ -9179,7 +9192,7 @@ var SCN_BASE = [
       "Neurologie chiamata|ora", "OA informato|ora"] }
 ];
 
-var sview = { id:null, q:"", y:0 };
+var sview = { id:null, q:"", y:0, cat:null };
 
 function scnData(){
   if(!S.scenari || typeof S.scenari !== "object") S.scenari = {};
@@ -9254,7 +9267,36 @@ function renderScnHome(){
   var sx = document.createElement("button"); sx.className = "sx"; sx.hidden = !sview.q;
   sx.setAttribute("aria-label", t("del")); sx.appendChild(svgIcon("x", 15));
   sw.appendChild(q); sw.appendChild(sx); fr.appendChild(sw);
+  var sc = document.createElement("button"); sc.className = "ghostsm";
+  sc.textContent = t("scnSortCol");
+  function scOn(){ sc.classList.toggle("on", scnData().sortCol !== false); }
+  scOn();
+  sc.onclick = function(){ var d = scnData(); d.sortCol = (d.sortCol === false); scOn(); save(); fill(); };
+  fr.appendChild(sc);
   stick.appendChild(fr);
+
+  /* filtri: una pastiglia per ogni categoria presente */
+  var cf = document.createElement("div"); cf.className = "scnfilt";
+  stick.appendChild(cf);
+  function filtri(){
+    cf.textContent = "";
+    var pres = SCN_CAT.filter(function(c){
+      return scnData().models.some(function(m){ return (SCN_CAT.some(function(z){ return z.id === m.cat; }) ? m.cat : "alt") === c.id; });
+    });
+    if(sview.cat && !pres.some(function(c){ return c.id === sview.cat; })) sview.cat = null;
+    cf.hidden = pres.length < 2;
+    var all = document.createElement("button"); all.className = "catchip" + (!sview.cat ? " on" : "");
+    all.style.setProperty("--cc", "var(--accent)"); all.textContent = t("scnAll");
+    all.onclick = function(){ sview.cat = null; filtri(); fill(); };
+    cf.appendChild(all);
+    pres.forEach(function(c){
+      var b = document.createElement("button"); b.className = "catchip" + (sview.cat === c.id ? " on" : "");
+      b.style.setProperty("--cc", scnCatVar(c.id)); b.textContent = c[S.settings.ui] || c.it;
+      b.onclick = function(){ sview.cat = (sview.cat === c.id) ? null : c.id; filtri(); fill(); };
+      cf.appendChild(b);
+    });
+  }
+  filtri();
   root.appendChild(stick);
 
   var grid = document.createElement("div"); grid.className = "scntiles";
@@ -9262,20 +9304,34 @@ function renderScnHome(){
 
   function fill(){
     grid.textContent = "";
-    var qq = sview.q.trim().toLowerCase();
+    var words = scnNorm(sview.q).split(/\s+/).filter(Boolean);
+    var qq = words.join(" ");
     var list = scnData().models.filter(function(m){
-      if(!qq) return true;
-      var hay = [m.title, m.sub, m.call, scnCatName(m.cat)].concat(m.items.map(function(i){ return i.k; }))
-        .join(" ").toLowerCase();
-      return hay.indexOf(qq) >= 0;
+      var mc = SCN_CAT.some(function(z){ return z.id === m.cat; }) ? m.cat : "alt";
+      if(sview.cat && mc !== sview.cat) return false;
+      if(!words.length) return true;
+      var c = SCN_CAT[scnCatRank(mc)];
+      var catHay = scnNorm([c.it, c.de, c.al || ""].join(" "));
+      var hay = scnNorm([m.title, m.sub, m.call].concat(m.items.map(function(i){ return i.k; })).join(" ")) + " " + catHay;
+      var catWords = catHay.split(/\s+/);
+      /* ogni parola deve trovarsi: nel testo, oppure e' una categoria abbreviata ("neuro" per "neurologico") */
+      return words.every(function(w){
+        if(hay.indexOf(w) >= 0) return true;
+        return w.length >= 4 && catWords.some(function(cw){ return cw.length >= 4 && w.indexOf(cw) === 0; });
+      });
     });
+    if(scnData().sortCol !== false){
+      list = list.map(function(m, i){ return { m:m, i:i }; }).sort(function(a, b){
+        return (scnCatRank(a.m.cat) - scnCatRank(b.m.cat)) || (a.i - b.i);
+      }).map(function(x){ return x.m; });
+    }
     list.forEach(function(m){ grid.appendChild(scnTile(m)); });
     if(!list.length){
       var e = document.createElement("p"); e.className = "emptysm"; e.textContent = t("scnEmpty");
       e.style.gridColumn = "1 / -1";
       grid.appendChild(e);
     }
-    if(!qq){
+    if(!qq && !sview.cat){
       var add = document.createElement("button"); add.className = "scntile add";
       var pl = document.createElement("span"); pl.className = "plus"; pl.textContent = "+";
       var lb = document.createElement("span"); lb.textContent = t("scnNew");
