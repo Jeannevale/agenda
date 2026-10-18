@@ -7944,6 +7944,17 @@ Object.assign(I18N.de, {
 var cview = { id:null, tab:"fach", q:"" };
 
 function colleagues(){ return S.colleagues || (S.colleagues = []); }
+/* l'ultimo collega aperto va in cima alla lista */
+function usaCollega(c){ if(c){ c.used = Date.now(); save(); } }
+function colRecenti(lista){
+  var pos = new Map();
+  colleagues().forEach(function(c, i){ pos.set(c, i); });
+  return lista.slice().sort(function(a, b){
+    var ua = a.used || 0, ub = b.used || 0;
+    if(ua !== ub) return ub - ua;
+    return pos.get(a) - pos.get(b);
+  });
+}
 function colById(id){ return colleagues().filter(function(c){ return c.id === id; })[0] || null; }
 function colEvents(c){ return c.events || (c.events = []); }
 function colTodos(cid){ return S.items.filter(function(i){ return i.cid === cid; }); }
@@ -7987,6 +7998,7 @@ function renderColList(){
   var shown = q ? colleagues().filter(function(c){
     return ((c.name||"") + " " + (c.role||"")).toLowerCase().indexOf(q) >= 0;
   }) : colleagues();
+  shown = colRecenti(shown);
   $("colListN").textContent = shown.length ? String(shown.length) : "";
 
   var host = $("colList");
@@ -8033,7 +8045,7 @@ function colCard(c){
   b.appendChild(ch);
   b.dataset.cid = c.id;
   b.onclick = function(){
-    cview.listY = window.scrollY || 0;
+    usaCollega(c);
     cview.id = c.id; cview.tab = "fach"; renderCol(); window.scrollTo(0,0);
   };
   return b;
@@ -8319,6 +8331,7 @@ function openColSheet(c){
         var nc = { id:uid(), name:nome, role:fR.input.value.trim(), created:Date.now(),
           fachlich:"", personale:"", events:[] };
         colleagues().push(nc);
+        nc.used = Date.now();
         cview.id = nc.id; cview.tab = "fach";
       }
       save(); close(); renderCol();
@@ -8435,7 +8448,8 @@ function initCol(){
   $("colNewBtn").onclick = function(){ openColSheet(null); };
   $("colBack").onclick = function(){
     cview.id = null; renderCol();
-    tornaA(cview.listY || 0);
+    /* chi hai appena aperto e' ora in cima: si riparte da li' */
+    tornaA(0);
   };
   $("cdEdit").appendChild(svgIcon("gear", 18));
   $("cdEdit").onclick = function(){ openColSheet(colById(cview.id)); };
@@ -8763,6 +8777,7 @@ function apriSorgente(m){
     pview.id = m.pid; pview.tab = "notes";
     setMode("pat"); window.scrollTo(0,0);
   } else if(m.cid && colById(m.cid)){
+    usaCollega(colById(m.cid));
     cview.id = m.cid; cview.tab = "ev";
     setMode("col"); window.scrollTo(0,0);
   }
