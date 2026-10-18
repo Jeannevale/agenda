@@ -332,6 +332,24 @@ body.kb-scrive{padding-bottom:var(--kb,0px)}
 .notearea > .md-h:first-child{margin-top:0}
 .notearea .nb-li{padding-left:15px; text-indent:-15px}
 .notearea.vuoto > div:first-child::before{content:attr(data-ph); color:var(--ink-3)}
+/* testo grigio scuro: si accende e si spegne col tasto della mini-tastiera */
+:root{--nb-grigio:#5A6266}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){ --nb-grigio:#8C9699; } }
+:root[data-theme="dark"]{--nb-grigio:#8C9699}
+.nb-g{color:var(--nb-grigio)}
+/* riga allineata sotto la prima parola dopo "=" della riga sopra:
+   il rientro lo calcola quadernoAllinea, qui si toglie solo quello da elenco */
+.notearea .nb-al{text-indent:0}
+/* mini-tastiera: compare in alto solo mentre scrivi nel foglio */
+.notetools{display:none; gap:8px; padding-top:8px}
+.notestick.scrive .notetools{display:flex}
+.ntk{flex:none; min-width:52px; height:40px; padding:0 12px; border-radius:9px;
+  border:1px solid var(--line-strong); background:var(--surface); color:var(--ink-2);
+  display:grid; place-items:center; font-size:24px; line-height:1;
+  -webkit-tap-highlight-color:transparent; touch-action:manipulation}
+#ntkPall{font-size:32px}
+.ntk .ntk-sw{width:20px; height:20px; border-radius:50%; background:var(--nb-grigio)}
+.ntk.on{border-color:var(--accent); background:var(--accent-soft); box-shadow:inset 0 0 0 1px var(--accent)}
 
 /* ================= lucchetto ================= */
 .lockpane{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
@@ -1265,6 +1283,11 @@ table.labtab td.pname .namebtn:hover{text-decoration-color:var(--accent); color:
     <span class="nf-count mono" id="noteFindN" hidden></span>
     <button class="nf-step" id="noteFindUp" aria-label="precedente" hidden></button>
     <button class="nf-step" id="noteFindDown" aria-label="successivo" hidden></button>
+  </div>
+  <div class="notetools" id="noteTools">
+    <button class="ntk" id="ntkPall" aria-label="Elenco puntato">•</button>
+    <button class="ntk" id="ntkGrigio" aria-label="Testo grigio scuro"><span class="ntk-sw"></span></button>
+    <button class="ntk" id="ntkAllinea" aria-label="Allinea dopo l'uguale"></button>
   </div>
   </div>
   <div id="noteArea" class="notearea" contenteditable="true" role="textbox" aria-multiline="true"></div>
@@ -2838,6 +2861,7 @@ document.addEventListener("visibilitychange", function(){ if(!document.hidden) t
 Object.assign(I18N.it, {
   mShift:"Turno", mPat:"Pazienti", mNote:"Note",
   noteH:"Titolo",
+  ntkPall:"Elenco puntato", ntkGrigio:"Testo grigio scuro (ritocca per smettere)", ntkAllinea:"Allinea sotto la parola dopo «=»",
   notePlaceholder:"Quello che impari, giorno per giorno…",
   noteSavedHint:"salvato",
   noteFind:"Cerca nelle note…", noteFindX:"Cancella la ricerca",
@@ -2974,6 +2998,7 @@ Object.assign(I18N.it, {
 Object.assign(I18N.de, {
   mShift:"Dienst", mPat:"Patienten", mNote:"Notizen",
   noteH:"Überschrift",
+  ntkPall:"Aufzählung", ntkGrigio:"Dunkelgrauer Text (nochmal tippen zum Beenden)", ntkAllinea:"Unter dem Wort nach «=» ausrichten",
   notePlaceholder:"Was du lernst, Tag für Tag…",
   noteSavedHint:"gespeichert",
   noteFind:"In Notizen suchen…", noteFindX:"Suche löschen",
@@ -5249,11 +5274,60 @@ function quadernoNormalizza(ed){
     ed.appendChild(vuoto);
   }
 }
+/* Segni nel testo salvato (mai HTML):
+   ⟪…⟫  = pezzo in grigio scuro
+   ⇥    = a inizio riga: riga allineata sotto la prima parola dopo "=" della riga sopra
+   Lo spazio di larghezza zero (​) serve solo a tenere il cursore dentro o
+   fuori dal grigio mentre scrivi: non entra mai nel salvataggio. */
+var NB_GA = "⟪", NB_GB = "⟫", NB_AL = "⇥", NB_ZW = "​";
+var NB_ZW_RE = /​/g;
+function nbPulito(s){ return String(s || "").replace(/[⟪⟫⇥​]/g, ""); }
+/* il colore vero del grigio (cambia con il tema): lo misuro su un campione */
+function nbGrigio(){
+  var p = document.createElement("span");
+  p.className = "nb-g"; p.style.display = "none";
+  document.body.appendChild(p);
+  var c = getComputedStyle(p).color;
+  document.body.removeChild(p);
+  return c;
+}
+/* una riga del foglio → testo con i segni del grigio */
+function bloccoMarkup(blk, grigio){
+  var out = "", inG = false;
+  var w = document.createTreeWalker(blk, NodeFilter.SHOW_TEXT);
+  for(var n = w.nextNode(); n; n = w.nextNode()){
+    var s = n.nodeValue.replace(NB_ZW_RE, "").replace(/ /g, " ");
+    if(!s) continue;
+    var g = n.parentNode !== blk && getComputedStyle(n.parentNode).color === grigio;
+    if(g !== inG){ out += g ? NB_GA : NB_GB; inG = g; }
+    out += s;
+  }
+  if(inG) out += NB_GB;
+  return out;
+}
+/* testo con i segni del grigio → una riga del foglio */
+function setBlockMarkup(blk, s){
+  blk.textContent = "";
+  var g = false, qualcosa = false;
+  String(s || "").split(/([⟪⟫])/).forEach(function(p){
+    if(p === NB_GA){ g = true; return; }
+    if(p === NB_GB){ g = false; return; }
+    if(!p) return;
+    qualcosa = true;
+    if(g){
+      var sp = document.createElement("span");
+      sp.className = "nb-g"; sp.textContent = p;
+      blk.appendChild(sp);
+    } else blk.appendChild(document.createTextNode(p));
+  });
+  if(!qualcosa) blk.appendChild(document.createElement("br"));
+}
 /* dal foglio al testo semplice */
 function quadernoTesto(ed){
   quadernoNormalizza(ed);
+  var grigio = nbGrigio();
   return quadernoBlocks(ed).map(function(n){
-    var testo = n.textContent.replace(/ /g, " ");
+    var testo = (n.classList.contains("nb-al") ? NB_AL : "") + bloccoMarkup(n, grigio);
     return n.classList.contains("md-h") ? ("# " + testo).replace(/\s+$/, "") : testo;
   }).join("\n");
 }
@@ -5263,23 +5337,278 @@ function quadernoRiempi(ed, testo, placeholder){
   ed.textContent = "";
   String(testo || "").split("\n").forEach(function(r){
     var d = document.createElement("div");
-    if(/^#{1,3}\s/.test(r)){ d.className = "md-h"; setBlockText(d, r.replace(/^#{1,3}\s/, "")); }
-    else setBlockText(d, r);
+    var h = /^#{1,3}\s/.exec(r);
+    if(h){ d.className = "md-h"; r = r.slice(h[0].length); }
+    if(r.charAt(0) === NB_AL){ d.classList.add("nb-al"); r = r.slice(1); }
+    setBlockMarkup(d, r);
     ed.appendChild(d);
   });
   quadernoNormalizza(ed);
   quadernoRighe(ed);
 }
-/* le righe che cominciano con "- " prendono il rientro da elenco */
+/* le righe che cominciano con "- " o "• " prendono il rientro da elenco */
 function quadernoRighe(ed){
   var vuoto = true;
   quadernoBlocks(ed).forEach(function(n){
-    n.classList.toggle("nb-li", /^[-•]\s/.test(n.textContent));
-    if(n.textContent.trim()) vuoto = false;
+    var tx = n.textContent.replace(NB_ZW_RE, "");
+    n.classList.toggle("nb-li", /^[-•][\s ]/.test(tx));
+    if(tx.trim()) vuoto = false;
   });
   ed.classList.toggle("vuoto", vuoto);
   var primo = ed.firstElementChild;
   if(primo && ed._ph) primo.setAttribute("data-ph", ed._ph);
+  quadernoAllinea(ed);
+}
+
+/* --- allineamento dopo "=" ---------------------------------------------
+   Dove sta (in pixel, sullo schermo) la prima lettera dopo il primo "="
+   di una riga. Se dopo "=" non c'e' ancora niente, subito dopo l'uguale. */
+function posDopoUguale(blk){
+  if(!blk) return null;
+  var w = document.createTreeWalker(blk, NodeFilter.SHOW_TEXT);
+  var visto = false, uN = null, uO = 0;
+  for(var n = w.nextNode(); n; n = w.nextNode()){
+    var s = n.nodeValue;
+    for(var k = 0; k < s.length; k++){
+      var c = s.charAt(k);
+      if(!visto){ if(c === "="){ visto = true; uN = n; uO = k; } continue; }
+      if(c === "=" || /[\s ​]/.test(c)) continue;
+      var r = document.createRange();
+      r.setStart(n, k); r.setEnd(n, k + 1);
+      var rr = r.getClientRects();
+      if(rr.length) return rr[0].left;
+    }
+  }
+  if(visto){
+    var r2 = document.createRange();
+    r2.setStart(uN, uO); r2.setEnd(uN, uO + 1);
+    return r2.getBoundingClientRect().right + 5;
+  }
+  return null;
+}
+/* rientro di ogni riga allineata, ricalcolato dal testo della riga sopra:
+   cosi' resta giusto anche se cambia la larghezza dello schermo o il font */
+function quadernoAllinea(ed){
+  if(!ed || !ed.offsetWidth) return;
+  var blocchi = quadernoBlocks(ed), base = null;
+  blocchi.forEach(function(b, i){
+    if(!b.classList.contains("nb-al")){
+      if(b.style.paddingLeft){ b.style.paddingLeft = ""; b.style.textIndent = ""; }
+      return;
+    }
+    if(base === null){
+      var cs = getComputedStyle(ed);
+      base = ed.getBoundingClientRect().left + ed.clientLeft + parseFloat(cs.paddingLeft || 0);
+    }
+    var sopra = blocchi[i - 1];
+    var x = posDopoUguale(sopra), px;
+    if(x !== null) px = x - base;
+    /* riga sopra senza "=": se e' anch'essa allineata, continuo sotto di lei */
+    else px = (sopra && sopra.classList.contains("nb-al")) ? (parseFloat(sopra.style.paddingLeft) || 0) : 0;
+    px = Math.max(0, Math.min(px, ed.clientWidth * 0.75));
+    b.style.paddingLeft = Math.round(px) + "px";
+    b.style.textIndent = "0";
+  });
+}
+
+/* --- cursore ------------------------------------------------------------ */
+function caretIn(node, off){
+  var r = document.createRange();
+  r.setStart(node, off); r.collapse(true);
+  var sel = window.getSelection();
+  sel.removeAllRanges(); sel.addRange(r);
+}
+/* rimette il cursore alla stessa lettera (contata come caretOffset) */
+function caretAt(blk, off){
+  var w = document.createTreeWalker(blk, NodeFilter.SHOW_TEXT), ultimo = null;
+  for(var n = w.nextNode(); n; n = w.nextNode()){
+    ultimo = n;
+    if(off <= n.nodeValue.length){ caretIn(n, Math.max(0, off)); return; }
+    off -= n.nodeValue.length;
+  }
+  if(ultimo) caretIn(ultimo, ultimo.nodeValue.length);
+  else caretTo(blk, "inizio");
+}
+/* il pezzo grigio (il piu' esterno) in cui sta il cursore, se c'e' */
+function grigioDi(ed){
+  var sel = window.getSelection();
+  if(!sel || !sel.rangeCount) return null;
+  var n = sel.getRangeAt(0).startContainer;
+  if(!ed.contains(n)) return null;
+  if(n.nodeType === 3) n = n.parentNode;
+  var ref = nbGrigio(), trovato = null;
+  while(n && n !== ed && n.parentNode !== ed){
+    if(getComputedStyle(n).color === ref) trovato = n;
+    n = n.parentNode;
+  }
+  return trovato;
+}
+/* elementi rimasti vuoti dopo un taglio: via; riga vuota: un <br> per l'altezza */
+function pulisciRiga(b){
+  Array.prototype.slice.call(b.querySelectorAll("*")).reverse().forEach(function(el){
+    if(el.tagName !== "BR" && !el.textContent.replace(NB_ZW_RE, "") && el.parentNode) el.parentNode.removeChild(el);
+  });
+  if(b.textContent.replace(NB_ZW_RE, "")){
+    Array.prototype.slice.call(b.querySelectorAll("br")).forEach(function(br){ br.parentNode.removeChild(br); });
+  } else {
+    b.textContent = "";
+    b.appendChild(document.createElement("br"));
+  }
+}
+/* toglie il <br> di una riga vuota prima di scriverci dentro */
+function togliBrVuoto(blk){
+  if(blk.childNodes.length === 1 && blk.firstChild.nodeName === "BR"){
+    blk.removeChild(blk.firstChild);
+    return true;
+  }
+  return false;
+}
+/* Spezza la riga al cursore, come Invio, tenendo il grigio dov'era.
+   Restituisce la riga nuova, con il cursore all'inizio. */
+function quadernoSpezza(ed, blk){
+  var sel = window.getSelection();
+  var r = sel.getRangeAt(0);
+  if(!r.collapsed){ r.deleteContents(); r.collapse(true); }
+  var eraGrigio = !!grigioDi(ed);
+  var dopo = document.createRange();
+  dopo.setStart(r.startContainer, r.startOffset);
+  dopo.setEnd(blk, blk.childNodes.length);
+  var frag = dopo.extractContents();
+  var nuovo = document.createElement("div");
+  nuovo.appendChild(frag);
+  pulisciRiga(blk);
+  pulisciRiga(nuovo);
+  ed.insertBefore(nuovo, blk.nextSibling);
+  var f = nuovo.firstChild;
+  if(eraGrigio){
+    /* si andava a capo scrivendo in grigio: la riga nuova continua grigia */
+    if(f && f.nodeType === 1 && f.classList.contains("nb-g") && f.firstChild && f.firstChild.nodeType === 3){
+      f.firstChild.insertData(0, NB_ZW);
+      caretIn(f.firstChild, 1);
+    } else {
+      togliBrVuoto(nuovo);
+      var sp = document.createElement("span"); sp.className = "nb-g";
+      var tn = document.createTextNode(NB_ZW); sp.appendChild(tn);
+      nuovo.insertBefore(sp, nuovo.firstChild);
+      caretIn(tn, 1);
+    }
+  } else if(f && f.nodeType === 1 && f.tagName !== "BR"){
+    /* la riga nuova comincia con un pezzo grigio: il cursore resta fuori */
+    var z = document.createTextNode(NB_ZW);
+    nuovo.insertBefore(z, f);
+    caretIn(z, 1);
+  } else {
+    caretTo(nuovo, "inizio");
+  }
+  return nuovo;
+}
+/* scrive del testo al cursore (dentro il grigio, se ci sei) */
+function inserisciTesto(blk, s){
+  var sel = window.getSelection();
+  var r = sel.getRangeAt(0);
+  if(!r.collapsed) r.deleteContents();
+  if(togliBrVuoto(blk)){ r = document.createRange(); r.setStart(blk, 0); r.collapse(true); }
+  var tn = document.createTextNode(s);
+  r.insertNode(tn);
+  caretIn(tn, s.length);
+}
+
+/* --- i tre tasti della mini-tastiera ------------------------------------ */
+/* pallino: mette o toglie "• " a inizio riga */
+function quadernoPallino(ed){
+  var blk = quadernoCurrent(ed) || ed.lastElementChild;
+  if(!blk) return;
+  var off = quadernoCurrent(ed) ? caretOffset(blk) : blk.textContent.length;
+  var w = document.createTreeWalker(blk, NodeFilter.SHOW_TEXT), primo = null, idx = 0;
+  for(var n = w.nextNode(); n; n = w.nextNode()){
+    var m = /[^​]/.exec(n.nodeValue);
+    if(m){ primo = n; idx = m.index; break; }
+  }
+  if(primo && /^[•-][  ]/.test(primo.nodeValue.slice(idx))){
+    primo.deleteData(idx, 2);
+    off = Math.max(0, off - 2);
+  } else {
+    togliBrVuoto(blk);
+    /* spazio non separabile: uno normale in fondo alla riga il browser lo mangia */
+    blk.insertBefore(document.createTextNode("•\u00a0"), blk.firstChild);
+    off += 2;
+  }
+  caretAt(blk, off);
+  ed._salva();
+  quadernoTasti(ed);
+}
+/* grigio: da qui in poi scrivi in grigio scuro, finche' non lo ritocchi */
+function quadernoGrigio(ed){
+  var sel = window.getSelection();
+  if(!sel.rangeCount || !ed.contains(sel.anchorNode) || sel.anchorNode === ed){
+    quadernoNormalizza(ed);
+    caretTo(ed.lastElementChild, "fine");
+  }
+  var r = sel.getRangeAt(0);
+  if(!r.collapsed) r.collapse(false);
+  var g = grigioDi(ed);
+  if(g){
+    /* esco dal grigio: quello che sta dopo il cursore resta grigio */
+    var dopo = document.createRange();
+    dopo.setStart(r.startContainer, r.startOffset);
+    dopo.setEnd(g, g.childNodes.length);
+    var resto = dopo.extractContents();
+    var fuori = document.createTextNode(NB_ZW);
+    g.parentNode.insertBefore(fuori, g.nextSibling);
+    if(resto.textContent.replace(NB_ZW_RE, "")){
+      var g2 = g.cloneNode(false);
+      g2.appendChild(resto);
+      fuori.parentNode.insertBefore(g2, fuori.nextSibling);
+    }
+    if(!g.textContent.replace(NB_ZW_RE, "")) g.parentNode.removeChild(g);
+    caretIn(fuori, 1);
+  } else {
+    var blk = quadernoCurrent(ed);
+    if(blk && togliBrVuoto(blk)){ r = document.createRange(); r.setStart(blk, 0); r.collapse(true); }
+    var sp = document.createElement("span"); sp.className = "nb-g";
+    var tn = document.createTextNode(NB_ZW); sp.appendChild(tn);
+    r.insertNode(sp);
+    caretIn(tn, 1);
+  }
+  ed._salva();
+  quadernoTasti(ed);
+}
+/* allinea: la riga del cursore va sotto la prima parola dopo "=" della riga sopra */
+function quadernoAllineaRiga(ed){
+  var blk = quadernoCurrent(ed) || ed.lastElementChild;
+  if(!blk) return;
+  var off = quadernoCurrent(ed) ? caretOffset(blk) : blk.textContent.length;
+  blk.classList.toggle("nb-al");
+  quadernoAllinea(ed);
+  caretAt(blk, off);
+  ed._salva();
+  quadernoTasti(ed);
+  cursoreInVistaPresto(ed);
+}
+/* icona del tasto: "a = parola" sopra, e sotto il cursore che va a mettersi
+   sotto la parola dopo l'uguale */
+function iconaAllinea(){
+  var ns = "http://www.w3.org/2000/svg";
+  var s = document.createElementNS(ns, "svg");
+  s.setAttribute("viewBox", "0 0 26 24");
+  s.setAttribute("width", "26"); s.setAttribute("height", "24");
+  s.setAttribute("fill", "none"); s.setAttribute("stroke", "currentColor");
+  s.setAttribute("stroke-width", "2"); s.setAttribute("stroke-linecap", "round");
+  s.setAttribute("stroke-linejoin", "round");
+  ["M3 6h4", "M10 4.5h3", "M10 7.5h3", "M16 6h7", "M16 12v9", "M4 16.5h8", "M9.5 14l2.5 2.5-2.5 2.5"].forEach(function(d){
+    var p = document.createElementNS(ns, "path");
+    p.setAttribute("d", d);
+    s.appendChild(p);
+  });
+  return s;
+}
+/* i tasti si accendono secondo dove sta il cursore */
+function quadernoTasti(ed){
+  var bg = $("ntkGrigio"), ba = $("ntkAllinea");
+  if(!bg || ed !== noteEd()) return;
+  bg.classList.toggle("on", !!grigioDi(ed));
+  var blk = quadernoCurrent(ed);
+  ba.classList.toggle("on", !!(blk && blk.classList.contains("nb-al")));
 }
 
 /* il tasto Titolo: la riga del cursore diventa grande, o torna normale */
@@ -5377,6 +5706,18 @@ function quadernoCollega(ed, onCambio, placeholder){
   if(ed._collegato) return;
   ed._collegato = true;
 
+  /* le righe allineate dopo "=" si ricalcolano quando il foglio cambia
+     larghezza o compare (da nascosto la misura non c'e') */
+  if(window.ResizeObserver){
+    var largo = -1;
+    new ResizeObserver(function(){
+      if(ed.offsetWidth === largo) return;
+      largo = ed.offsetWidth;
+      quadernoAllinea(ed);
+    }).observe(ed);
+  }
+  if(document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ quadernoAllinea(ed); });
+
   ed.addEventListener("input", function(){ ed._salva(); cursoreInVistaPresto(ed); });
   ed.addEventListener("focus", function(){
     document.body.classList.add("kb-scrive");
@@ -5389,19 +5730,37 @@ function quadernoCollega(ed, onCambio, placeholder){
     spazioTastiera();
   });
 
-  /* Invio: spezzo la riga a mano, così la riga nuova non eredita il titolo */
+  /* Invio: spezzo la riga a mano, così la riga nuova non eredita il titolo.
+     Il grigio resta dov'era; elenco puntato e allineamento continuano sulla
+     riga nuova, e su una riga vuota Invio li chiude invece di andare a capo. */
   ed.addEventListener("keydown", function(e){
     if(e.key !== "Enter" || e.shiftKey) return;
     var blk = quadernoCurrent(ed);
     if(!blk) return;
     e.preventDefault();
-    var testo = blk.textContent, off = caretOffset(blk);
-    setBlockText(blk, testo.slice(0, off));
-    var nuovo = document.createElement("div");
-    setBlockText(nuovo, testo.slice(off));
-    ed.insertBefore(nuovo, blk.nextSibling);
-    caretTo(nuovo, "inizio");
+    var tx = blk.textContent.replace(NB_ZW_RE, "");
+    var pall = /^[•-][  ]/.exec(tx);
+    var al = blk.classList.contains("nb-al");
+    if(pall && !tx.slice(2).trim()){
+      setBlockText(blk, ""); caretTo(blk, "inizio");
+      ed._salva(); quadernoTasti(ed);
+      return;
+    }
+    if(al && !tx.trim()){
+      blk.classList.remove("nb-al");
+      ed._salva(); caretTo(blk, "inizio"); quadernoTasti(ed);
+      return;
+    }
+    var nuovo = quadernoSpezza(ed, blk);
+    if(al) nuovo.classList.add("nb-al");
+    if(pall){
+      var segno = document.createTextNode(pall[0].charAt(0) + "\u00a0");
+      var eraVuota = togliBrVuoto(nuovo);
+      nuovo.insertBefore(segno, nuovo.firstChild);
+      if(eraVuota || !grigioDi(ed)) caretIn(segno, 2);
+    }
     ed._salva();
+    quadernoTasti(ed);
     cursoreInVistaPresto(ed);
     /* la riga qui sopra e' finita: chi ci tiene puo' farci qualcosa */
     ed.dispatchEvent(new CustomEvent("quaderno-acapo", { detail:blk }));
@@ -5411,20 +5770,13 @@ function quadernoCollega(ed, onCambio, placeholder){
   ed.addEventListener("paste", function(e){
     e.preventDefault();
     var testo = (e.clipboardData || window.clipboardData).getData("text/plain") || "";
-    var righe = testo.split(/\r?\n/);
+    var righe = nbPulito(testo).split(/\r?\n/);
     var blk = quadernoCurrent(ed);
     if(!blk){ quadernoNormalizza(ed); blk = ed.lastElementChild; caretTo(blk, "fine"); }
-    var resto = blk.textContent, off = caretOffset(blk);
-    setBlockText(blk, resto.slice(0, off) + righe[0]);
-    var dopo = blk;
-    for(var i = 1; i < righe.length; i++){
-      var d = document.createElement("div");
-      setBlockText(d, righe[i]);
-      ed.insertBefore(d, dopo.nextSibling);
-      dopo = d;
-    }
-    setBlockText(dopo, dopo.textContent + resto.slice(off));
-    caretTo(dopo, "fine");
+    righe.forEach(function(riga, i){
+      if(i > 0) blk = quadernoSpezza(ed, blk);
+      if(riga) inserisciTesto(blk, riga);
+    });
     ed._salva();
     cursoreInVistaPresto(ed);
   });
@@ -5449,6 +5801,7 @@ function renderNote(){
   $("noteH").textContent = t("noteH");
   $("noteFind").placeholder = t("noteFind");
   $("noteFindX").setAttribute("aria-label", t("noteFindX"));
+  ["ntkPall", "ntkGrigio", "ntkAllinea"].forEach(function(id){ $(id).setAttribute("aria-label", t(id)); $(id).title = t(id); });
   quadernoRiempi(noteEd(), S.notebook, t("notePlaceholder"));
   notaCercaAggiorna(false);
 }
@@ -5460,15 +5813,17 @@ function renderNote(){
    niente, perche' e' un foglio libero e dentro non entra mai HTML. */
 function convertiRiga(testo){
   var busta = { testo:testo, tasks:[], morals:[] };
-  var nT = convertiMarcati(busta, "testo", "tasks", null, addFreeTodo);
+  /* i segni del grigio e dell'allineamento non finiscono mai in un compito o in una morale */
+  var nT = convertiMarcati(busta, "testo", "tasks", null, function(tx){ return addFreeTodo(nbPulito(tx)); });
   var nM = convertiMorali(busta, "testo", "morals", {});
+  if(nM) morals().slice(0, nM).forEach(function(m){ m.text = nbPulito(m.text); });
   return { testo:busta.testo, compiti:nT, morali:nM };
 }
 /* la riga appena chiusa con Invio */
 function convertiBlocco(blk){
-  var r = convertiRiga(blk.textContent);
+  var r = convertiRiga(bloccoMarkup(blk, nbGrigio()));
   if(!r.compiti && !r.morali) return false;
-  setBlockText(blk, r.testo);
+  setBlockMarkup(blk, r.testo);
   avvisaTutto({ compiti:r.compiti, morali:r.morali });
   return true;
 }
@@ -5480,6 +5835,8 @@ function convertiQuaderno(){
   var tot = { compiti:0, morali:0 }, cambiato = false;
   var nuove = righe.map(function(riga){
     var cap = /^#{1,3}\s/.exec(riga);
+    if(!cap && riga.charAt(0) === NB_AL) cap = [NB_AL];
+    else if(cap && riga.charAt(cap[0].length) === NB_AL) cap = [cap[0] + NB_AL];
     var corpo = cap ? riga.slice(cap[0].length) : riga;
     var r = convertiRiga(corpo);
     if(r.compiti || r.morali){
@@ -5625,6 +5982,25 @@ function initNote(){
   $("noteH").onclick = function(){ quadernoTitolo(ed); };
   $("noteMic").appendChild(svgIcon("mic", 15));
   $("noteMic").onclick = function(){ quadernoDetta(ed, $("noteMic")); };
+
+  /* mini-tastiera in alto: compare solo mentre scrivi nel foglio */
+  $("ntkAllinea").appendChild(iconaAllinea());
+  [["ntkPall", quadernoPallino], ["ntkGrigio", quadernoGrigio], ["ntkAllinea", quadernoAllineaRiga]].forEach(function(k){
+    var b = $(k[0]);
+    /* toccare il tasto non deve togliere il cursore dal foglio né chiudere la tastiera */
+    b.addEventListener("pointerdown", function(e){ e.preventDefault(); });
+    b.addEventListener("mousedown", function(e){ e.preventDefault(); });
+    b.onclick = function(e){
+      e.preventDefault();
+      if(document.activeElement !== ed) ed.focus();
+      k[1](ed);
+    };
+  });
+  ed.addEventListener("focus", function(){ $("noteTop").classList.add("scrive"); quadernoTasti(ed); });
+  ed.addEventListener("blur", function(){ $("noteTop").classList.remove("scrive"); });
+  document.addEventListener("selectionchange", function(){
+    if(document.activeElement === ed) quadernoTasti(ed);
+  });
   quadernoCollega(ed, function(testo){
     S.notebook = testo; save(); segnalaSalvato();
   }, t("notePlaceholder"));
