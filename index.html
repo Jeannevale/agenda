@@ -333,16 +333,19 @@ body.kb-scrive{padding-bottom:var(--kb,0px)}
 .notearea .nb-li{padding-left:15px; text-indent:-15px}
 .notearea.vuoto > div:first-child::before{content:attr(data-ph); color:var(--ink-3)}
 /* testo grigio scuro: si accende e si spegne col tasto della mini-tastiera */
-:root{--nb-grigio:#5A6266}
-@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){ --nb-grigio:#8C9699; } }
-:root[data-theme="dark"]{--nb-grigio:#8C9699}
+:root{--nb-grigio:#A0763C}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){ --nb-grigio:#D9B97F; } }
+:root[data-theme="dark"]{--nb-grigio:#D9B97F}
 .nb-g{color:var(--nb-grigio)}
 /* riga allineata sotto la prima parola dopo "=" della riga sopra:
    il rientro lo calcola quadernoAllinea, qui si toglie solo quello da elenco */
 .notearea .nb-al{text-indent:0}
 /* mini-tastiera: compare in alto solo mentre scrivi nel foglio */
-.notetools{display:none; gap:8px; padding-top:8px}
-.notestick.scrive .notetools{display:flex}
+.notetools{display:flex; gap:8px; padding-top:8px; position:relative; z-index:2;
+  background:var(--bg); border-radius:0 0 12px 12px}
+/* con la tastiera aperta il telefono puo' far scorrere la parte visibile oltre
+   la testata: allora i tasti scendono e restano attaccati in cima a cio' che vedi */
+.notetools.galleggia{padding:8px 8px 8px; margin-inline:-8px; box-shadow:var(--shadow)}
 .ntk{flex:none; min-width:52px; height:40px; padding:0 12px; border-radius:9px;
   border:1px solid var(--line-strong); background:var(--surface); color:var(--ink-2);
   display:grid; place-items:center; font-size:24px; line-height:1;
@@ -2861,7 +2864,7 @@ document.addEventListener("visibilitychange", function(){ if(!document.hidden) t
 Object.assign(I18N.it, {
   mShift:"Turno", mPat:"Pazienti", mNote:"Note",
   noteH:"Titolo",
-  ntkPall:"Elenco puntato", ntkGrigio:"Testo grigio scuro (ritocca per smettere)", ntkAllinea:"Allinea sotto la parola dopo «=»",
+  ntkPall:"Elenco puntato", ntkGrigio:"Testo beige (ritocca per smettere)", ntkAllinea:"Allinea sotto la parola dopo «=»",
   notePlaceholder:"Quello che impari, giorno per giorno…",
   noteSavedHint:"salvato",
   noteFind:"Cerca nelle note…", noteFindX:"Cancella la ricerca",
@@ -2998,7 +3001,7 @@ Object.assign(I18N.it, {
 Object.assign(I18N.de, {
   mShift:"Dienst", mPat:"Patienten", mNote:"Notizen",
   noteH:"Überschrift",
-  ntkPall:"Aufzählung", ntkGrigio:"Dunkelgrauer Text (nochmal tippen zum Beenden)", ntkAllinea:"Unter dem Wort nach «=» ausrichten",
+  ntkPall:"Aufzählung", ntkGrigio:"Beiger Text (nochmal tippen zum Beenden)", ntkAllinea:"Unter dem Wort nach «=» ausrichten",
   notePlaceholder:"Was du lernst, Tag für Tag…",
   noteSavedHint:"gespeichert",
   noteFind:"In Notizen suchen…", noteFindX:"Suche löschen",
@@ -5602,6 +5605,19 @@ function iconaAllinea(){
   });
   return s;
 }
+/* porta la mini-tastiera in cima alla parte di schermo che si vede davvero */
+function fissaTasti(){
+  var tk = $("noteTools");
+  if(!tk || $("noteShell").hidden){ if(tk){ tk.style.transform = ""; tk.classList.remove("galleggia"); } return; }
+  tk.style.transform = "";
+  var vv = window.visualViewport;
+  var cima = vv ? vv.offsetTop : 0;
+  var r = tk.getBoundingClientRect();
+  if(r.top < cima){
+    tk.style.transform = "translateY(" + Math.round(cima - r.top) + "px)";
+    tk.classList.add("galleggia");
+  } else tk.classList.remove("galleggia");
+}
 /* i tasti si accendono secondo dove sta il cursore */
 function quadernoTasti(ed){
   var bg = $("ntkGrigio"), ba = $("ntkAllinea");
@@ -5976,7 +5992,7 @@ function initNotaCerca(){
 
 function initNote(){
   var ed = noteEd();
-  ed._testa = function(){ return $("noteTop"); };
+  ed._testa = function(){ return $("noteTools"); };
   initNotaCerca();
   $("modeNote").onclick = function(){ setMode("note"); };
   $("noteH").onclick = function(){ quadernoTitolo(ed); };
@@ -5992,15 +6008,37 @@ function initNote(){
     b.addEventListener("mousedown", function(e){ e.preventDefault(); });
     b.onclick = function(e){
       e.preventDefault();
-      if(document.activeElement !== ed) ed.focus();
+      /* tasto toccato senza scrivere: riprendo dal punto dove ero rimasta */
+      if(document.activeElement !== ed){
+        ed.focus();
+        if(ultimoCursore && ed.contains(ultimoCursore.startContainer)){
+          var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(ultimoCursore);
+        } else { quadernoNormalizza(ed); caretTo(ed.lastElementChild, "fine"); }
+      }
       k[1](ed);
     };
   });
-  ed.addEventListener("focus", function(){ $("noteTop").classList.add("scrive"); quadernoTasti(ed); });
-  ed.addEventListener("blur", function(){ $("noteTop").classList.remove("scrive"); });
+  var ultimoCursore = null;
+  ed.addEventListener("focus", function(){ quadernoTasti(ed); fissaTasti(); });
+  ed.addEventListener("blur", function(){ setTimeout(fissaTasti, 300); });
   document.addEventListener("selectionchange", function(){
-    if(document.activeElement === ed) quadernoTasti(ed);
+    if(document.activeElement !== ed) return;
+    var sel = window.getSelection();
+    if(sel.rangeCount) ultimoCursore = sel.getRangeAt(0).cloneRange();
+    quadernoTasti(ed);
   });
+  /* i tasti restano sempre in vista, anche quando con la tastiera aperta
+     la parte visibile dello schermo scorre oltre la testata */
+  var attesaTasti = 0;
+  function fissaTastiPresto(){
+    if(attesaTasti) return;
+    attesaTasti = requestAnimationFrame(function(){ attesaTasti = 0; fissaTasti(); });
+  }
+  window.addEventListener("scroll", fissaTastiPresto, { passive:true });
+  if(window.visualViewport){
+    window.visualViewport.addEventListener("scroll", fissaTastiPresto);
+    window.visualViewport.addEventListener("resize", fissaTastiPresto);
+  }
   quadernoCollega(ed, function(testo){
     S.notebook = testo; save(); segnalaSalvato();
   }, t("notePlaceholder"));
