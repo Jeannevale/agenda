@@ -24,6 +24,8 @@
   --alert-soft:#FAE2DC;
   --wish:#4E8F6A;
   --wish-soft:#E8F4EC;
+  --sun:#D9A400;
+  --sun-soft:#FFF3C4;
   --shadow:0 1px 2px rgba(18,37,42,.06), 0 8px 24px -16px rgba(18,37,42,.35);
   --r:10px;
   color-scheme:light;
@@ -34,7 +36,7 @@
     --ink-3:#78908F; --line:#28393C; --line-strong:#3A4E52; --accent:#54C4D6; --accent-soft:#123840;
     --rail-todo:#93ABB2; --rail-todo-soft:#1E2C2F; --rail-result:#DFA54B; --rail-result-soft:#33280F;
     --rail-done:#7DB88E; --rail-done-soft:#182B1F; --alert:#FF6E4E; --alert-soft:#3A1A12;
-    --wish:#79C49A; --wish-soft:#15241B;
+    --wish:#79C49A; --wish-soft:#15241B; --sun:#E9C649; --sun-soft:#33290A;
     --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.8);
     color-scheme:dark;
   }
@@ -44,7 +46,7 @@
   --ink-3:#78908F; --line:#28393C; --line-strong:#3A4E52; --accent:#54C4D6; --accent-soft:#123840;
   --rail-todo:#93ABB2; --rail-todo-soft:#1E2C2F; --rail-result:#DFA54B; --rail-result-soft:#33280F;
   --rail-done:#7DB88E; --rail-done-soft:#182B1F; --alert:#FF6E4E; --alert-soft:#3A1A12;
-    --wish:#79C49A; --wish-soft:#15241B;
+    --wish:#79C49A; --wish-soft:#15241B; --sun:#E9C649; --sun-soft:#33290A;
   --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.8);
   color-scheme:dark;
 }
@@ -134,6 +136,11 @@ button{cursor:pointer; background:none; border:none}
 /* le cose senza fretta: verdino, in fondo alla lista */
 .item.is-wish{background:var(--wish-soft); border-left-color:var(--wish)}
 .item.stage-done.is-wish{background:var(--surface-2); border-left-color:var(--rail-done)}
+/* le cose col sole: gialle, in fondo ma prima di quelle verdi */
+.item.is-sun{background:var(--sun-soft); border-left-color:var(--sun)}
+.item.stage-done.is-sun{background:var(--surface-2); border-left-color:var(--rail-done)}
+.sunchip{display:inline-flex; align-items:center; justify-content:center;
+  padding:2px 7px; border-radius:5px; background:var(--sun); color:#3A2C00}
 .wishchip{display:inline-flex; align-items:center; justify-content:center;
   padding:2px 7px; border-radius:5px; background:var(--wish); color:#fff}
 
@@ -219,6 +226,11 @@ button{cursor:pointer; background:none; border:none}
 .wishbtn{width:38px; height:36px; flex:none; border:1px solid var(--line); border-radius:8px;
   background:var(--surface); color:var(--ink-3); display:grid; place-items:center}
 .wishbtn.on{background:var(--wish-soft); border-color:var(--wish); color:var(--wish)}
+.sunbtn{width:38px; height:36px; flex:none; border:1px solid var(--line); border-radius:8px;
+  background:var(--surface); color:var(--ink-3); display:grid; place-items:center}
+.sunbtn.on{background:var(--sun-soft); border-color:var(--sun); color:#A67C00}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]) .sunbtn.on{ color:var(--sun); } }
+:root[data-theme="dark"] .sunbtn.on{ color:var(--sun); }
 .unlink{display:inline-flex; align-items:center; gap:6px; flex:none; padding:7px 9px;
   border:1px solid var(--accent); border-radius:8px; background:var(--accent-soft);
   color:var(--accent); font-family:"IBM Plex Mono",monospace; font-size:12.5px;
@@ -454,7 +466,7 @@ body.kb-scrive{padding-bottom:var(--kb,0px)}
 @media (max-width:400px){ .crow2 .taginput{width:60px} .crow2 .mic-note{display:none} }
 @media (max-width:400px){
   .crow2{gap:6px}
-  .crow2 .urgbtn,.crow2 .wishbtn{width:34px; height:34px}
+  .crow2 .urgbtn,.crow2 .wishbtn,.crow2 .sunbtn{width:34px; height:34px}
   .crow2 .mic-sm{width:34px; height:34px}
   .crow2 .addbtn{padding:9px 13px}
 }
@@ -1348,6 +1360,7 @@ table.labtab td.pname .namebtn:hover{text-decoration-color:var(--accent); color:
       <input class="taginput" id="composeTag" placeholder="Zi." autocomplete="off">
       <button class="urgbtn" id="composeUrg" aria-label="urgente">!</button>
       <button class="wishbtn" id="composeWish" aria-label="senza fretta"></button>
+      <button class="sunbtn" id="composeSun" aria-label="sole"></button>
       <span id="composeDay"></span>
       <span class="mic-note" id="micNote"></span>
       <button class="addbtn" id="addBtn">Aggiungi</button>
@@ -1465,6 +1478,7 @@ var I18N = {
     movedResult:"Spostato in Risultato", movedDone:"Archiviato in Fatti", open:"Apri",
     editHint:"Tocca due volte (o tieni premuto) per modificare", edited:"Modificato",
     wish:"Senza fretta", wishHint:"Senza fretta: va in fondo alla lista",
+    sun:"Sole", sunHint:"Sole: giallo, in fondo ma prima dei verdi",
     unlinkHint:"Stacca il compito da questa scheda",
     minutes:"min", hours:"h"
   },
@@ -1505,6 +1519,7 @@ var I18N = {
     movedResult:"Zu Ergebnis verschoben", movedDone:"Zu Erledigt abgelegt", open:"Öffnen",
     editHint:"Zum Ändern doppelt tippen (oder gedrückt halten)", edited:"Geändert",
     wish:"Ohne Eile", wishHint:"Ohne Eile: kommt ans Ende der Liste",
+    sun:"Sonne", sunHint:"Sonne: gelb, am Ende, aber vor den grünen",
     unlinkHint:"Aufgabe von dieser Karte lösen",
     minutes:"Min", hours:"Std"
   }
@@ -1525,6 +1540,7 @@ var ICONS = {
   camera:'<path d="M3.4 8.8h3.3l1.5-2.4h7.6l1.5 2.4h3.3v9.8H3.4Z"/><circle cx="12" cy="13.6" r="3.4"/>',
   image:'<rect x="3.2" y="5.4" width="17.6" height="13.2" rx="2.2"/><path d="m3.8 16 4.5-4.1 3.3 2.9 2.9-2.5 5.7 4.9"/><circle cx="8.7" cy="9.7" r="1.25"/>',
   cal:'<rect x="3.4" y="5.2" width="17.2" height="15.4" rx="2.2"/><path d="M3.4 9.8h17.2M8.2 3.4v3.4M15.8 3.4v3.4"/>',
+  sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/>',
   heart:'<path d="M12 20.3S3.6 15.4 3.6 9.6a4.6 4.6 0 0 1 8.4-2.6 4.6 4.6 0 0 1 8.4 2.6c0 5.8-8.4 10.7-8.4 10.7Z"/>',
   grip:'<circle cx="9" cy="6" r="1.4"/><circle cx="15" cy="6" r="1.4"/><circle cx="9" cy="12" r="1.4"/><circle cx="15" cy="12" r="1.4"/><circle cx="9" cy="18" r="1.4"/><circle cx="15" cy="18" r="1.4"/>'
 };
@@ -1625,7 +1641,8 @@ function itemsFor(rail){
     var af = fired(a) ? 0 : 1, bf = fired(b) ? 0 : 1;
     if(af !== bf) return af - bf;
     /* le cose senza fretta stanno sempre in fondo, qualunque altra cosa succeda */
-    var aw = a.wish ? 1 : 0, bw = b.wish ? 1 : 0;
+    /* poi i gialli (sole), e per ultimi i verdi (cuore) */
+    var aw = gruppoFondo(a), bw = gruppoFondo(b);
     if(aw !== bw) return aw - bw;
     var au = a.urgent ? 0 : 1, bu = b.urgent ? 0 : 1;
     if(au !== bu) return au - bu;
@@ -1635,6 +1652,8 @@ function itemsFor(rail){
   });
   return out;
 }
+/* 0 = normale, 1 = sole (giallo), 2 = senza fretta (verde): in quest'ordine verso il fondo */
+function gruppoFondo(i){ return i.wish ? 2 : i.sun ? 1 : 0; }
 function fired(i){ return !!(i.alarm && i.alarmFired && i.stage !== "done"); }
 function firedItems(){ return S.items.filter(fired); }
 
@@ -1753,7 +1772,7 @@ function rowNode(it, opts){
 
   var row = document.createElement("div");
   row.className = "item stage-" + it.stage + (it.urgent ? " is-urgent" : "")
-    + (it.wish ? " is-wish" : "") + (fired(it) ? " is-firing" : "");
+    + (it.wish ? " is-wish" : "") + (it.sun && !it.wish ? " is-sun" : "") + (fired(it) ? " is-firing" : "");
   row.dataset.id = it.id;
 
   /* checkbox */
@@ -1785,6 +1804,13 @@ function rowNode(it, opts){
   meta.className = "meta";
   if(!opts.senzaChi) chipDiChi(it).forEach(function(c){ meta.appendChild(c); });
   if(it.urgent && it.stage !== "done"){ meta.appendChild(chip("bang", "!")); }
+  if(it.sun && !it.wish && it.stage !== "done"){
+    var sc = document.createElement("span"); sc.className = "sunchip";
+    sc.appendChild(svgIcon("sun", 13, 2));
+    sc.title = t("sun");
+    sc.setAttribute("aria-label", t("sun"));
+    meta.appendChild(sc);
+  }
   if(it.wish && it.stage !== "done"){
     /* solo il cuore: la scritta la sai gia' */
     var wc = document.createElement("span"); wc.className = "wishchip";
@@ -1911,8 +1937,8 @@ function startEdit(it, txtEl){
     };
     row.appendChild(lc);
   }
-  var segni = segniRow(it.urgent, it.wish);
-  row.appendChild(segni.urg); row.appendChild(segni.wish);
+  var segni = segniRow(it.urgent, it.wish, it.sun);
+  row.appendChild(segni.urg); row.appendChild(segni.wish); row.appendChild(segni.sun);
 
   var acts = document.createElement("div"); acts.className = "edit-actions";
   var no = document.createElement("button");
@@ -1939,6 +1965,7 @@ function startEdit(it, txtEl){
     it.tag = tag.value.trim();
     it.urgent = segni.urgente();
     it.wish = segni.senzaFretta();
+    it.sun = segni.sole();
     editingId = null; save(); render(); showToast(t("edited"));
   }
   ta.addEventListener("keydown", function(e){
@@ -2038,7 +2065,7 @@ function trovaPaziente(testo){
    compito e' nato: se cambi stanza o pseudonimo, l'etichetta segue. */
 /* I due segni che decidono dove va una voce: "!" la manda in cima, il cuore
    in fondo. Non possono stare accesi insieme: accendendone uno l'altro si spegne. */
-function segniRow(urgente, senzaFretta){
+function segniRow(urgente, senzaFretta, sole){
   var urg = document.createElement("button");
   urg.className = "urgbtn" + (urgente ? " on" : ""); urg.textContent = "!";
   urg.setAttribute("aria-label", "!"); urg.title = "!";
@@ -2046,19 +2073,28 @@ function segniRow(urgente, senzaFretta){
   wish.className = "wishbtn" + (senzaFretta ? " on" : "");
   wish.appendChild(svgIcon("heart", 16, 1.9));
   wish.setAttribute("aria-label", t("wish")); wish.title = t("wishHint");
-  urg.onclick = function(){
-    urg.classList.toggle("on");
-    if(urg.classList.contains("on")) wish.classList.remove("on");
-  };
-  wish.onclick = function(){
-    wish.classList.toggle("on");
-    if(wish.classList.contains("on")) urg.classList.remove("on");
-  };
+  var sun = document.createElement("button");
+  sun.className = "sunbtn" + (sole && !senzaFretta ? " on" : "");
+  sun.appendChild(svgIcon("sun", 17, 1.9));
+  sun.setAttribute("aria-label", t("sun")); sun.title = t("sunHint");
+  segniEsclusivi([urg, wish, sun]);
   return {
-    urg:urg, wish:wish,
+    urg:urg, wish:wish, sun:sun,
+    sole:function(){ return sun.classList.contains("on"); },
     urgente:function(){ return urg.classList.contains("on"); },
     senzaFretta:function(){ return wish.classList.contains("on"); }
   };
+}
+
+/* "!", cuore e sole: uno solo acceso alla volta */
+function segniEsclusivi(btns){
+  btns.forEach(function(b){
+    b.onclick = function(){
+      var acceso = !b.classList.contains("on");
+      btns.forEach(function(x){ x.classList.remove("on"); });
+      if(acceso) b.classList.add("on");
+    };
+  });
 }
 
 function chipDiChi(it){
@@ -2176,6 +2212,7 @@ function addFromCompose(){
       ta.value = ""; ta.style.height = "auto";
       $("composeUrg").classList.remove("on");
       $("composeWish").classList.remove("on");
+      $("composeSun").classList.remove("on");
       save(); render(); avvisaMorali(nMor);
       return;
     }
@@ -2187,6 +2224,7 @@ function addFromCompose(){
     id:uid(), text:stripMarks(text), tag:$("composeTag").value.trim(),
     urgent:$("composeUrg").classList.contains("on"),
     wish:$("composeWish").classList.contains("on"),
+    sun:$("composeSun").classList.contains("on"),
     stage:"todo", day:target, created:Date.now(),
     comment:"", alarm:null, alarmFired:false, lastOffset:null
   };
@@ -2197,6 +2235,7 @@ function addFromCompose(){
   ta.value = ""; ta.style.height = "auto";
   $("composeUrg").classList.remove("on");
   $("composeWish").classList.remove("on");
+  $("composeSun").classList.remove("on");
   /* ti porto a vedere il giorno in cui il compito e' finito */
   view.day = target; view._wasToday = (target === todayStr());
   view.rail = "todo";
@@ -2836,14 +2875,9 @@ Array.prototype.forEach.call(document.querySelectorAll(".rail-tab"), function(b)
 var composePick = dayPickBtn(todayStr());
 $("composeDay").appendChild(composePick.wrap);
 $("composeWish").appendChild(svgIcon("heart", 16, 1.9));
-$("composeUrg").onclick = function(){
-  this.classList.toggle("on");
-  if(this.classList.contains("on")) $("composeWish").classList.remove("on");
-};
-$("composeWish").onclick = function(){
-  this.classList.toggle("on");
-  if(this.classList.contains("on")) $("composeUrg").classList.remove("on");
-};
+$("composeSun").appendChild(svgIcon("sun", 17, 1.9));
+$("composeSun").title = t("sunHint");
+segniEsclusivi([$("composeUrg"), $("composeWish"), $("composeSun")]);
 $("addBtn").onclick = addFromCompose;
 $("composeMic").onclick = function(){ dictateInto($("composeText"), $("composeMic")); };
 $("composeText").addEventListener("input", function(){ autoGrow(this); });
@@ -4636,7 +4670,7 @@ function secTodo(host, p){
   var holder = document.createElement("div");
   holder.style.cssText = "display:flex; flex-direction:column; gap:8px; margin-top:2px";
   open.sort(function(a,b){
-    if(!!a.wish !== !!b.wish) return a.wish ? 1 : -1;
+    if(gruppoFondo(a) !== gruppoFondo(b)) return gruppoFondo(a) - gruppoFondo(b);
     if(!!a.urgent !== !!b.urgent) return a.urgent ? -1 : 1;
     return (a.created||0) - (b.created||0);
   });
@@ -4663,7 +4697,7 @@ function openTodoSheet(p){
     mic.onclick = function(){ dictateInto(ta, mic); };
     var segni = segniRow(false, false);
     var giorno = dayPickBtn(todayStr());
-    row.appendChild(mic); row.appendChild(segni.urg); row.appendChild(segni.wish);
+    row.appendChild(mic); row.appendChild(segni.urg); row.appendChild(segni.wish); row.appendChild(segni.sun);
     row.appendChild(giorno.wrap);
     sheet.appendChild(row);
 
@@ -4673,7 +4707,7 @@ function openTodoSheet(p){
     ok.onclick = function(){
       var text = ta.value.trim();
       if(!text){ ta.focus(); return; }
-      addPatTodo(p, text, segni.urgente(), giorno.get(), segni.senzaFretta());
+      addPatTodo(p, text, segni.urgente(), giorno.get(), segni.senzaFretta(), segni.sole());
       close(); render(); renderPat();
     };
     var cn = document.createElement("button"); cn.className = "btn btn-ghost";
@@ -4683,10 +4717,10 @@ function openTodoSheet(p){
     setTimeout(function(){ ta.focus(); }, 80);
   });
 }
-function addPatTodo(p, text, urgent, day, wish){
+function addPatTodo(p, text, urgent, day, wish, sun){
   var it = {
     id:uid(), text:stripMoral(stripMarks(text)), tag:(p.room || p.alias || ""), urgent:!!urgent, stage:"todo",
-    wish:!!wish, day:day || todayStr(), created:Date.now(), comment:"", alarm:null, alarmFired:false,
+    wish:!!wish, sun:!!sun && !wish, day:day || todayStr(), created:Date.now(), comment:"", alarm:null, alarmFired:false,
     lastOffset:null, pid:p.id
   };
   S.items.unshift(it);
@@ -7914,10 +7948,10 @@ function colTodos(cid){ return S.items.filter(function(i){ return i.cid === cid;
 function colOpenTodos(cid){ return colTodos(cid).filter(function(i){ return i.stage !== "done"; }); }
 
 /* un compito legato a un collega: nel turno porta il suo nome come etichetta */
-function addColTodo(c, text, urgent, day, wish){
+function addColTodo(c, text, urgent, day, wish, sun){
   var it = {
     id:uid(), text:stripMoral(stripMarks(text)), tag:(c.name || ""), urgent:!!urgent, stage:"todo",
-    wish:!!wish, day:day || todayStr(), created:Date.now(), comment:"", alarm:null, alarmFired:false,
+    wish:!!wish, sun:!!sun && !wish, day:day || todayStr(), created:Date.now(), comment:"", alarm:null, alarmFired:false,
     lastOffset:null, cid:c.id
   };
   S.items.unshift(it);
@@ -8208,7 +8242,7 @@ function secColTodo(host, c){
   var holder = document.createElement("div");
   holder.style.cssText = "display:flex; flex-direction:column; gap:8px; margin-top:2px";
   open.sort(function(a,b){
-    if(!!a.wish !== !!b.wish) return a.wish ? 1 : -1;
+    if(gruppoFondo(a) !== gruppoFondo(b)) return gruppoFondo(a) - gruppoFondo(b);
     if(!!a.urgent !== !!b.urgent) return a.urgent ? -1 : 1;
     return (a.day || "").localeCompare(b.day || "") || (a.created||0) - (b.created||0);
   });
@@ -8238,7 +8272,7 @@ function openColTodoSheet(c){
     var segni = segniRow(false, false);
     /* di partenza oggi; col calendario lo si sposta avanti o indietro */
     var giorno = dayPickBtn(todayStr());
-    row.appendChild(mic); row.appendChild(segni.urg); row.appendChild(segni.wish);
+    row.appendChild(mic); row.appendChild(segni.urg); row.appendChild(segni.wish); row.appendChild(segni.sun);
     row.appendChild(giorno.wrap);
     sheet.appendChild(row);
 
@@ -8248,7 +8282,7 @@ function openColTodoSheet(c){
     ok.onclick = function(){
       var text = ta.value.trim();
       if(!text){ ta.focus(); return; }
-      addColTodo(c, text, segni.urgente(), giorno.get(), segni.senzaFretta());
+      addColTodo(c, text, segni.urgente(), giorno.get(), segni.senzaFretta(), segni.sole());
       stopDictation(); close(); render(); renderCol();
     };
     var cn = document.createElement("button"); cn.className = "btn btn-ghost";
