@@ -351,6 +351,7 @@ body.kb-scrive{padding-bottom:var(--kb,0px)}
   display:grid; place-items:center; font-size:24px; line-height:1;
   -webkit-tap-highlight-color:transparent; touch-action:manipulation}
 #ntkPall{font-size:32px}
+#ntkUguale{font-size:26px; font-weight:600}
 .ntk.ntk-tx{font-family:"IBM Plex Sans Condensed","IBM Plex Sans",sans-serif; font-size:15px; font-weight:600; letter-spacing:.02em}
 .ntk .ntk-sw{width:20px; height:20px; border-radius:50%; background:var(--nb-grigio)}
 .ntk.on{border-color:var(--accent); background:var(--accent-soft); box-shadow:inset 0 0 0 1px var(--accent)}
@@ -1291,6 +1292,7 @@ table.labtab td.pname .namebtn:hover{text-decoration-color:var(--accent); color:
     <button class="ntk ntk-tx" id="noteH">Titolo</button>
     <button class="ntk" id="ntkPall" aria-label="Elenco puntato">•</button>
     <button class="ntk" id="ntkGrigio" aria-label="Testo grigio scuro"><span class="ntk-sw"></span></button>
+    <button class="ntk" id="ntkUguale" aria-label="Inserisci uguale">=</button>
     <button class="ntk" id="ntkAllinea" aria-label="Allinea dopo l'uguale"></button>
   </div>
   </div>
@@ -2865,6 +2867,7 @@ document.addEventListener("visibilitychange", function(){ if(!document.hidden) t
 Object.assign(I18N.it, {
   mShift:"Turno", mPat:"Pazienti", mNote:"Note",
   noteH:"Titolo",
+  ntkUguale:"Inserisci « = »",
   ntkPall:"Elenco puntato", ntkGrigio:"Testo beige (ritocca per smettere)", ntkAllinea:"Allinea sotto la parola dopo «=»",
   notePlaceholder:"Quello che impari, giorno per giorno…",
   noteSavedHint:"salvato",
@@ -3002,6 +3005,7 @@ Object.assign(I18N.it, {
 Object.assign(I18N.de, {
   mShift:"Dienst", mPat:"Patienten", mNote:"Notizen",
   noteH:"Überschrift",
+  ntkUguale:"« = » einfügen",
   ntkPall:"Aufzählung", ntkGrigio:"Beiger Text (nochmal tippen zum Beenden)", ntkAllinea:"Unter dem Wort nach «=» ausrichten",
   notePlaceholder:"Was du lernst, Tag für Tag…",
   noteSavedHint:"gespeichert",
@@ -5577,6 +5581,19 @@ function quadernoGrigio(ed){
   ed._salva();
   quadernoTasti(ed);
 }
+/* uguale: scrive " = " dove sta il cursore. Lo spazio dopo e' non separabile,
+   altrimenti in fondo alla riga il browser lo mangia; se prima c'e' gia' uno
+   spazio non ne aggiunge un secondo. */
+function quadernoUguale(ed){
+  var blk = quadernoCurrent(ed);
+  if(!blk){ quadernoNormalizza(ed); blk = ed.lastElementChild; caretTo(blk, "fine"); }
+  var prima = blk.textContent.slice(0, caretOffset(blk)).replace(NB_ZW_RE, "");
+  var spazio = (!prima || /[\s\u00a0]$/.test(prima)) ? "" : " ";
+  inserisciTesto(blk, spazio + "=\u00a0");
+  ed._salva();
+  quadernoTasti(ed);
+  cursoreInVistaPresto(ed);
+}
 /* allinea: la riga del cursore va sotto la prima parola dopo "=" della riga sopra */
 function quadernoAllineaRiga(ed){
   var blk = quadernoCurrent(ed) || ed.lastElementChild;
@@ -5819,7 +5836,7 @@ function renderNote(){
   $("noteH").textContent = t("noteH");
   $("noteFind").placeholder = t("noteFind");
   $("noteFindX").setAttribute("aria-label", t("noteFindX"));
-  ["ntkPall", "ntkGrigio", "ntkAllinea"].forEach(function(id){ $(id).setAttribute("aria-label", t(id)); $(id).title = t(id); });
+  ["ntkPall", "ntkGrigio", "ntkUguale", "ntkAllinea"].forEach(function(id){ $(id).setAttribute("aria-label", t(id)); $(id).title = t(id); });
   quadernoRiempi(noteEd(), S.notebook, t("notePlaceholder"));
   notaCercaAggiorna(false);
 }
@@ -6002,7 +6019,7 @@ function initNote(){
 
   /* mini-tastiera in alto: compare solo mentre scrivi nel foglio */
   $("ntkAllinea").appendChild(iconaAllinea());
-  [["noteH", quadernoTitolo], ["ntkPall", quadernoPallino], ["ntkGrigio", quadernoGrigio], ["ntkAllinea", quadernoAllineaRiga]].forEach(function(k){
+  [["noteH", quadernoTitolo], ["ntkPall", quadernoPallino], ["ntkGrigio", quadernoGrigio], ["ntkUguale", quadernoUguale], ["ntkAllinea", quadernoAllineaRiga]].forEach(function(k){
     var b = $(k[0]);
     /* toccare il tasto non deve togliere il cursore dal foglio né chiudere la tastiera */
     b.addEventListener("pointerdown", function(e){ e.preventDefault(); });
