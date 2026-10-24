@@ -791,6 +791,24 @@ table.labtab td.pname .namebtn:hover{text-decoration-color:var(--accent); color:
 .evitem .evday .evago{color:var(--ink-3)}
 .evitem .evtext{font-size:14.5px; white-space:pre-wrap; overflow-wrap:anywhere; margin-top:3px;
   cursor:text; touch-action:manipulation; -webkit-user-select:none; user-select:none}
+/* Titolo e indice restano in alto, dentro la testata del collega */
+.cdtools{position:relative; z-index:2; background:var(--bg); padding-top:8px; border-radius:0 0 12px 12px}
+.cdtools.galleggia{padding:8px; margin-inline:-8px; box-shadow:var(--shadow)}
+.cdrow{display:flex; gap:8px; align-items:center}
+#cdIdxBtn{margin-left:auto; font-size:26px; letter-spacing:1px}
+.cdidx{position:absolute; top:calc(100% + 6px); right:0; width:min(340px,100%); max-height:55dvh;
+  overflow-y:auto; overscroll-behavior:contain; background:var(--surface);
+  border:1px solid var(--line-strong); border-radius:12px; box-shadow:var(--shadow); padding:6px; z-index:30}
+.cdidx .cdidx-h{font-family:"IBM Plex Sans Condensed","IBM Plex Sans",sans-serif; font-size:12px;
+  letter-spacing:.06em; text-transform:uppercase; color:var(--ink-3); padding:6px 10px 4px}
+.cdidx .cdidx-i{display:block; width:100%; text-align:left; padding:10px; border-radius:8px;
+  font-family:"IBM Plex Sans Condensed","IBM Plex Sans",sans-serif; font-weight:600; font-size:15.5px;
+  color:var(--ink); overflow-wrap:anywhere}
+.cdidx .cdidx-i:hover{background:var(--surface-2)}
+.cdidx .emptysm{padding:4px 10px 8px}
+/* il titolo raggiunto dall'indice si illumina un attimo */
+@keyframes qflash{0%{background:var(--accent-soft)} 100%{background:transparent}}
+.notearea .md-h.qflash{animation:qflash 1.4s ease-out; border-radius:6px}
 .colcard .pc-alias{font-family:"IBM Plex Sans","IBM Plex Sans Condensed",sans-serif;
   font-weight:600; font-size:16px}
 
@@ -1332,6 +1350,13 @@ table.labtab td.pname .namebtn:hover{text-decoration-color:var(--accent); color:
         <button class="iconbtn" id="cdEdit" aria-label="modifica"></button>
       </div>
       <nav class="ptabs" id="cdTabs"></nav>
+      <div class="cdtools" id="cdTools" hidden>
+        <div class="cdrow">
+          <button class="ntk ntk-tx" id="cdH">Titolo</button>
+          <button class="ntk" id="cdIdxBtn" aria-label="Indice">&#8943;</button>
+        </div>
+        <div class="cdidx" id="cdIdx" hidden></div>
+      </div>
     </header>
     <main class="psec" id="cdSec"></main>
   </div>
@@ -1417,6 +1442,7 @@ function indietroInterno(){
   }
   if(mode === "pat" && pview.id && sysAperto){ sysChiudi(); return; }
   if(mode === "pat" && pview.id){ $("patBack").click(); return; }
+  if(mode === "col" && cview.id && !$("cdIdx").hidden){ colIdxChiudi(); return; }
   if(mode === "col" && cview.id){ $("colBack").click(); return; }
   if(mode === "scn" && sview.id){ scnChiudi(); return; }
 }
@@ -5661,8 +5687,11 @@ function iconaAllinea(){
 }
 /* porta la mini-tastiera in cima alla parte di schermo che si vede davvero */
 function fissaTasti(){
-  var tk = $("noteTools");
-  if(!tk || $("noteShell").hidden){ if(tk){ tk.style.transform = ""; tk.classList.remove("galleggia"); } return; }
+  galleggiaTasti($("noteTools"), !$("noteShell").hidden);
+  galleggiaTasti($("cdTools"), !$("colShell").hidden && !$("colDetail").hidden && !$("cdTools").hidden);
+}
+function galleggiaTasti(tk, attivo){
+  if(!tk || !attivo){ if(tk){ tk.style.transform = ""; tk.classList.remove("galleggia"); } return; }
   tk.style.transform = "";
   var vv = window.visualViewport;
   var cima = vv ? vv.offsetTop : 0;
@@ -7891,7 +7920,8 @@ Object.assign(I18N.it, {
   cFachTitle:"Fachlich — teoria e mestiere",
   cFachPh:"Quello che ti insegna, come ragiona, le regole che segue…",
   cPersTitle:"Personale", cPersPh:"Com'è lavorarci insieme, cosa apprezza, cosa evitare…",
-  cQNote:"Si scrive e resta com'è: il tasto «Titolo» rende grande la riga del cursore.",
+  cQNote:"Si scrive e resta com'è: «Titolo», in alto, rende grande la riga del cursore e la mette nell'indice ⋯.",
+  cIdx:"Indice", cIdxEmpty:"Ancora nessun titolo. Scrivi una riga e tocca «Titolo»: comparirà qui.",
   cEvTitle:"Eventi", cEvAdd:"Aggiungi un evento",
   cEvEmpty:"Nessun evento registrato.",
   cEvDay:"Quando è successo", cEvPh:"Che cosa è successo…",
@@ -7922,7 +7952,8 @@ Object.assign(I18N.de, {
   cFachTitle:"Fachlich — Theorie und Handwerk",
   cFachPh:"Was er/sie dir beibringt, wie er/sie denkt, welche Regeln gelten…",
   cPersTitle:"Persönlich", cPersPh:"Wie die Zusammenarbeit läuft, was geschätzt wird, was nicht…",
-  cQNote:"Wird direkt so geschrieben: „Überschrift“ macht die Zeile am Cursor groß.",
+  cQNote:"Wird direkt so geschrieben: „Überschrift“ oben macht die Zeile am Cursor groß und setzt sie ins Inhaltsverzeichnis ⋯.",
+  cIdx:"Inhalt", cIdxEmpty:"Noch keine Überschrift. Eine Zeile schreiben und „Überschrift“ tippen: sie erscheint hier.",
   cEvTitle:"Ereignisse", cEvAdd:"Ereignis hinzufügen",
   cEvEmpty:"Kein Ereignis eingetragen.",
   cEvDay:"Wann es passiert ist", cEvPh:"Was passiert ist…",
@@ -8077,6 +8108,13 @@ function renderColDetail(){
     tabs.appendChild(b);
   });
 
+  var foglio = cview.tab === "fach" || cview.tab === "pers";
+  $("cdTools").hidden = !foglio;
+  $("cdH").textContent = t("noteH");
+  $("cdIdxBtn").setAttribute("aria-label", t("cIdx")); $("cdIdxBtn").title = t("cIdx");
+  colIdxChiudi();
+  colEd = null;
+
   var sec = $("cdSec");
   sec.textContent = "";
   if(cview.tab === "fach") secQuaderno(sec, c, "fachlich", "cFachTitle", "cFachPh");
@@ -8089,9 +8127,14 @@ function renderColDetail(){
    Lo stesso quaderno del braccio Note, salvato dentro il collega. Il foglio
    non viene ridisegnato mentre scrivi: il cursore resta dov'è. */
 function secQuaderno(host, c, campo, titleKey, phKey){
-  var card = secCard(host, titleKey, t("noteH"), function(){ quadernoTitolo(ed); });
+  var card = secCard(host, titleKey, null);
   var ed = document.createElement("div");
   ed.className = "notearea qsmall";
+  /* Titolo e indice stanno nella testata, che resta in alto mentre scorri */
+  colEd = ed; colCursore = null;
+  ed._testa = function(){ return $("cdTools"); };
+  ed.addEventListener("focus", function(){ colTasti(); fissaTasti(); });
+  ed.addEventListener("blur", function(){ setTimeout(fissaTasti, 300); });
   ed.contentEditable = "true";
   ed.setAttribute("role", "textbox");
   ed.setAttribute("aria-multiline", "true");
@@ -8441,8 +8484,90 @@ function semeColleghi(){
   }
 }
 
+/* ------------------------------------- Titolo e indice nella testata
+   Il foglio aperto (Fachlich o Personale) e' colEd. I titoli non si salvano
+   a parte: l'indice li legge ogni volta dal foglio, quindi un titolo nuovo,
+   cambiato o tolto si vede subito. */
+var colEd = null, colCursore = null;
+function colTasti(){
+  var b = $("cdH"); if(!b) return;
+  var blk = colEd && document.activeElement === colEd ? quadernoCurrent(colEd) : null;
+  b.classList.toggle("on", !!(blk && blk.classList.contains("md-h")));
+}
+/* tasto toccato senza scrivere: riprendo dal punto dove ero rimasta */
+function colRiprendi(){
+  var ed = colEd;
+  if(!ed || document.activeElement === ed) return;
+  ed.focus();
+  if(colCursore && ed.contains(colCursore.startContainer)){
+    var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(colCursore);
+  } else { quadernoNormalizza(ed); caretTo(ed.lastElementChild, "fine"); }
+}
+function colIdxChiudi(){ var x = $("cdIdx"); if(x) x.hidden = true; $("cdIdxBtn").classList.remove("on"); }
+function colIdxApri(){
+  var box = $("cdIdx"), ed = colEd;
+  box.textContent = "";
+  var h = document.createElement("div"); h.className = "cdidx-h";
+  h.textContent = t("cIdx") + " — " + t(cview.tab === "pers" ? "cPers" : "cFach");
+  box.appendChild(h);
+  var titoli = ed ? quadernoBlocks(ed).filter(function(n){
+    return n.classList.contains("md-h") && n.textContent.replace(NB_ZW_RE, "").trim();
+  }) : [];
+  if(!titoli.length){
+    var e = document.createElement("p"); e.className = "emptysm"; e.textContent = t("cIdxEmpty");
+    box.appendChild(e);
+  }
+  titoli.forEach(function(blk){
+    var b = document.createElement("button"); b.className = "cdidx-i";
+    b.textContent = blk.textContent.replace(NB_ZW_RE, "").trim();
+    b.addEventListener("pointerdown", function(ev){ ev.preventDefault(); });
+    b.onclick = function(){ colIdxChiudi(); colVaiTitolo(blk); };
+    box.appendChild(b);
+  });
+  box.hidden = false; box.scrollTop = 0;
+  $("cdIdxBtn").classList.add("on");
+}
+/* il titolo scelto va subito sotto la testata */
+function colVaiTitolo(blk){
+  if(colEd && document.activeElement === colEd) caretTo(blk, "fine");
+  var vv = window.visualViewport;
+  var cima = Math.max(vv ? vv.offsetTop : 0, $("cdTools").getBoundingClientRect().bottom) + 10;
+  window.scrollBy({ top:Math.round(blk.getBoundingClientRect().top - cima), behavior:"smooth" });
+  blk.classList.remove("qflash"); void blk.offsetWidth; blk.classList.add("qflash");
+  setTimeout(function(){ blk.classList.remove("qflash"); }, 1500);
+}
+
 /* ------------------------------------------------------------- avvio */
 function initCol(){
+  /* toccare Titolo o ⋯ non deve togliere il cursore dal foglio né chiudere la tastiera */
+  ["cdH", "cdIdxBtn"].forEach(function(id){
+    $(id).addEventListener("pointerdown", function(e){ e.preventDefault(); });
+    $(id).addEventListener("mousedown", function(e){ e.preventDefault(); });
+  });
+  $("cdH").onclick = function(e){
+    e.preventDefault();
+    if(!colEd) return;
+    colRiprendi();
+    quadernoTitolo(colEd);
+    colTasti();
+    if(!$("cdIdx").hidden) colIdxApri();
+  };
+  $("cdIdxBtn").onclick = function(e){
+    e.preventDefault();
+    if($("cdIdx").hidden) colIdxApri(); else colIdxChiudi();
+  };
+  /* tocco fuori dall'indice: si chiude */
+  document.addEventListener("pointerdown", function(e){
+    if($("cdIdx").hidden || $("cdTools").contains(e.target)) return;
+    colIdxChiudi();
+  });
+  document.addEventListener("selectionchange", function(){
+    if(!colEd || document.activeElement !== colEd) return;
+    var sel = window.getSelection();
+    if(sel.rangeCount) colCursore = sel.getRangeAt(0).cloneRange();
+    colTasti();
+  });
+
   S.colleagues = S.colleagues || [];
   $("modeCol").onclick = function(){ setMode("col"); };
   $("colNewBtn").onclick = function(){ openColSheet(null); };
