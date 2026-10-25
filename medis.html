@@ -1264,8 +1264,25 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
 
     <div class="blk">
       <h3>Antidiabetici orali in reparto</h3>
-      <div class="rx"><div class="nm">Metformin</div><div class="prep" style="color:var(--ink)">Stop il giorno dell'OP, riprendi dopo 48 h con creatinina stabile. Mezzo di contrasto: stop solo con GFR &lt; 30 o AKI.</div>
-        <div class="ren">GFR 30–44: max 1000 mg/d · GFR &lt; 30: controindicato</div></div>
+      <div class="rx"><div class="nm">Metformin (500 mg Tbl.)</div><div class="dose"><span class="std">500 mg p.o. 1-0-1</span></div>
+        <div class="prep" style="color:var(--ink)">Ai pasti, intera con acqua · dopo 1 Woche: 1000 mg 1-0-1 (con GFR ≥ 45) · solo tipo 2</div>
+        <div class="prep">Stop il giorno dell'OP, riprendi dopo 48 h con creatinina stabile. Mezzo di contrasto: stop solo con GFR &lt; 30 o AKI.</div>
+        <div class="ren">GFR 30–44: 500 mg 1-0-1 (max 1000 mg/Tag) · GFR &lt; 30: controindicato</div></div>
+    </div>
+
+    <div class="blk">
+      <h3>Metformin insieme a Lantus</h3>
+      <p><b>Prima di iniziare:</b> creatinina stabile · lattato normale · niente ipossia, shock o sepsi · scompenso compensato · mangia · nessun mezzo di contrasto in programma.</p>
+      <p><b>Non crolla la glicemia:</b> la Metformin non aumenta l'insulina, riduce il glucosio prodotto dal fegato e rende l'insulina più efficace. Agisce piano: primi giorni poco, pieno effetto dopo 2 Wochen.</p>
+      <ol class="steps">
+        <li><b>Insulina invariata</b> all'inizio: Lantus e Apidra alla stessa dose.</li>
+        <li><b>Glicemia</b> ai pasti e alle 22 Uhr.</li>
+        <li><b>Glicemia &lt; 5 mmol/l (90 mg/dl)</b> dopo un pasto → Apidra di quel pasto −10 %.</li>
+        <li><b>A digiuno &lt; 5 mmol/l (90 mg/dl) per 2 Tage</b> → Lantus −10 % (es. 28 → 25 IE).</li>
+        <li><b>Ipoglicemia &lt; 4 mmol/l (72 mg/dl)</b> → trattala (→ <a class="x" href="#glu">Ipoglicemia</a>) e Lantus −20 %.</li>
+      </ol>
+      <p class="prep">Se la prendeva a casa: riprendi la sua dose, adattata al GFR. Se è nuova: in reparto basta l'insulina, la Metformin la inizia l'Hausarzt dopo la dimissione.</p>
+      <div class="ren">Metformin: GFR 30–44 max 1000 mg/Tag · GFR &lt; 30 non dare</div>
       <div class="rx"><div class="nm">SGLT2 (Forxiga, Jardiance)</div><div class="prep" style="color:var(--ink)">Stop 3 giorni prima dell'OP e se digiuno o malato.</div>
         <div class="ren">non iniziare: Forxiga con GFR &lt; 25 · Jardiance con GFR &lt; 20</div></div>
     </div>
@@ -2067,6 +2084,7 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
     ['Mikroklist','1 Tube 5 ml rettale','invariato',0,'cac'],
     ['Klysma salinisch (Natriumphosphat)','1 Flasche 135 ml rettale · max. 1/24 Std.','non dare',1,'cac'],
     ['Methylnaltrexon (Relistor)','38–61 kg 8 mg · 62–114 kg 12 mg s.c. ogni 48 Std.','62–114 kg: 8 mg · < 62 kg: 0,075 mg/kg',1,'cac'],
+    ['Metformin','500 mg 1-0-1 ai pasti · dopo 1 Woche 1000 mg 1-0-1','GFR 30–44: max 1000 mg/Tag · < 30: controindicato',1,'glu'],
     ['Rifampicin','450 mg ogni 12 h p.o./i.v. (solo con protesi)','invariato (alcune Fachinfo: max 600 mg/24 h)',0,'ab2']
   ];
   var tb=document.getElementById('aztb');
