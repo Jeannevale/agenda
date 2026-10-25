@@ -135,6 +135,7 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
     <button class="tile" data-go="hzv" data-k="low output lattato diurese vti noradrenalina dobutamina perfusor"><span class="k emo">Emodinamica</span><span class="t">Low Output</span><span class="s">Lattato · diurese · VTI · perfusori</span></button>
     <button class="tile" data-go="sam" data-k="mitrale insufficienza lvot fenilefrina esmolol volume"><span class="k emo">Emodinamica</span><span class="t">SAM · Insuff. mitralica</span><span class="s">Volume · fenilefrina · stop dobu</span></button>
     <button class="tile" data-go="rr" data-k="ipertensione hypertonie pressione urapidil ebrantil clonidina clonidin catapresan clevidipin cleviprex metoprololo perfusor candesartan ramipril amlodipin bisoprolol nebivolol doxazosin spironolacton torasemid hydrochlorothiazid moxonidin nitrendipin bayotensin antidoto ipotensione hypotonie pressione bassa crollo akrinor cafedrin fenilefrina phenylephrin efedrina ephedrin jonosteril betabloccante overdose glucagon glucagen milrinon corotrop adrenalin suprarenin noradrenalin calciumchlorid"><span class="k emo">Emodinamica</span><span class="t">Ipertensione</span><span class="s">Boli · Perfusor · orali · se crolla: antidoti</span></button>
+    <button class="tile" data-go="rrc" data-k="ipertensione cause improvvisa secondaria escludere prima urapidil ebrantil nitro nitrolingual infarto nstemi troponina tamponamento polso paradosso giugulari lattato diuresi tee ct ictus cushing dissezione differenza braccia dolore piritramid globo vescicale blasenscan ipossia glicemia astinenza rebound betablocker clonidin ipertiroidismo amiodarone tsh ft3 ft4 thiamazol prednisolon mezzo di contrasto iodio obiettivo 140"><span class="k emo">Emodinamica</span><span class="t">Ipertensione cause</span><span class="s">Escludere prima · Urapidil vs Nitro</span></button>
     <button class="tile" data-go="nitro" data-k="nitro nitrati nitroglicerina glyceroltrinitrat nitrolingual perfusor spray isosorbiddinitrat isoket nitroprussid nipruss no ossido nitrico stickstoffmonoxid inomax edema polmonare lungenödem angina ischemia ipertensione polmonare"><span class="k emo">Emodinamica</span><span class="t">Nitrati · NO</span><span class="s">Glyceroltrinitrat Perfusor · Isoket · nipruss</span></button>
     <button class="tile" data-go="vhf" data-k="fibrillazione atriale vorhofflimmern amiodarone cordarex anticoagulazione cardioversione landiolol landiololo rapibloc frequenza"><span class="k rit">Ritmo</span><span class="t">Fibrillazione atriale</span><span class="s">Amiodarone · Landiolol · anticoag.</span></button>
     <button class="tile" data-go="endo" data-k="endocardite vancomicina emocolture tdm livello"><span class="k inf">Infezione</span><span class="t">Endocardite</span><span class="s">Emocolture · vancomicina + livelli</span></button>
@@ -719,6 +720,7 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
 <!-- ============ IPERTENSIONE ============ -->
 <section class="page" id="rr" data-t="Ipertensione">
   <div class="ph"><h2>Pressione alta</h2><span class="cat">Emodinamica</span></div>
+  <button class="rlink" type="button" data-go="rrc">Prima di abbassare: cause da escludere → Ipertensione cause</button>
   <div class="grid">
     <div class="blk alert">
       <div class="rx"><div class="nm">Urapidil (Ebrantil 25 mg/5 ml)</div>
@@ -846,6 +848,102 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
         <div class="ren same">unverändert</div></div>
       <p class="fixbox">Nicht zuerst Phenylephrin (Nachlast ↑, Auswurf ↓), Ephedrin oder Akrinor (Beta-Anteil blockiert). Landiolol ist nach 10–15 min weg, Amiodaron-Hypotonie nach &lt; 1 h: Bolus langsamer laufen lassen.</p>
       <p class="fixbox">Refraktär: Hochdosis-Insulin mit Glukose → Intensiv + Giftnotruf.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ IPERTENSIONE CAUSE ============ -->
+<section class="page" id="rrc" data-t="Ipertensione cause">
+  <div class="ph"><h2>Ipertensione cause</h2><span class="cat">Prima di abbassare</span></div>
+  <div class="grid">
+    <div class="blk alert">
+      <h3>Escludi subito</h3>
+      <ul class="l">
+        <li><b>Infarto:</b> ECG con derivazioni posteriori, confrontato con il precedente (inversioni T nuove?) · troponina subito e dopo 3 Std. · dopo sternotomia un NSTEMI può non dare dolore</li>
+        <li><b>Tamponamento:</b> eco · non diagnostica → segni qui sotto</li>
+        <li><b>Ictus · emorragia:</b> pupille, parola, forza, simmetria del viso, Vorhalteversuch · ipertensione + bradicardia = Cushing → CCT, non abbassare in modo aggressivo</li>
+        <li><b>Dissezione:</b> dolore toracico o dorsale, differenza di pressione fra le braccia nuova o aumentata → CT · prima Betablocker, non Urapidil da solo</li>
+      </ul>
+      <p>Differenza fra le braccia già nota: misura e tratta sul braccio con il valore più alto.</p>
+    </div>
+
+    <div class="blk">
+      <h3>Cause banali (le più frequenti)</h3>
+      <div class="rx"><div class="nm">Dolore: Piritramid (Dipidolor 15 mg/2 ml)</div><div class="dose">3,75 mg i.v. lento</div>
+        <div class="prep">0,5 ml ad 10 ml NaCl 0,9 %</div>
+        <div class="ren same">invariato</div></div>
+      <ul class="l">
+        <li>Globo vescicale o catetere ostruito → Blasenscan</li>
+        <li>Agitazione → <a class="x" href="#delir">Delir</a> · astinenza alcol, nicotina, Benzodiazepin → <a class="x" href="#ast">Astinenza</a></li>
+        <li>Ipossia, ipercapnia (versamento pleurico, atelettasia, pneumotorace) → SpO₂, BGA, Rx torace</li>
+        <li>Ipoglicemia → Glucose 40 % 20 ml i.v. (alcolista: prima Thiamin)</li>
+        <li>Brivido, febbre</li>
+        <li>Ipervolemia → peso rispetto al basale, edemi</li>
+      </ul>
+      <h3 style="margin-top:8px">Farmaci</h3>
+      <ul class="l">
+        <li>Betablocker o Clonidin saltati → rebound</li>
+        <li>Antiipertensivi orali non ripresi dopo la PIT</li>
+        <li>Catecolamine residue, steroidi, NSAR</li>
+      </ul>
+      <h3 style="margin-top:8px">Misurazione</h3>
+      <p>Bracciale della misura giusta · entrambe le braccia · linea arteriosa calibrata.</p>
+    </div>
+
+    <div class="blk">
+      <h3>Tamponamento senza eco</h3>
+      <p>L'ipertensione parla contro un tamponamento rilevante (di solito ipotensione + tachicardia).</p>
+      <p><b>Segni precoci</b> (emodinamici):</p>
+      <ul class="l">
+        <li>FC che sale senza altra causa</li>
+        <li>Pressione differenziale che si stringe</li>
+        <li>Polso paradosso &gt; 10 mmHg</li>
+        <li>Giugulari turgide, PVC in salita</li>
+        <li>Dispnea, ortopnea, irrequietezza</li>
+      </ul>
+      <p><b>Segni tardivi</b> (normali non escludono un tamponamento iniziale): diuresi (senza catetere: Blasenscan ÷ ore dall'ultima minzione = ml/h) · lattato (sale solo a portata già calata, ripeti dopo 1 Std.) · ScvO₂ bassa · mani fredde, ricapillarizzazione &gt; 3 s, cute marezzata.</p>
+      <p>Ricontrolla FC, PA e giugulari ogni 30 Min. per 2 Std.</p>
+      <p class="fixbox">Un segno cambia o il dubbio resta → TEE (vede i versamenti posteriori localizzati) o CT Thorax nativ + Oberarzt.</p>
+      <h3 style="margin-top:8px">Polso paradosso senza linea arteriosa</h3>
+      <ol class="steps">
+        <li>Sfigmomanometro manuale (non l'automatico): gonfia oltre la sistolica, sgonfia di 2 mmHg al secondo</li>
+        <li>Annota quando senti i primi toni solo in espirazione</li>
+        <li>Annota quando li senti anche in inspirazione</li>
+        <li>Differenza &gt; 10 mmHg = polso paradosso</li>
+      </ol>
+      <p>Più rapido: curva del saturimetro che cala in inspirazione · polso radiale che scompare in inspirazione = paradosso marcato (&gt; 15–20 mmHg).</p>
+    </div>
+
+    <div class="blk">
+      <h3>Ipertiroidismo da Amiodaron</h3>
+      <p>TSH normale all'ingresso non lo esclude, ma compare dopo mesi o anni di terapia (anche dopo la sospensione). Amiodaron da pochi giorni: improbabile.</p>
+      <p><b>Prime settimane, normale:</b> TSH lievemente ↑, fT4 ↑, fT3 ↓ o normale = eutiroideo, non trattare.</p>
+      <p><b>Ipertiroidismo vero</b> (entrambi i tipi): TSH ↓ + fT3 ↑ · TSH ↑ = ipotiroidismo da Amiodaron.</p>
+      <div class="tbl"><table>
+        <thead><tr><th></th><th>Typ 1</th><th>Typ 2</th></tr></thead>
+        <tbody>
+          <tr><td class="d">Meccanismo</td><td class="d">lo iodio fa produrre più ormone</td><td class="d">tiroidite distruttiva</td></tr>
+          <tr><td class="d">Tiroide prima</td><td class="d">malata (autonomia, nodi, Basedow)</td><td class="d">sana</td></tr>
+          <tr><td class="d">Ecodoppler</td><td class="d">vascolarizzazione ↑</td><td class="d">vascolarizzazione assente</td></tr>
+          <tr><td class="d">Terapia</td><td class="d">Thiamazol 40 mg p.o. 1-0-0</td><td class="d">Prednisolon 40 mg p.o. 1-0-0 per 1–3 Monate, poi scalare</td></tr>
+        </tbody>
+      </table></div>
+      <p>Forme miste frequenti · tipo non chiaro → Konsil Endokrinologie prima della terapia.</p>
+      <p><b>Più probabile nel post-OP:</b> mezzo di contrasto iodato (coronarografia) con autonomia latente → ipertiroidismo dopo 2–12 Wochen. Controlla TSH, fT3, fT4.</p>
+    </div>
+
+    <div class="blk">
+      <h3>Terapia</h3>
+      <p>Obiettivo <b>sistolica &lt; 140 mmHg</b> (suture, anastomosi, sanguinamento) · dopo chirurgia aortica chiedi all'Oberarzt · max. −25 % nella prima ora.</p>
+      <p>Troponina prelevata: non aspettare il risultato per abbassare.</p>
+      <div class="rx"><div class="nm">Urapidil (Ebrantil 25 mg/5 ml) · ipertensione senza altri segni</div><div class="dose">12,5 mg i.v. lento = 2,5 ml</div>
+        <div class="prep">non diluito · ripeti dopo 5 Min.</div>
+        <div class="ren same">invariato</div></div>
+      <div class="rx"><div class="nm">Glyceroltrinitrat · sospetta ischemia (T nuove, angina) o congestione polmonare</div><div class="dose">Nitrolingual Spray 0,4 mg/Hub: 2 Hübe s.l.</div>
+        <div class="prep">solo con sistolica &gt; 100 · Perfusor Nitrolingual infus 1 mg/ml puro: Start 1 ml/h, +1 ml/h ogni 5 Min., max. 8 ml/h → <a class="x" href="#nitro">Nitrati</a></div>
+        <div class="ren same">invariato</div></div>
+      <p class="fixbox">Niente Nitro: tamponamento non escluso (eco non diagnostica: riduce il precarico, la pressione può crollare) · PDE5-Hemmer (Sildenafil 24 Std., Tadalafil 48 Std.) · infarto del ventricolo destro · stenosi aortica severa non operata.</p>
+      <p>Dopo 2–3 boli risale → terapia orale (<a class="x" href="#rr">Ipertensione</a>) · serve un Perfusor → IMC.</p>
     </div>
   </div>
 </section>
@@ -1873,6 +1971,9 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
     ['Hydrochlorothiazid','max. 25 mg 1-0-0','wirkungslos → Torasemid',1,'rr'],
     ['Moxonidin','0,2 mg 1-0-1 · max. 0,3 mg 1-0-1','kontraindiziert',1,'rr'],
     ['Nitrendipin (Bayotensin akut)','5 mg p.o. bei RR sys > 160','unverändert',0,'rr'],
+    ['Piritramid (Dipidolor)','3,75 mg i.v. lento (0,5 ml ad 10 ml NaCl 0,9 %)','invariato',0,'rrc'],
+    ['Thiamazol (ipertiroidismo da Amiodaron Typ 1)','40 mg p.o. 1-0-0','invariato',0,'rrc'],
+    ['Prednisolon (ipertiroidismo da Amiodaron Typ 2)','40 mg p.o. 1-0-0 per 1–3 Monate, poi scalare','invariato',0,'rrc'],
     ['Glyceroltrinitrat Perfusor (Nitrolingual infus)','1 mg/ml puro · Start 1 ml/h · +1 ml/h ogni 5 min · max. 8 ml/h · linea PE','invariato',0,'nitro'],
     ['Isosorbiddinitrat Perfusor (Isoket)','1 mg/ml puro · Start 2 ml/h · max. 10 ml/h','invariato',0,'nitro'],
     ['Nitroprussid-Natrium (nipruss)','60 mg/50 ml Glucose 5 % · 0,3–3 µg/kg/min · solo Intensiv','dose minima · tiocianato se > 3 Tage',1,'nitro'],
