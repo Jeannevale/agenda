@@ -111,6 +111,25 @@ tr.chg td.rc{color:var(--renal);font-weight:600;background:var(--renal-bg)}
 td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dotted var(--muted)}
 .calc{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:6px;font-size:14px}
 .calc input{width:4em;border:1px solid var(--line);border-radius:6px;padding:4px 6px;background:var(--bg);color:var(--ink);font-family:var(--f-mono);font-weight:600}
+/* Flusso: calcolatore ml/h sotto ogni Perfusor (dose · sostanza · diluizione, peso dalla barra) */
+#flow-btn{color:var(--add)}
+#flow-btn[aria-pressed="true"]{background:var(--add);border-color:var(--add);color:var(--surface)}
+.fl{display:none;flex-wrap:wrap;align-items:center;gap:6px 12px;margin-top:6px;padding:7px 10px;border-radius:8px;background:var(--add-bg);font-size:13.5px}
+body.flow .fl{display:flex}
+.fl .fo{flex-basis:100%;display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 8px}
+.fl .fl-l{font-size:11px;text-transform:uppercase;letter-spacing:.06em;font-weight:700;color:var(--add)}
+.fl .fo b{font-family:var(--f-mono);font-size:18px;font-weight:700;color:var(--ink)}
+.fl .fo small{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.fl .fi{display:inline-flex;align-items:center;gap:4px;white-space:nowrap}
+.fl input{width:4.4em;border:1px solid var(--line);border-radius:6px;padding:4px 6px;background:var(--surface);color:var(--ink);font-family:var(--f-mono);font-weight:600;font-size:15px;text-align:right}
+.fl input.ed{border-color:var(--add)}
+.fl .u{font-size:12.5px;color:var(--muted)}
+.fl .fh{flex-basis:100%;font-size:12px;color:var(--muted)}
+tr.flr{display:none}
+body.flow tr.flr{display:table-row}
+tr.flr td{border-top:0;padding-top:0}
+@media (max-width:440px){.bar{gap:6px}.bar .btn{padding:6px 8px}.wt{padding:2px 6px}#home-btn:not([hidden])~.brand{display:none}}
+@media (max-width:380px){.wt label:first-child{display:none}}
 @media (prefers-reduced-motion:no-preference){.page.on{animation:f .12s ease-out}@keyframes f{from{opacity:.4}to{opacity:1}}}
 </style>
 
@@ -120,6 +139,7 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
     <div class="brand">HZV <small id="crumb">Kitteltasche</small></div>
     <div class="wt"><label for="w">Peso</label><input id="w" type="number" inputmode="decimal" min="30" max="250" value="75"><label for="w">kg</label></div>
     <button class="btn" id="renal-btn" type="button" aria-pressed="false">GFR &lt; 30</button>
+    <button class="btn" id="flow-btn" type="button" aria-pressed="false">Flusso</button>
   </div>
   <div class="rbanner">Filtro rene attivo: dosi per GFR &lt; 30 ml/min in viola, dose standard barrata dove cambia.</div>
 </header>
@@ -307,11 +327,11 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
       <h3>Perfusori</h3>
       <div class="rx"><div class="nm">Noradrenalina</div>
         <div class="dose">0,1 µg/kg/min = <span class="c" data-c="nor01"></span></div>
-        <div class="prep">Perfusor 5 mg/50 ml NaCl (100 µg/ml). Bolo: 1 mg in 200 ml NaCl = 5 µg/ml → 1 ml = 5 µg.</div>
+        <div class="prep">Perfusor 5 mg/50 ml NaCl (100 µg/ml). Bolo: 1 mg in 200 ml NaCl = 5 µg/ml → 1 ml = 5 µg.</div><div class="fl" data-fl="nor"></div>
         <div class="ren same">invariato</div></div>
       <div class="rx"><div class="nm">Dobutamina</div>
         <div class="dose">2,5–10 µg/kg/min</div>
-        <div class="prep">Perfusor 250 mg/50 ml (5 mg/ml): <span class="c" data-c="dobu"></span>. t½ 2 min.</div>
+        <div class="prep">Perfusor 250 mg/50 ml (5 mg/ml): <span class="c" data-c="dobu"></span>. t½ 2 min.</div><div class="fl" data-fl="dobu"></div>
         <div class="ren same">invariato</div></div>
       <p class="prep">Concentrazioni tipiche: verifica quelle della siringa in reparto. Fenilefrina → <a class="x" href="#sam">SAM</a></p>
     </div>
@@ -326,8 +346,8 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
       <ol class="steps">
         <li><b>Volume:</b> <span class="dose">500 ml in 10 min</span>, poi rivaluta con TEE.</li>
         <li><b>Fenilefrina</b> bolo <span class="dose">50–100 µg</span> (fino a 200 µg) ogni 2 min → infusione <span class="dose">0,15–0,5 µg/kg/min</span> = <span class="c" data-c="phenUg"></span>
-          <div class="prep">Bolo: 100 µg/ml (10 mg in 100 ml NaCl) → 0,5–1 ml. Perfusor 10 mg/50 ml (200 µg/ml) → <span class="c" data-c="phenMl"></span></div>
-          <div class="prep"><b>oppure Noradrenalina</b> bolo 5 µg (1 ml di 1 mg/200 ml), poi Perfusor ↑ di 0,03 µg/kg/min ogni 3 min = <span class="c" data-c="norStep"></span> ogni step (5 mg/50 ml).</div></li>
+          <div class="prep">Bolo: 100 µg/ml (10 mg in 100 ml NaCl) → 0,5–1 ml. Perfusor 10 mg/50 ml (200 µg/ml) → <span class="c" data-c="phenMl"></span></div><div class="fl" data-fl="phen"></div>
+          <div class="prep"><b>oppure Noradrenalina</b> bolo 5 µg (1 ml di 1 mg/200 ml), poi Perfusor ↑ di 0,03 µg/kg/min ogni 3 min = <span class="c" data-c="norStep"></span> ogni step (5 mg/50 ml).</div><div class="fl" data-fl="nor"></div></li>
         <li><b>Dobutamina subito a metà</b> (t½ 2 min). Meglio stop di tutti gli inotropi se possibile.</li>
         <li><b>Controllo:</b> gradiente LVOT (TEE).</li>
       </ol>
@@ -337,7 +357,7 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
       <ul class="l"><li>Evita tachicardia, nitrati, diuretici, inotropi.</li><li>Persiste → cardiochirurgo (revisione).</li></ul>
       <div class="rx" style="margin-top:6px"><div class="nm">Esmololo (se tachicardico)</div>
         <div class="dose">bolo 0,5 mg/kg in 1 min = <span class="c" data-c="esmB"></span></div>
-        <div class="prep">poi 50–300 µg/kg/min · Brevibloc 2500 mg/250 ml (10 mg/ml) → <span class="c" data-c="esmInf"></span></div>
+        <div class="prep">poi 50–300 µg/kg/min · Brevibloc 2500 mg/250 ml (10 mg/ml) → <span class="c" data-c="esmInf"></span></div><div class="fl" data-fl="esm"></div>
         <div class="ren same">invariato (fenilefrina, Nor, dobutamina: invariati)</div></div>
     </div>
   </div>
@@ -356,11 +376,11 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
       <h3>Vancomicina e.v.</h3>
       <div class="rx"><div class="nm">Bolo 30 mg/kg (max 3 g)</div>
         <div class="dose"><span class="c" data-c="vLoad"></span> a 10 mg/min → ≥ <span class="c" data-c="vLoadMin"></span></div>
-        <div class="prep">Diluisci ≤ 5 mg/ml → in <span data-c="vLoadVol"></span> NaCl 0,9 %. Mai ridurre il bolo, neanche con reni pessimi o dialisi.</div>
+        <div class="prep">Diluisci ≤ 5 mg/ml → in <span data-c="vLoadVol"></span> NaCl 0,9 %. Mai ridurre il bolo, neanche con reni pessimi o dialisi.</div><div class="fl" data-fl="vload"></div>
         <div class="ren same">bolo invariato</div></div>
       <div class="rx"><div class="nm">Mantenimento continuo, appena finisce il bolo</div>
         <div class="dose std">30 mg/kg/24 h = <span class="c" data-c="vMaint"></span></div>
-        <div class="prep">Perfusor 1 g/50 ml (20 mg/ml) solo via ZVK → <span class="c" data-c="vMaintMl"></span></div>
+        <div class="prep">Perfusor 1 g/50 ml (20 mg/ml) solo via ZVK → <span class="c" data-c="vMaintMl"></span></div><div class="fl" data-fl="vmaint"></div>
         <div class="ren">≈ 10 mg/kg/24 h = <b data-c="vRen"></b> (<span data-c="vRenMl"></span>), poi secondo livello. Emodialisi: niente continua, 500–1000 mg dopo ogni dialisi secondo livello pre-HD (target 15–20 mg/l). CRRT: 1–1,5 g/24 h + TDM.</div></div>
     </div>
     <div class="blk">
@@ -384,7 +404,7 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
       <h3>Schema anticoagulazione</h3>
       <div class="rx"><b>1° episodio e &lt; 24 h</b> → niente anticoagulazione. Antiaritmico solo se molto sintomatico (evita recidive nei primi giorni).</div>
       <div class="rx"><b>Ripetuto o &gt; 24 h</b> → anticoagulazione per 1 mese, poi rivaluta.</div>
-      <div class="rx"><span class="tag haus">reparto</span> Eparina Perfusor, pTT target <b>40–50 s</b> (bioprotesi 50–60 s) → <a class="x" href="#ak">dosi</a>. Mg e.v. + betabloccante per frequenza.</div>
+      <div class="rx"><span class="tag haus">reparto</span> Eparina Perfusor, pTT target <b>40–50 s</b> (bioprotesi 50–60 s) → <a class="x" href="#ak">dosi</a>. Mg e.v. + betabloccante per frequenza.<div class="fl" data-fl="hep12"></div></div>
       <div class="rx">VHF ≥ 24 h prima di cardioversione: TEE o ≥ 3 settimane di anticoagulazione.</div>
     </div>
     <div class="blk alert">
@@ -394,7 +414,7 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
         <div class="prep">Solo Glucosio 5 %, mai NaCl.</div></div>
       <div class="rx"><div class="nm">Mantenimento</div>
         <div class="dose">900 mg/24 h</div>
-        <div class="prep">Perfusor 900 mg ad 50 ml G5 % via ZVK = <b>2,1 ml/h</b> · periferica: 900 mg in 500 ml G5 % = <b>21 ml/h</b></div></div>
+        <div class="prep">Perfusor 900 mg ad 50 ml G5 % via ZVK = <b>2,1 ml/h</b> · periferica: 900 mg in 500 ml G5 % = <b>21 ml/h</b></div><div class="fl" data-fl="amio"></div></div>
       <div class="rx"><div class="nm">Poi orale</div>
         <div class="dose">200 mg 1-1-1 × 10 gg o 1-0-1 × 20 gg → poi 200 mg 1-0-0</div></div>
       <div class="rx"><div class="nm">Recidiva</div>
@@ -405,7 +425,7 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
       <h3>Frequenz bleibt hoch · nur IMC/Intensiv</h3>
       <div class="rx"><div class="nm">Landiolol (Rapibloc 300 mg)</div>
         <div class="dose">Start 1 µg/kg/min = <span class="c" data-c="landS"></span> · alle 10 min +1 µg/kg/min · max. 10 µg/kg/min = <span class="c" data-c="landM"></span></div>
-        <div class="prep">300 mg in 50 ml NaCl 0,9 % (6 mg/ml) · kein Bolus · <b>zusätzlich</b> zum Amiodaron-Perfusor, Amiodaron weiterlaufen lassen · Hypotonie häufig → RR nach jeder Steigerung · Bradykardie/Pausen bei Rückkehr in Sinusrhythmus → Pacing bereit · Wirkung nach 10–15 min weg · nicht bei dekompensierter Herzinsuffizienz, AV-Block II–III ohne Schrittmacher</div>
+        <div class="prep">300 mg in 50 ml NaCl 0,9 % (6 mg/ml) · kein Bolus · <b>zusätzlich</b> zum Amiodaron-Perfusor, Amiodaron weiterlaufen lassen · Hypotonie häufig → RR nach jeder Steigerung · Bradykardie/Pausen bei Rückkehr in Sinusrhythmus → Pacing bereit · Wirkung nach 10–15 min weg · nicht bei dekompensierter Herzinsuffizienz, AV-Block II–III ohne Schrittmacher</div><div class="fl" data-fl="land"></div>
         <div class="ren same">unverändert</div></div>
       <p class="fixbox">Frequenzziel &lt; 110/min in Ruhe. Amiodaron wirkt erst nach Stunden: nicht nach 2 h absetzen.</p>
     </div>
@@ -435,7 +455,7 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
         <div class="ren same">invariato · scelta con CrCl &lt; 15 ml/min</div></div>
       <div class="rx"><div class="nm">Heparin-Natrium Perfusor <span class="tag haus">reparto PIT</span></div>
         <div class="dose">400 IE/h = 2 ml/h</div>
-        <div class="prep">10.000 IE/50 ml NaCl 0,9 % (200 IE/ml) · niente pTT</div>
+        <div class="prep">10.000 IE/50 ml NaCl 0,9 % (200 IE/ml) · niente pTT</div><div class="fl" data-fl="hepP"></div>
         <div class="ren same">invariato</div></div>
     </div>
 
@@ -443,11 +463,11 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
       <h3>Terapeutica · con Perfusor</h3>
       <div class="rx"><div class="nm">Heparin-Natrium Perfusor · dopo l'OP <span class="tag haus">reparto</span></div>
         <div class="dose">12 IE/kg/h = <span class="c" data-c="hep12"></span> · senza bolo</div>
-        <div class="prep">10.000 IE/50 ml NaCl 0,9 % (200 IE/ml) · pTT target 40–50 s, bioprotesi 50–60 s</div>
+        <div class="prep">10.000 IE/50 ml NaCl 0,9 % (200 IE/ml) · pTT target 40–50 s, bioprotesi 50–60 s</div><div class="fl" data-fl="hep12"></div>
         <div class="ren same">invariato · scelta preferita con GFR &lt; 30</div></div>
       <div class="rx"><div class="nm">Heparin-Natrium Perfusor · trombosi venosa, embolia polmonare</div>
         <div class="dose">bolo 80 IE/kg = <span class="c" data-c="hepBol"></span> · poi 18 IE/kg/h = <span class="c" data-c="hep18"></span></div>
-        <div class="prep">bolo da Heparin-Natrium 25.000 IE/5 ml (5.000 IE/ml) e.v. · pTT target 60–80 s</div>
+        <div class="prep">bolo da Heparin-Natrium 25.000 IE/5 ml (5.000 IE/ml) e.v. · pTT target 60–80 s</div><div class="fl" data-fl="hep18"></div>
         <div class="ren same">invariato</div></div>
       <h3 style="margin-top:8px">Adeguare dopo ogni pTT</h3>
       <div class="tbl"><table>
@@ -741,15 +761,15 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
       <h3>Perfusor · nur IMC/Intensiv</h3>
       <div class="rx"><div class="nm">Urapidil (Ebrantil 50 mg/10 ml)</div>
         <div class="dose">Start 9 mg/h = 4,5 ml/h · max. 30 mg/h = 15 ml/h</div>
-        <div class="prep">100 mg (2 Amp.) + 30 ml NaCl 0,9 % = 50 ml (2 mg/ml) · mit Doxazosin schwächer (beide Alpha-1)</div>
+        <div class="prep">100 mg (2 Amp.) + 30 ml NaCl 0,9 % = 50 ml (2 mg/ml) · mit Doxazosin schwächer (beide Alpha-1)</div><div class="fl" data-fl="ura"></div>
         <div class="ren same">unverändert</div></div>
       <div class="rx"><div class="nm">Clonidin (Catapresan 0,15 mg/1 ml)</div>
         <div class="dose">Start 30 µg/h = 2 ml/h · max. 120 µg/h = 8 ml/h</div>
-        <div class="prep">0,75 mg (5 Amp.) + 45 ml NaCl 0,9 % = 50 ml (15 µg/ml) · gut bei Unruhe/Entzug · Bradykardie mit Betablocker · ausschleichen (Rebound)</div>
+        <div class="prep">0,75 mg (5 Amp.) + 45 ml NaCl 0,9 % = 50 ml (15 µg/ml) · gut bei Unruhe/Entzug · Bradykardie mit Betablocker · ausschleichen (Rebound)</div><div class="fl" data-fl="clon"></div>
         <div class="ren">Start 1 ml/h · max. 4 ml/h</div></div>
       <div class="rx"><div class="nm">Clevidipin (Cleviprex 0,5 mg/ml)</div>
         <div class="dose">Start 2 mg/h = 4 ml/h · alle 90 s verdoppeln · max. 32 mg/h = 64 ml/h</div>
-        <div class="prep">fertige Emulsion, nicht verdünnen · eigener Zugang · Lipid: max. 1000 ml/24 h · nicht bei Soja-/Eiallergie · Flasche nach 12 h verwerfen</div>
+        <div class="prep">fertige Emulsion, nicht verdünnen · eigener Zugang · Lipid: max. 1000 ml/24 h · nicht bei Soja-/Eiallergie · Flasche nach 12 h verwerfen</div><div class="fl" data-fl="clev"></div>
         <div class="ren same">unverändert</div></div>
     </div>
     <div class="blk alert">
@@ -774,7 +794,7 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
         <div class="ren same">unverändert</div></div>
       <div class="rx"><div class="nm">2 · Noradrenalin · se non basta</div>
         <div class="dose">Bolus 5 µg · Perfusor 0,1 µg/kg/min = <span class="c" data-c="nor01"></span></div>
-        <div class="prep">Bolus: 1 mg ad 200 ml NaCl 0,9 % (5 µg/ml) → 1 ml · Perfusor: 5 mg ad 50 ml NaCl 0,9 % (100 µg/ml) über ZVK</div>
+        <div class="prep">Bolus: 1 mg ad 200 ml NaCl 0,9 % (5 µg/ml) → 1 ml · Perfusor: 5 mg ad 50 ml NaCl 0,9 % (100 µg/ml) über ZVK</div><div class="fl" data-fl="nor"></div>
         <div class="ren same">unverändert</div></div>
       <p class="fixbox">Urapidil ha un'emivita di circa 3 h: l'ipotensione può durare anche dopo lo stop.</p>
     </div>
@@ -829,19 +849,19 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
       </ol>
       <div class="rx"><div class="nm">1 · Noradrenalin · Brücke</div>
         <div class="dose">Bolus 5 µg · Perfusor 0,1 µg/kg/min = <span class="c" data-c="nor01"></span></div>
-        <div class="prep">Bolus: 1 mg ad 200 ml NaCl 0,9 % (5 µg/ml) → 1 ml · Perfusor: 5 mg ad 50 ml NaCl 0,9 % (100 µg/ml)</div>
+        <div class="prep">Bolus: 1 mg ad 200 ml NaCl 0,9 % (5 µg/ml) → 1 ml · Perfusor: 5 mg ad 50 ml NaCl 0,9 % (100 µg/ml)</div><div class="fl" data-fl="nor"></div>
         <div class="ren same">unverändert</div></div>
       <div class="rx"><div class="nm">2 · Adrenalin (Suprarenin 1 mg/1 ml) · Inotropie</div>
         <div class="dose">Start 0,05 µg/kg/min = <span class="c" data-c="adrS"></span> · max. 0,2 µg/kg/min = <span class="c" data-c="adrM"></span></div>
-        <div class="prep">5 mg ad 50 ml NaCl 0,9 % (100 µg/ml) · überwindet die Betablockade</div>
+        <div class="prep">5 mg ad 50 ml NaCl 0,9 % (100 µg/ml) · überwindet die Betablockade</div><div class="fl" data-fl="adr"></div>
         <div class="ren same">unverändert</div></div>
       <div class="rx"><div class="nm">2 · Milrinon (Corotrop 10 mg/10 ml) · Inotropie</div>
         <div class="dose">0,375 µg/kg/min = <span class="c" data-c="milS"></span> · kein Bolus</div>
-        <div class="prep">20 mg (2 Amp.) + 30 ml NaCl 0,9 % = 50 ml (400 µg/ml) · wirkt am Betarezeptor vorbei · Vasodilatation → immer mit Noradrenalin</div>
+        <div class="prep">20 mg (2 Amp.) + 30 ml NaCl 0,9 % = 50 ml (400 µg/ml) · wirkt am Betarezeptor vorbei · Vasodilatation → immer mit Noradrenalin</div><div class="fl" data-fl="mil"></div>
         <div class="ren">0,3 µg/kg/min = <span class="c" data-c="milR"></span></div></div>
       <div class="rx"><div class="nm">3 · Glucagon (GlucaGen 1 mg) · nur refraktär</div>
         <div class="dose">5 mg i.v. in 2 min · dann 3 mg/h</div>
-        <div class="prep">5 Kits, je in 1 ml Lösungsmittel · Wiederholung nach 10 min · Erbrechen (Atemweg schützen), Hyperglykämie, Hypokaliämie · teuer, wenig vorrätig → Apotheke/Intensiv früh anrufen</div>
+        <div class="prep">5 Kits, je in 1 ml Lösungsmittel · Wiederholung nach 10 min · Erbrechen (Atemweg schützen), Hyperglykämie, Hypokaliämie · teuer, wenig vorrätig → Apotheke/Intensiv früh anrufen</div><div class="fl" data-fl="glucagon"></div>
         <div class="ren same">unverändert</div></div>
       <div class="rx"><div class="nm">+ Calciumchlorid 10 %</div>
         <div class="dose">10 ml (6,8 mmol) i.v. in 10 min über ZVK</div>
@@ -941,7 +961,7 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
         <div class="prep">non diluito · ripeti dopo 5 Min.</div>
         <div class="ren same">invariato</div></div>
       <div class="rx"><div class="nm">Glyceroltrinitrat · sospetta ischemia (T nuove, angina) o congestione polmonare</div><div class="dose">Nitrolingual Spray 0,4 mg/Hub: 2 Hübe s.l.</div>
-        <div class="prep">solo con sistolica &gt; 100 · Perfusor Nitrolingual infus 1 mg/ml puro: Start 1 ml/h, +1 ml/h ogni 5 Min., max. 8 ml/h → <a class="x" href="#nitro">Nitrati</a></div>
+        <div class="prep">solo con sistolica &gt; 100 · Perfusor Nitrolingual infus 1 mg/ml puro: Start 1 ml/h, +1 ml/h ogni 5 Min., max. 8 ml/h → <a class="x" href="#nitro">Nitrati</a></div><div class="fl" data-fl="gtn"></div>
         <div class="ren same">invariato</div></div>
       <p class="fixbox">Niente Nitro: tamponamento non escluso (eco non diagnostica: riduce il precarico, la pressione può crollare) · PDE5-Hemmer (Sildenafil 24 Std., Tadalafil 48 Std.) · infarto del ventricolo destro · stenosi aortica severa non operata.</p>
       <p>Dopo 2–3 boli risale → terapia orale (<a class="x" href="#rr">Ipertensione</a>) · serve un Perfusor → IMC.</p>
@@ -956,8 +976,8 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
     <div class="blk alert">
       <h3>Ipokaliemia</h3>
       <p class="big">10 mmol alzano K⁺ di ~0,1 mmol/l</p>
-      <div class="rx"><div class="nm">Periferia</div><div class="dose std">max 40 mmol/l · max 10 mmol/h</div><div class="prep">es. 40 mmol KCl in 1000 ml NaCl a 250 ml/h</div></div>
-      <div class="rx"><div class="nm">ZVK</div><div class="dose std">10 mmol/h di KCl puro</div><div class="prep">KCl 7,45 % = 1 mmol/ml · Perfusor 50 ml a 10 ml/h. Fino a 20 mmol/h solo con monitor ECG</div>
+      <div class="rx"><div class="nm">Periferia</div><div class="dose std">max 40 mmol/l · max 10 mmol/h</div><div class="prep">es. 40 mmol KCl in 1000 ml NaCl a 250 ml/h</div><div class="fl" data-fl="kclp"></div></div>
+      <div class="rx"><div class="nm">ZVK</div><div class="dose std">10 mmol/h di KCl puro</div><div class="prep">KCl 7,45 % = 1 mmol/ml · Perfusor 50 ml a 10 ml/h. Fino a 20 mmol/h solo con monitor ECG</div><div class="fl" data-fl="kcl"></div>
         <div class="ren">metà dose e velocità, ricontrolla K⁺ dopo ogni 20 mmol (rischio iperkaliemia)</div></div>
       <div class="calc">
         <label for="k0">K⁺ attuale</label><input id="k0" type="number" step="0.1" value="3.4">
@@ -1058,7 +1078,7 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
         <li><b>Mantenimento</b> <span class="prep">(dopo il bolo, se resta basso)</span>
           <div class="rx"><div class="nm">Calciumgluconat 10 % Perfusor</div>
             <div class="dose">50 ml puro via ZVK a 5 ml/h (= 1,1 mmol/h)</div>
-            <div class="prep">periferia: 100 ml in 1000 ml Glucose 5 % a 50 ml/h · Ca ionizzato ogni 4 h, adatta la velocità · target ≥ 1,1 mmol/l</div>
+            <div class="prep">periferia: 100 ml in 1000 ml Glucose 5 % a 50 ml/h · Ca ionizzato ogni 4 h, adatta la velocità · target ≥ 1,1 mmol/l</div><div class="fl" data-fl="ca"></div>
             <div class="ren same">invariato</div></div></li>
         <li><b>Lieve e asintomatica</b> <span class="prep">(Ca ionizzato 1,0–1,1)</span>
           <div class="rx"><div class="nm">Calcium Sandoz forte 500 mg Brausetablette</div>
@@ -1256,7 +1276,7 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
         <li><b>Volume:</b> NaCl 0,9 % 1000 ml nella 1ª ora · cardiopatico o LVEF ridotta: 500 ml, poi rivaluta.</li>
         <li><b>K⁺ prima dell'insulina:</b> K⁺ &lt; 3,5 → prima KCl, niente insulina · K⁺ 3,5–5,0 → 20 mmol KCl in ogni litro di liquido.</li>
         <li><b>Insulina Perfusor</b> Actrapid 50 IE/50 ml NaCl (1 IE/ml), senza bolo: <span class="dose">0,1 IE/kg/h = <span class="c" data-c="insP"></span></span>
-          <div class="prep">iperosmolare: 0,05 IE/kg/h = <span class="c" data-c="insP05"></span> · glicemia ogni ora, deve scendere di 3 mmol/l/h</div></li>
+          <div class="prep">iperosmolare: 0,05 IE/kg/h = <span class="c" data-c="insP05"></span> · glicemia ogni ora, deve scendere di 3 mmol/l/h</div><div class="fl" data-fl="ins"></div></li>
         <li><b>Glicemia &lt; 14 mmol/l:</b> aggiungi Glucosio 10 % 125 ml/h e continua l'insulina finché i chetoni si negativizzano.</li>
       </ol>
       <div class="ren same">dosi invariate · attenzione al volume e al K⁺ (sale)</div>
@@ -1439,7 +1459,7 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
   <div class="ph"><h2>Polmonite</h2><span class="cat">Antibiotici</span></div>
   <div class="grid">
     <div class="blk alert"><h3>Prima di partire</h3><p>Emocolture ×2, secreto/BAL per coltura, PCT. <span class="tag haus">reparto</span> ABS: Piperacillin/Tazobactam per <b>7 giorni</b> in totale.</p></div>
-    <div class="blk"><h3>Nosocomiale / VAP (dopo OP, PIT &gt; 48 h)</h3><div class="rx"><div class="nm">Piperacillin/Tazobactam (Tazobac 4,5 g)</div><div class="dose">4,5 g ogni 8 h i.v.</div><div class="prep">1ª dose: 4,5 g in 100 ml NaCl 0,9 % in 30 min = 200 ml/h. Poi infusione prolungata: 4,5 g in 50 ml NaCl 0,9 % con Perfusor in 4 h = <b>12,5 ml/h</b>, ogni 8 h (linea dedicata).</div><div class="ren">1ª dose piena · GFR 20–29: 4,5 g ogni 8 h (massimo) · GFR &lt; 20: 4,5 g ogni 12 h.</div><div class="fixbox">Con Vancomycin: rischio di AKI → creatinina ogni giorno · Kalium (ipokaliemia) · Leber: transaminasi e colestasi · convulsioni con dosi alte e reni scarsi · Phenprocoumon: controlla INR.</div></div></div>
+    <div class="blk"><h3>Nosocomiale / VAP (dopo OP, PIT &gt; 48 h)</h3><div class="rx"><div class="nm">Piperacillin/Tazobactam (Tazobac 4,5 g)</div><div class="dose">4,5 g ogni 8 h i.v.</div><div class="prep">1ª dose: 4,5 g in 100 ml NaCl 0,9 % in 30 min = 200 ml/h. Poi infusione prolungata: 4,5 g in 50 ml NaCl 0,9 % con Perfusor in 4 h = <b>12,5 ml/h</b>, ogni 8 h (linea dedicata).</div><div class="fl" data-fl="tazo"></div><div class="ren">1ª dose piena · GFR 20–29: 4,5 g ogni 8 h (massimo) · GFR &lt; 20: 4,5 g ogni 12 h.</div><div class="fixbox">Con Vancomycin: rischio di AKI → creatinina ogni giorno · Kalium (ipokaliemia) · Leber: transaminasi e colestasi · convulsioni con dosi alte e reni scarsi · Phenprocoumon: controlla INR.</div></div></div>
     <div class="blk"><h3>Aspirazione / extraospedaliera (senza rischio Pseudomonas)</h3><div class="rx"><div class="nm">Ampicillin/Sulbactam (Unacid 3 g)</div><div class="dose">3 g ogni 8 h i.v.</div><div class="prep">3 g in 100 ml NaCl 0,9 % in 30 min = <b>200 ml/h</b> (minimo 15 min). Durata 5–7 giorni.</div><div class="ren">GFR 15–29: 3 g ogni 12 h · GFR &lt; 15: 3 g ogni 24 h.</div><div class="fixbox"><b>Leber:</b> transaminasi e colestasi (ittero colestatico, anche dopo lo stop) · esantema · diarrea/C. diff.</div></div></div>
     <div class="blk"><h3>Atipici / Legionella (aggiunta nei casi gravi)</h3><div class="rx"><div class="nm">Clarithromycin</div><div class="dose">500 mg ogni 12 h p.o. o i.v.</div><div class="prep">i.v.: 500 mg in 250 ml NaCl 0,9 % in 60 min = <b>250 ml/h</b>. Durata 5–7 giorni.</div><div class="ren">250 mg ogni 12 h (fino a 500 mg ogni 12 h nei casi gravi).</div><div class="fixbox"><b>QT:</b> ECG prima e dopo 2 giorni, soprattutto con Amiodarone · Apixaban/Rivaroxaban ↑ · Ticagrelor: controindicato · Simvastatin/Atorvastatin: sospendi (rabdomiolisi) · Digoxin ↑ · Phenprocoumon: INR ↑ · Leber: transaminasi.</div></div></div>
     <div class="blk"><h3>MRSA</h3><div class="rx"><div class="nm">Linezolid (Zyvoxid 600 mg)</div><div class="dose">600 mg ogni 12 h i.v. o p.o.</div><div class="prep">i.v.: sacca pronta 600 mg/300 ml (2 mg/ml) in 60 min = <b>300 ml/h</b> (30–120 min). p.o. stessa dose, biodisponibilità ~100 %. Durata 7–10 giorni, max 28.</div><div class="ren">dose invariata, ma piastrine ogni 2 giorni (accumulo dei metaboliti).</div><div class="fixbox">Piastrine 1×/settimana (più spesso se reni scarsi) · debole MAO-inibitore: <b>Noradrenalin, Phenylephrin, Dopamin</b> → picco pressorio; SSRI, Tramadol → sindrome serotoninergica · lattato ↑ · glicemia ↓ con insulina.</div></div></div>
@@ -1477,7 +1497,7 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
   <div class="ph"><h2>Addome · vie biliari</h2><span class="cat">Antibiotici</span></div>
   <div class="grid">
     <div class="blk alert"><h3>Prima di partire</h3><p>Il <b>controllo della fonte</b> (drenaggio, ERCP, chirurgia) è decisivo. Durata dopo il controllo della fonte: 4–7 giorni. Emocolture ×2.</p></div>
-    <div class="blk"><h3>Prima scelta</h3><div class="rx"><div class="nm">Piperacillin/Tazobactam (Tazobac 4,5 g)</div><div class="dose">4,5 g ogni 8 h i.v.</div><div class="prep">1ª dose: 4,5 g in 100 ml NaCl 0,9 % in 30 min = 200 ml/h. Poi infusione prolungata: 4,5 g in 50 ml NaCl 0,9 % con Perfusor in 4 h = <b>12,5 ml/h</b>, ogni 8 h (linea dedicata).</div><div class="ren">1ª dose piena · GFR 20–29: 4,5 g ogni 8 h (massimo) · GFR &lt; 20: 4,5 g ogni 12 h.</div><div class="fixbox">Con Vancomycin: rischio di AKI → creatinina ogni giorno · Kalium (ipokaliemia) · Leber: transaminasi e colestasi · convulsioni con dosi alte e reni scarsi · Phenprocoumon: controlla INR.</div></div></div>
+    <div class="blk"><h3>Prima scelta</h3><div class="rx"><div class="nm">Piperacillin/Tazobactam (Tazobac 4,5 g)</div><div class="dose">4,5 g ogni 8 h i.v.</div><div class="prep">1ª dose: 4,5 g in 100 ml NaCl 0,9 % in 30 min = 200 ml/h. Poi infusione prolungata: 4,5 g in 50 ml NaCl 0,9 % con Perfusor in 4 h = <b>12,5 ml/h</b>, ogni 8 h (linea dedicata).</div><div class="fl" data-fl="tazo"></div><div class="ren">1ª dose piena · GFR 20–29: 4,5 g ogni 8 h (massimo) · GFR &lt; 20: 4,5 g ogni 12 h.</div><div class="fixbox">Con Vancomycin: rischio di AKI → creatinina ogni giorno · Kalium (ipokaliemia) · Leber: transaminasi e colestasi · convulsioni con dosi alte e reni scarsi · Phenprocoumon: controlla INR.</div></div></div>
     <div class="blk"><h3>Alternativa</h3><div class="rx"><div class="nm">Ceftriaxon (2 g)</div><div class="dose">2 g 1×/d i.v. (con Metronidazol)</div><div class="prep">2 g in 100 ml NaCl 0,9 % in 30 min = 200 ml/h.</div><div class="ren">invariato (solo GFR &lt; 10: max 2 g/24 h).</div><div class="fixbox">Mai nella stessa linea con soluzioni al calcio (Ringer, Calciumgluconat): sciacqua tra i due · colestasi/fango biliare (Leber, ecografia se dolore) · Phenprocoumon: INR · diarrea/C. diff.</div></div>
       <div class="rx"><div class="nm">Metronidazol (500 mg/100 ml)</div><div class="dose">500 mg ogni 8 h i.v. (p.o.: 400 mg ogni 8 h)</div><div class="prep">Sacca pronta da 100 ml (5 mg/ml) in 30 min = <b>200 ml/h</b>. Durata max 10 giorni.</div><div class="ren same">invariato (solo HD: dopo la dialisi).</div><div class="fixbox"><b>Leber:</b> insufficienza grave (Child C) → dimezza la dose · polineuropatia/encefalopatia con uso prolungato (stop) · Phenprocoumon: INR sale molto · niente alcol.</div></div></div>
     <div class="blk"><h3>ESBL / molto grave</h3><p>→ Meropenem, vedi <a class="x" href="#ab7">Sepsi</a></p></div>
@@ -1546,11 +1566,11 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
           <div class="prep">Normalstation: kein Sedierungs-Perfusor → Verlegung mit Oberarzt absprechen.</div></li>
         <li><div class="nm">Dexmedetomidin (Dexdor) gleich parallel starten</div>
           <div class="dose">0,7 µg/kg/h = <span class="c" data-c="dexS"></span></div>
-          <div class="prep">200 µg ad 50 ml NaCl 0,9 % (4 µg/ml) · kein Bolus · wirkt erst nach 30–60 min → bis dahin Midazolam 1 mg bei Bedarf · max. 1,4 µg/kg/h = <span class="c" data-c="dexM"></span></div>
+          <div class="prep">200 µg ad 50 ml NaCl 0,9 % (4 µg/ml) · kein Bolus · wirkt erst nach 30–60 min → bis dahin Midazolam 1 mg bei Bedarf · max. 1,4 µg/kg/h = <span class="c" data-c="dexM"></span></div><div class="fl" data-fl="dex"></div>
           <div class="ren same">unverändert</div></li>
         <li><div class="nm">Reicht nicht: Midazolam-Perfusor</div>
           <div class="dose">1 mg/h = 1 ml/h</div>
-          <div class="prep">50 mg ad 50 ml NaCl 0,9 % (1 mg/ml) · alle 30 min +1 ml/h · max. 3 mg/h ohne Atemwegssicherung, darüber Anästhesie · Ziel RASS −1 (ruhig, erweckbar) · SpO2 kontinuierlich</div>
+          <div class="prep">50 mg ad 50 ml NaCl 0,9 % (1 mg/ml) · alle 30 min +1 ml/h · max. 3 mg/h ohne Atemwegssicherung, darüber Anästhesie · Ziel RASS −1 (ruhig, erweckbar) · SpO2 kontinuierlich</div><div class="fl" data-fl="mida"></div>
           <div class="ren">Start 0,5 mg/h = 0,5 ml/h (Metabolit kumuliert)</div></li>
       </ol>
     </div>
@@ -1563,7 +1583,7 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
         <div class="ren same">unverändert</div></div>
       <div class="rx"><div class="nm">Dexmedetomidin (Dexdor 200 µg/2 ml) · nur Intensiv</div>
         <div class="dose">Start 0,7 µg/kg/h = <span class="c" data-c="dexS"></span> · max. 1,4 µg/kg/h = <span class="c" data-c="dexM"></span></div>
-        <div class="prep">200 µg (2 ml) ad 50 ml NaCl 0,9 % → 4 µg/ml · kein Bolus · Bradykardie, Hypotonie · atemneutral, gut im Weaning</div>
+        <div class="prep">200 µg (2 ml) ad 50 ml NaCl 0,9 % → 4 µg/ml · kein Bolus · Bradykardie, Hypotonie · atemneutral, gut im Weaning</div><div class="fl" data-fl="dex"></div>
         <div class="ren same">unverändert</div></div>
       <div class="rx"><div class="nm">Clonidin (Catapresan 0,15 mg/1 ml)</div>
         <div class="dose">75 µg i.v. in 5 min</div>
@@ -1688,7 +1708,7 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
       <h3>Perfusor · edema polmonare, ischemia, RR alta</h3>
       <div class="rx"><div class="nm">Glyceroltrinitrat (Nitrolingual infus 50 mg/50 ml)</div>
         <div class="dose">Start 1 mg/h = 1 ml/h · +1 ml/h ogni 5 min · max. 8 mg/h = 8 ml/h</div>
-        <div class="prep">1 mg/ml puro, non diluire · siringa e linea in PE, non PVC (il PVC assorbe il farmaco) · niente bolo e.v.</div>
+        <div class="prep">1 mg/ml puro, non diluire · siringa e linea in PE, non PVC (il PVC assorbe il farmaco) · niente bolo e.v.</div><div class="fl" data-fl="gtn"></div>
         <div class="prep">Effetto dopo 1–2 min · finisce 5 min dopo lo stop · RR ogni 5 min mentre sali</div>
         <div class="ren same">invariato</div></div>
       <p class="fixbox">RR sist. &lt; 100 mmHg → stop. Riparti a metà velocità quando risale.</p>
@@ -1706,7 +1726,7 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
       <h3>Alternativa · effetto più lento</h3>
       <div class="rx"><div class="nm">Isosorbiddinitrat (Isoket 0,1 % = 1 mg/ml)</div>
         <div class="dose">Start 2 mg/h = 2 ml/h · max. 10 mg/h = 10 ml/h</div>
-        <div class="prep">50 mg/50 ml puro · linea PE · emivita ~1 h: meno titolabile del Glyceroltrinitrat</div>
+        <div class="prep">50 mg/50 ml puro · linea PE · emivita ~1 h: meno titolabile del Glyceroltrinitrat</div><div class="fl" data-fl="isdn"></div>
         <div class="ren same">invariato</div></div>
     </div>
 
@@ -1714,7 +1734,7 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
       <h3>Solo Intensiv</h3>
       <div class="rx"><div class="nm">Nitroprussid-Natrium (nipruss 60 mg)</div>
         <div class="dose">Start 0,3 µg/kg/min = <span class="c" data-c="npS"></span> · max. 3 µg/kg/min = <span class="c" data-c="npM"></span></div>
-        <div class="prep">60 mg in 50 ml Glucose 5 % (1,2 mg/ml) · siringa e linea protette dalla luce · solo con pressione arteriosa cruenta · effetto in 30 s · lattato o acidosi inspiegati → stop (cianuro)</div>
+        <div class="prep">60 mg in 50 ml Glucose 5 % (1,2 mg/ml) · siringa e linea protette dalla luce · solo con pressione arteriosa cruenta · effetto in 30 s · lattato o acidosi inspiegati → stop (cianuro)</div><div class="fl" data-fl="np"></div>
         <div class="ren">il tiocianato si accumula: dose minima, livello se &gt; 3 Tage</div></div>
       <div class="rx"><div class="nm">Stickstoffmonoxid inhalativ (INOmax)</div>
         <div class="dose">20 ppm dal ventilatore</div>
@@ -1800,10 +1820,10 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
         <li><div class="nm">24 h dopo l'emostasi: profilassi</div>
           <div class="dose">Heparin-Perfusor 400 IE/h = 2 ml/h <span class="tag haus">reparto</span></div>
           <div class="prep">10.000 IE/50 ml NaCl 0,9 % (200 IE/ml)</div>
-          <div class="ren same">invariato</div></li>
+          <div class="ren same">invariato</div></li><div class="fl" data-fl="hepP"></div>
         <li><div class="nm">Tag 3 (72 h): dose piena</div>
           <div class="dose">Heparin 12 IE/kg/h = <span class="c" data-c="hep12"></span> · senza bolo</div>
-          <div class="prep">pTT dopo 6 h · target 40–50 s, bioprotesi 50–60 s <span class="tag haus">reparto</span></div>
+          <div class="prep">pTT dopo 6 h · target 40–50 s, bioprotesi 50–60 s <span class="tag haus">reparto</span></div><div class="fl" data-fl="hep12"></div>
           <div class="ren same">invariato</div></li>
         <li><div class="nm">Dopo 48 h stabili: Clexane terapeutico</div>
           <div class="dose std">1 mg/kg s.c. 1-0-1 = <span class="c" data-c="enoxB"></span></div>
@@ -1939,13 +1959,72 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
     acamp:function(w){return w>=60?'2-2-2 Tbl. = 1998 mg/Tag':'2-1-1 Tbl. = 1332 mg/Tag';},
     ferin:function(w){return n(Math.min(r(20*w,100),1000))+' mg';}
   };
+
+  /* Flusso: per ogni Perfusor dose (unità della scheda), sostanza e volume → ml/h.
+     I valori di partenza sono quelli scritti nella scheda; ciò che scrivi vale per
+     lo stesso farmaco in tutte le pagine finché l'app resta aperta. */
+  var FL = {
+    nor:{d:0.1,u:'µg/kg/min',a:5,au:'mg',v:50},
+    dobu:{d:2.5,u:'µg/kg/min',a:250,au:'mg',v:50},
+    phen:{d:0.15,u:'µg/kg/min',a:10,au:'mg',v:50},
+    esm:{d:50,u:'µg/kg/min',a:2500,au:'mg',v:250},
+    adr:{d:0.05,u:'µg/kg/min',a:5,au:'mg',v:50},
+    mil:{d:0.375,r:0.3,u:'µg/kg/min',a:20,au:'mg',v:50},
+    land:{d:1,u:'µg/kg/min',a:300,au:'mg',v:50},
+    np:{d:0.3,u:'µg/kg/min',a:60,au:'mg',v:50},
+    vload:{d:10,u:'mg/min',a:function(w){return vl(w);},au:'mg',v:function(w){return Math.ceil(vl(w)/5/250)*250;}},
+    vmaint:{d:30,r:10,u:'mg/kg/24 h',a:1000,au:'mg',v:50},
+    amio:{d:900,u:'mg/24 h',a:900,au:'mg',v:50},
+    hepP:{d:400,u:'IE/h',a:10000,au:'IE',v:50},
+    hep12:{d:12,u:'IE/kg/h',a:10000,au:'IE',v:50},
+    hep18:{d:18,u:'IE/kg/h',a:10000,au:'IE',v:50},
+    ins:{d:0.1,u:'IE/kg/h',a:50,au:'IE',v:50},
+    ura:{d:9,u:'mg/h',a:100,au:'mg',v:50},
+    clon:{d:30,r:15,u:'µg/h',a:0.75,au:'mg',v:50},
+    clev:{d:2,u:'mg/h',a:25,au:'mg',v:50},
+    glucagon:{d:3,u:'mg/h',a:null,au:'mg',v:null},
+    gtn:{d:1,u:'mg/h',a:50,au:'mg',v:50},
+    isdn:{d:2,u:'mg/h',a:50,au:'mg',v:50},
+    mida:{d:1,r:0.5,u:'mg/h',a:50,au:'mg',v:50},
+    dex:{d:0.7,u:'µg/kg/h',a:200,au:'µg',v:50},
+    kcl:{d:10,r:5,u:'mmol/h',a:50,au:'mmol',v:50},
+    kclp:{d:10,r:5,u:'mmol/h',a:40,au:'mmol',v:1000},
+    ca:{d:1.1,u:'mmol/h',a:11.25,au:'mmol',v:50,h:'Calciumgluconat 10 %: 10 ml = 2,25 mmol'},
+    tazo:{d:4.5,u:'g/4 h',a:4.5,au:'g',v:50}
+  };
+  var FLST = {}, FLON = false;
+  var MASS = {'µg':0.001,'mg':1,'g':1000};
+  function pnum(t){ t=String(t).replace(/\s/g,''); if(/^\d{1,3}(\.\d{3})+$/.test(t)) t=t.replace(/\./g,''); return parseFloat(t.replace(',','.')); }
+  function fin(x){ return (x==null||isNaN(x)) ? '' : String(+Number(x).toFixed(3)).replace('.',','); }
+  function perH(u){ var t=u.split('/').pop(); return t==='min'?60 : t==='h'?1 : t==='24 h'?1/24 : t==='4 h'?0.25 : 1; }
+  function flRate(e,d){ var p=e.u.split('/'), m=(MASS[p[0]]&&MASS[e.au])?MASS[p[0]]/MASS[e.au]:1; return d*(p.indexOf('kg')>0?W:1)*perH(e.u)*m; }
+  function flConc(e,c){
+    if(e.au==='mg'&&c<1) return n(c*1000,1)+' µg/ml';
+    if(e.au==='g') return n(c*1000,1)+' mg/ml';
+    return n(c,c<1?3:2)+' '+e.au+'/ml';
+  }
+  function flDef(e,f){ var x = f==='d' ? ((document.body.classList.contains('renal')&&e.r!=null)?e.r:e.d) : e[f]; return typeof x==='function' ? x(W) : x; }
+  function flCur(k,f){ var t=FLST[k][f]; if(t!=null) return pnum(t); var x=flDef(FL[k],f); return x==null?NaN:x; }
+  function flUpd(k){
+    var e=FL[k], d=flCur(k,'d'), a=flCur(k,'a'), v=flCur(k,'v'), out='—', cc='';
+    if(d>=0 && a>0 && v>0){ var c=a/v, ml=flRate(e,d)/c; out=n(ml, ml<1?2:1)+' ml/h'; cc='= '+flConc(e,c); }
+    document.querySelectorAll('.fl[data-fl="'+k+'"]').forEach(function(el){
+      el.querySelector('[data-o]').textContent=out;
+      el.querySelector('[data-cc]').textContent=cc;
+      ['d','a','v'].forEach(function(f){
+        var i=el.querySelector('[data-f="'+f+'"]'); if(i===document.activeElement) return;
+        var t=FLST[k][f]; i.value = t!=null ? t : fin(flDef(e,f)); i.classList.toggle('ed', t!=null);
+      });
+    });
+  }
+  function flAll(){ if(!FLON) return; for(var k in FL) flUpd(k); }
   function vl(w){return Math.min(r(30*w,250),3000);}
   function vp(w){return Math.min(r(15*w,50),2000);}
 
   // A–Z data: [nome, dose, rene, cambia?, pagina]
   var AZ = [
     ['Adrenalina','i.m. 0,5 mg · e.v. 50 µg ogni 2 min (1 mg/20 ml)','invariata',0,'ana'],
-    ['Amiodarone','bolo 5 mg/kg in 250 ml G5 % ≥ 30 min · 900 mg/24 h · poi 200 mg 1-1-1','invariato',0,'vhf'],
+    ['Amiodarone','bolo 5 mg/kg in 250 ml G5 % ≥ 30 min · 900 mg/24 h · poi 200 mg 1-1-1','invariato',0,'vhf','amio'],
     ['Enoxaparin (Clexane)','profilassi 40 mg s.c. 1-0-0 · terap. 1 mg/kg s.c. 1-0-1 (max. 80 mg) · pausa 12 h / 24 h','profilassi 20 mg 1-0-0 · terap. 1 mg/kg 1-0-0 + Anti-Xa · pausa ≥ 24 h / ≥ 48 h · CrCl < 15: Heparin-Natrium',1,'ak'],
     ['Clonidina','75 µg e.v. in 5 min (0,15 mg ad 10 ml → 5 ml)','singola ok · ripetute dimezza',1,'rr'],
     ['Diazepam rettale','10 mg','invariato',0,'neuro'],
@@ -1954,35 +2033,35 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
     ['Famotidin','20 mg e.v. lento in 2 Min.','10 mg',1,'ips'],
     ['Paracetamol','1 g p.o. 1-1-1-1 · max. 4 g/Tag','intervallo ≥ 6 Std.',1,'ips'],
     ['Prednisolon (allergia cutanea)','100 mg e.v. in 100 ml NaCl 0,9 % in 15 Min.','invariato',0,'ips'],
-    ['Dobutamina','2,5–10 µg/kg/min (250 mg/50 ml)','invariata',0,'hzv'],
-    ['Heparin-Natrium Perfusor','10.000 IE/50 ml · profilassi 400 IE/h · post-OP 12 IE/kg/h senza bolo · TVP/EP bolo 80 IE/kg + 18 IE/kg/h · pausa 6 h','invariato (preferito)',0,'ak'],
+    ['Dobutamina','2,5–10 µg/kg/min (250 mg/50 ml)','invariata',0,'hzv','dobu'],
+    ['Heparin-Natrium Perfusor','10.000 IE/50 ml · profilassi 400 IE/h · post-OP 12 IE/kg/h senza bolo · TVP/EP bolo 80 IE/kg + 18 IE/kg/h · pausa 6 h','invariato (preferito)',0,'ak','hep12'],
     ['Heparin-Natrium s.c.','profilassi 5.000 IE 1-1-1 · terap. 333 IE/kg, poi 250 IE/kg 1-0-1 · pausa 6 h','invariato',0,'ak'],
     ['Rivaroxaban (Xarelto)','VHF 20 mg 1-0-0 con il pasto · KHK + pAVK 2,5 mg 1-0-1 + ASS','VHF: CrCl 15–49: 15 mg 1-0-0 · < 15: non dare',1,'ak'],
-    ['Esmololo','bolo 0,5 mg/kg · 50–300 µg/kg/min','invariato',0,'sam'],
+    ['Esmololo','bolo 0,5 mg/kg · 50–300 µg/kg/min','invariato',0,'sam','esm'],
     ['Etomidato','sedazione 0,1 mg/kg · cardioversione 0,15 mg/kg · RSI 0,3 mg/kg (2 mg/ml)','invariato',0,'sed'],
-    ['Fenilefrina','bolo 50–100 (–200) µg ogni 2 min · 0,15–0,5 µg/kg/min','invariata',0,'sam'],
+    ['Fenilefrina','bolo 50–100 (–200) µg ogni 2 min · 0,15–0,5 µg/kg/min','invariata',0,'sam','phen'],
     ['Fidaxomicina','200 mg 1-0-1 × 10 gg','invariata',0,'dia'],
     ['Glucagone (GlucaGen)','1 mg i.m.','invariato',0,'glu'],
     ['Glucosio 40 % / 20 %','20–40 ml / 100 ml · poi G10 % 100 ml/h','invariato · monitora più a lungo',0,'glu'],
     ['Actrapid s.c. (correzione)','10–11,9 → 2 IE · 12–13,9 → 4 · 14–16,9 → 6 · 17–19,9 → 8 · ≥ 20 → 10 IE','metà dose',1,'glu'],
-    ['Actrapid Perfusor','50 IE/50 ml · chetoacidosi 0,1 IE/kg/h','invariato',0,'glu'],
+    ['Actrapid Perfusor','50 IE/50 ml · chetoacidosi 0,1 IE/kg/h','invariato',0,'glu','ins'],
     ['Lantus (glargin)','0,2 IE/kg/d s.c. sera · digiuno 75 %','0,1 IE/kg/d',1,'glu'],
     ['Ipratropio','0,5 mg nebulizzato','invariato',0,'ana'],
-    ['KCl','perif. max 40 mmol/l, 10 mmol/h · ZVK 10 (–20) mmol/h','metà dose/velocità · K⁺ ogni 20 mmol',1,'el'],
+    ['KCl','perif. max 40 mmol/l, 10 mmol/h · ZVK 10 (–20) mmol/h','metà dose/velocità · K⁺ ogni 20 mmol',1,'el','kcl'],
     ['Levetiracetam','60 mg/kg (max 4,5 g) in 10 min','carico invariato · poi 250–500 mg 2×/d',1,'neuro'],
     ['Lipid 20 %','1,5 ml/kg in 1 min · 0,25 ml/kg/min · max 12 ml/kg','invariato',0,'neuro'],
     ['Loperamide','4 mg, poi 2 mg · max 12–16 mg/d','invariata',0,'dia'],
     ['Magnesio solfato','2 g in 100 ml in 20–30 min','1 g, solo con Mg basso misurato',1,'el'],
     ['Metoprololo','2,5–5 mg e.v., max 15 mg','invariato',0,'rr'],
     ['Midazolam','1 mg (sedazione) · 10 mg (crisi)','singola ok · ripetute −50 %',1,'sed'],
-    ['Noradrenalina','bolo 5 µg (1 mg/200 ml) · Perfusor 5 mg/50 ml','invariata',0,'hzv'],
+    ['Noradrenalina','bolo 5 µg (1 mg/200 ml) · Perfusor 5 mg/50 ml','invariata',0,'hzv','nor'],
     ['Prednisolon / Hydrocortison','250 mg (–1 g) / 200 mg e.v.','invariati',0,'ana'],
     ['Propofol','sedazione 10–20 mg ogni 60 s · RSI 2 mg/kg','invariato',0,'sed'],
     ['Salbutamolo','2,5–5 mg neb · spray 4–10 puff (instabile) · iperK 10 mg neb','invariato',0,'ana'],
     ['Spiolto Respimat','2 puff 1×/d','GFR ≤ 50: monitora',1,'ana'],
     ['Trelegy / Trimbow','1 inal. 1×/d / 2 puff 2×/d','invariati',0,'ana'],
     ['Urapidil','10–25 mg e.v. lento ogni 5 min','invariato',0,'rr'],
-    ['Vancomicina e.v.','bolo 30 mg/kg (max 3 g) a 10 mg/min · 30 mg/kg/24 h · target 20–25 mg/l','bolo invariato · ≈ 10 mg/kg/24 h + livelli · HD: 500–1000 mg dopo dialisi',1,'endo'],
+    ['Vancomicina e.v.','bolo 30 mg/kg (max 3 g) a 10 mg/min · 30 mg/kg/24 h · target 20–25 mg/l','bolo invariato · ≈ 10 mg/kg/24 h + livelli · HD: 500–1000 mg dopo dialisi',1,'endo','vmaint'],
     ['Vancomicina p.o.','125 mg 4×/d × 10 gg','invariata',0,'dia'],
     ['Akrinor','1 fiala ad 10 ml → 1 ml boli','invariato',0,'nk'],
     ['Ephedrin','10 mg e.v. (50 mg ad 10 ml → 2 ml) · tachifilassi','unverändert',0,'rr'],
@@ -2011,7 +2090,7 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
     ['Calcitonina','ipercalcemia: 4 IE/kg s.c. ogni 12 h (max 48 h)','invariata',0,'ca'],
     ['Denosumab (Xgeva)','ipercalcemia: 120 mg s.c.','invariato · Ca ogni giorno (ipocalcemia)',1,'ca'],
     ['Prednisolone (ipercalcemia)','50 mg 1-0-0 p.o./e.v.','invariato',0,'ca'],
-    ['Calciumgluconat 10 % (ipocalcemia)','bolo 20 ml in 100 ml G5 % in 10 min · Perfusor 50 ml puro ZVK a 5 ml/h','invariato',0,'ca'],
+    ['Calciumgluconat 10 % (ipocalcemia)','bolo 20 ml in 100 ml G5 % in 10 min · Perfusor 50 ml puro ZVK a 5 ml/h','invariato',0,'ca','ca'],
     ['Calcium Sandoz forte 500 mg','ipocalcemia lieve: 1-0-1 p.o.','invariato',0,'ca'],
     ['Calcitriol (Rocaltrol)','0,25 µg 1-0-1 p.o.','preferito al colecalciferolo · controlla fosfato',1,'ca'],
     ['Furosemide (manca)','40 mg e.v.','80 mg e.v.',1,'nk'],
@@ -2028,26 +2107,26 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
     ['Meropenem','1 g ogni 8 h i.v.','GFR 26–29: 1 g ogni 12 h · 10–25: 500 mg ogni 12 h · < 10: 500 mg ogni 24 h',1,'ab7'],
     ['Metronidazol','500 mg ogni 8 h i.v.','invariato',0,'ab6'],
     ['Penicillin G','3 Mio IE ogni 4 h i.v. (endocardite)','GFR 19–29: 5 Mio IE ogni 8 h · < 19: ogni 12 h',1,'ab2'],
-    ['Piperacillin/Tazobactam','4,5 g ogni 8 h i.v.','1ª dose piena · GFR 20–29: ogni 8 h · < 20: ogni 12 h',1,'ab3'],
+    ['Piperacillin/Tazobactam','4,5 g ogni 8 h i.v.','1ª dose piena · GFR 20–29: ogni 8 h · < 20: ogni 12 h',1,'ab3','tazo'],
     ['Haloperidol (Haldol)','Delir 1 mg i.v. (≥ 75 J. 0,5 mg) · Psychose 5 mg i.m. · QTc!','unverändert',0,'delir'],
-    ['Dexmedetomidin (Dexdor)','Start 0,7 µg/kg/h, max. 1,4 µg/kg/h (4 µg/ml) · kein Bolus','unverändert',0,'delir'],
+    ['Dexmedetomidin (Dexdor)','Start 0,7 µg/kg/h, max. 1,4 µg/kg/h (4 µg/ml) · kein Bolus','unverändert',0,'delir','dex'],
     ['Lorazepam (Tavor)','Panik 1 mg s.l. · Psychose 2 mg i.m./i.v.','Panik 0,5 mg · Psychose 1 mg',1,'delir'],
     ['Olanzapin (Zyprexa)','10 mg Velotab oder i.m. · kein Benzo parenteral innerhalb 1 h','unverändert',0,'delir'],
     ['Quetiapin (Seroquel)','Delir 25 mg p.o. zur Nacht','unverändert',0,'delir'],
-    ['Midazolam Sofort-Sedierung','2 mg i.v. (≥ 75 J. 1 mg) · ohne Zugang 5 mg i.m. · Perfusor 1 mg/h nur Intensiv','Nachdosen 0,5 mg · Perfusor 0,5 mg/h',1,'delir'],
+    ['Midazolam Sofort-Sedierung','2 mg i.v. (≥ 75 J. 1 mg) · ohne Zugang 5 mg i.m. · Perfusor 1 mg/h nur Intensiv','Nachdosen 0,5 mg · Perfusor 0,5 mg/h',1,'delir','mida'],
     ['Melperon','Delir 25 mg p.o. zur Nacht','unverändert',0,'delir'],
     ['Lorazepam (astinenza alcol)','1 mg s.l. a sintomi, ripeti dopo 1 Std. · i.v. 1 mg diluito 1:1','0,5 mg',1,'ast'],
     ['Thiamin (Vitamin B1)','100 mg i.v. 1-1-1 in 100 ml NaCl 0,9 % · prima di Glucose','invariato',0,'ast'],
     ['Nicotin-Pflaster (Nicotinell TTS)','> 20 Zig./Tag 21 mg · 10–20: 14 mg · < 10: 7 mg /24 Std.','invariato',0,'ast'],
     ['Acamprosat (Campral)','≥ 60 kg 2-2-2 Tbl. · < 60 kg 2-1-1 Tbl. · 1 Jahr','controindicato',1,'ast'],
     ['Naltrexon (Adepend)','50 mg 1-0-0 · ≥ 3 Monate · niente oppioidi','controindicato',1,'ast'],
-    ['Adrenalin Perfusor','5 mg/50 ml · 0,05–0,2 µg/kg/min (Betablocker zu stark)','unverändert',0,'rr'],
-    ['Milrinon (Corotrop)','20 mg/50 ml · 0,375 µg/kg/min · kein Bolus · mit Noradrenalin','0,3 µg/kg/min',1,'rr'],
-    ['Glucagon (Betablocker-Antidot)','5 mg i.v. in 2 min · dann 3 mg/h · nur refraktär','unverändert',0,'rr'],
-    ['Landiolol (Rapibloc)','300 mg/50 ml · Start 1 µg/kg/min, max. 10 µg/kg/min · kein Bolus · nur IMC','unverändert',0,'vhf'],
-    ['Urapidil Perfusor','100 mg/50 ml · Start 4,5 ml/h (9 mg/h), max. 15 ml/h · nur IMC','unverändert',0,'rr'],
-    ['Clonidin Perfusor','0,75 mg/50 ml (15 µg/ml) · Start 2 ml/h, max. 8 ml/h · nur IMC','Start 1 ml/h · max. 4 ml/h',1,'rr'],
-    ['Clevidipin (Cleviprex)','0,5 mg/ml pur · Start 2 mg/h = 4 ml/h, max. 32 mg/h · nur IMC','unverändert',0,'rr'],
+    ['Adrenalin Perfusor','5 mg/50 ml · 0,05–0,2 µg/kg/min (Betablocker zu stark)','unverändert',0,'rr','adr'],
+    ['Milrinon (Corotrop)','20 mg/50 ml · 0,375 µg/kg/min · kein Bolus · mit Noradrenalin','0,3 µg/kg/min',1,'rr','mil'],
+    ['Glucagon (Betablocker-Antidot)','5 mg i.v. in 2 min · dann 3 mg/h · nur refraktär','unverändert',0,'rr','glucagon'],
+    ['Landiolol (Rapibloc)','300 mg/50 ml · Start 1 µg/kg/min, max. 10 µg/kg/min · kein Bolus · nur IMC','unverändert',0,'vhf','land'],
+    ['Urapidil Perfusor','100 mg/50 ml · Start 4,5 ml/h (9 mg/h), max. 15 ml/h · nur IMC','unverändert',0,'rr','ura'],
+    ['Clonidin Perfusor','0,75 mg/50 ml (15 µg/ml) · Start 2 ml/h, max. 8 ml/h · nur IMC','Start 1 ml/h · max. 4 ml/h',1,'rr','clon'],
+    ['Clevidipin (Cleviprex)','0,5 mg/ml pur · Start 2 mg/h = 4 ml/h, max. 32 mg/h · nur IMC','unverändert',0,'rr','clev'],
     ['Candesartan','max. 32 mg 1-0-0','Start 4 mg · K⁺ + Krea',1,'rr'],
     ['Ramipril','max. 5 mg 1-0-1','Start 1,25 mg · max. 5 mg/Tag',1,'rr'],
     ['Amlodipin','max. 10 mg/Tag','unverändert',0,'rr'],
@@ -2062,9 +2141,9 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
     ['Piritramid (Dipidolor)','3,75 mg i.v. lento (0,5 ml ad 10 ml NaCl 0,9 %)','invariato',0,'rrc'],
     ['Thiamazol (ipertiroidismo da Amiodaron Typ 1)','40 mg p.o. 1-0-0','invariato',0,'rrc'],
     ['Prednisolon (ipertiroidismo da Amiodaron Typ 2)','40 mg p.o. 1-0-0 per 1–3 Monate, poi scalare','invariato',0,'rrc'],
-    ['Glyceroltrinitrat Perfusor (Nitrolingual infus)','1 mg/ml puro · Start 1 ml/h · +1 ml/h ogni 5 min · max. 8 ml/h · linea PE','invariato',0,'nitro'],
-    ['Isosorbiddinitrat Perfusor (Isoket)','1 mg/ml puro · Start 2 ml/h · max. 10 ml/h','invariato',0,'nitro'],
-    ['Nitroprussid-Natrium (nipruss)','60 mg/50 ml Glucose 5 % · 0,3–3 µg/kg/min · solo Intensiv','dose minima · tiocianato se > 3 Tage',1,'nitro'],
+    ['Glyceroltrinitrat Perfusor (Nitrolingual infus)','1 mg/ml puro · Start 1 ml/h · +1 ml/h ogni 5 min · max. 8 ml/h · linea PE','invariato',0,'nitro','gtn'],
+    ['Isosorbiddinitrat Perfusor (Isoket)','1 mg/ml puro · Start 2 ml/h · max. 10 ml/h','invariato',0,'nitro','isdn'],
+    ['Nitroprussid-Natrium (nipruss)','60 mg/50 ml Glucose 5 % · 0,3–3 µg/kg/min · solo Intensiv','dose minima · tiocianato se > 3 Tage',1,'nitro','np'],
     ['Stickstoffmonoxid inhalativ (INOmax)','20 ppm · solo Intensiv · mai stop di colpo','invariato',0,'nitro'],
     ['Pantoprazol e.v. (sanguinamento)','80 mg bolo · poi 40 mg 1-0-1 per 72 h · poi p.o.','invariato',0,'gib'],
     ['Erythromycin (prima della gastroscopia)','250 mg in 100 ml NaCl 0,9 % in 30 min · QTc!','invariato',0,'gib'],
@@ -2090,14 +2169,37 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
   var tb=document.getElementById('aztb');
   AZ.sort(function(a,b){return a[0].localeCompare(b[0],'it');});
   tb.innerHTML = AZ.map(function(a){
-    return '<tr'+(a[3]?' class="chg"':'')+'><td><a href="#'+a[4]+'">'+a[0]+'</a></td><td class="d">'+a[1]+'</td><td class="rc">'+a[2]+'</td></tr>';
+    return '<tr'+(a[3]?' class="chg"':'')+'><td><a href="#'+a[4]+'">'+a[0]+'</a></td><td class="d">'+a[1]+'</td><td class="rc">'+a[2]+'</td></tr>'+(a[5]?'<tr class="flr"><td colspan="3"><div class="fl" data-fl="'+a[5]+'"></div></td></tr>':'');
   }).join('');
+
+
+  /* costruisce i riquadri Flusso (pagine + righe A–Z appena create) */
+  for(var fk in FL) FLST[fk]={d:null,a:null,v:null};
+  document.querySelectorAll('.fl[data-fl]').forEach(function(el){
+    var k=el.getAttribute('data-fl'), e=FL[k]; if(!e){el.remove();return;}
+    el.innerHTML='<span class="fo"><span class="fl-l">Flusso</span><b data-o>—</b><small data-cc></small></span>'+
+      '<span class="fi"><input type="text" inputmode="decimal" data-f="d" aria-label="Dose"><span class="u">'+e.u+'</span></span>'+
+      '<span class="fi"><input type="text" inputmode="decimal" data-f="a" aria-label="Sostanza"><span class="u">'+e.au+'</span></span>'+
+      '<span class="fi"><span class="u">in</span><input type="text" inputmode="decimal" data-f="v" aria-label="Diluita in"><span class="u">ml</span></span>'+
+      (e.h?'<span class="fh">'+e.h+'</span>':'');
+  });
+  document.addEventListener('input',function(ev){
+    var i=ev.target; if(!i.matches||!i.matches('.fl input')) return;
+    var k=i.closest('.fl').getAttribute('data-fl'), f=i.getAttribute('data-f');
+    FLST[k][f] = i.value.trim()==='' ? null : i.value.trim();
+    flUpd(k);
+  });
+  document.addEventListener('focusout',function(ev){
+    var i=ev.target; if(!i.matches||!i.matches('.fl input')) return;
+    setTimeout(function(){ flUpd(i.closest('.fl').getAttribute('data-fl')); },0);
+  });
+  FLON = true;
 
   function calc(){
     document.querySelectorAll('[data-c]').forEach(function(el){
       var f=C[el.getAttribute('data-c')]; if(f) el.textContent=f(W);
     });
-    kcalc();
+    kcalc(); flAll();
   }
   function kcalc(){
     var a=parseFloat(document.getElementById('k0').value), b=parseFloat(document.getElementById('k1').value), o=document.getElementById('kout');
@@ -2113,8 +2215,11 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
   document.getElementById('k1').addEventListener('input',kcalc);
 
   var rb=document.getElementById('renal-btn');
-  function setRenal(on){ document.body.classList.toggle('renal',on); rb.setAttribute('aria-pressed',on?'true':'false'); kcalc(); try{localStorage.setItem('hzv_r',on?'1':'0');}catch(e){} }
+  function setRenal(on){ document.body.classList.toggle('renal',on); rb.setAttribute('aria-pressed',on?'true':'false'); kcalc(); flAll(); try{localStorage.setItem('hzv_r',on?'1':'0');}catch(e){} }
   rb.addEventListener('click',function(){setRenal(!document.body.classList.contains('renal'));});
+  var fb=document.getElementById('flow-btn');
+  function setFlow(on){ document.body.classList.toggle('flow',on); fb.setAttribute('aria-pressed',on?'true':'false'); try{localStorage.setItem('hzv_f',on?'1':'0');}catch(e){} }
+  fb.addEventListener('click',function(){setFlow(!document.body.classList.contains('flow'));});
 
   var pages=[].slice.call(document.querySelectorAll('.page'));
   var hb=document.getElementById('home-btn'), crumb=document.getElementById('crumb');
@@ -2149,7 +2254,7 @@ td a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px dot
   });
   q.addEventListener('keydown',function(e){ if(e.key==='Enter'){ var f=tiles.filter(function(t){return !t.hidden;})[0]; if(f) f.click(); } });
 
-  try{ var sw=localStorage.getItem('hzv_w'); if(sw){wi.value=sw; W=parseFloat(sw)||75;} if(localStorage.getItem('hzv_r')==='1') setRenal(true);}catch(e){}
+  try{ var sw=localStorage.getItem('hzv_w'); if(sw){wi.value=sw; W=parseFloat(sw)||75;} if(localStorage.getItem('hzv_r')==='1') setRenal(true); if(localStorage.getItem('hzv_f')==='1') setFlow(true);}catch(e){}
   calc(); show();
 })();
 </script>
