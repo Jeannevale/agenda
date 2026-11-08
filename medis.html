@@ -11,6 +11,7 @@
   --warn:#8A5200; --warn-bg:#FFF1D6;
   --add:#1D5CA6; --add-bg:#E6EFFA;
   --haus:#0B6B5F; --haus-bg:#E0F3EF;
+  --res:#0A7491;
   --f-disp:"IBM Plex Sans Condensed","Arial Narrow",system-ui,sans-serif;
   --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
   --f-mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
@@ -18,11 +19,11 @@
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#0E1319; --surface:#161D26; --ink:#E5EAF1; --muted:#98A5B6; --line:#28323F;
   --accent:#FF7A7F; --accent-bg:#3A1A1D; --renal:#BCA2FF; --renal-bg:#261E3C;
-  --warn:#F4B657; --warn-bg:#33260F; --add:#86B6F2; --add-bg:#13253B; --haus:#62D0BF; --haus-bg:#0F2A27; color-scheme:dark}}
+  --warn:#F4B657; --warn-bg:#33260F; --add:#86B6F2; --add-bg:#13253B; --haus:#62D0BF; --haus-bg:#0F2A27; --res:#6CCBE6; color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#0E1319; --surface:#161D26; --ink:#E5EAF1; --muted:#98A5B6; --line:#28323F;
   --accent:#FF7A7F; --accent-bg:#3A1A1D; --renal:#BCA2FF; --renal-bg:#261E3C;
-  --warn:#F4B657; --warn-bg:#33260F; --add:#86B6F2; --add-bg:#13253B; --haus:#62D0BF; --haus-bg:#0F2A27; color-scheme:dark}
+  --warn:#F4B657; --warn-bg:#33260F; --add:#86B6F2; --add-bg:#13253B; --haus:#62D0BF; --haus-bg:#0F2A27; --res:#6CCBE6; color-scheme:dark}
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.42;padding-inline:16px}
 .wrap{max-width:980px;margin:0 auto;padding-block:0 56px}
@@ -84,15 +85,20 @@ ol.steps>li:first-child::before{top:0}
 a.x{color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid currentColor}
 
 /* home */
-.search{display:flex;gap:8px;margin:0 -16px 10px;padding:10px 16px;position:sticky;top:calc(env(safe-area-inset-top,0px) + var(--toph,58px));z-index:19;background:var(--bg)}
+.search{display:flex;flex-wrap:wrap;gap:8px;margin:0 -16px 10px;padding:10px 16px;position:sticky;top:calc(env(safe-area-inset-top,0px) + var(--toph,58px));z-index:19;background:var(--bg)}
 .search input{flex:1;min-width:0;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:10px 12px;font:inherit;color:var(--ink)}
+.cf{flex-basis:100%;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin:0 -16px;padding:0 16px}
+.cf::-webkit-scrollbar{display:none}
+.cf button{flex:none;display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 11px;font-size:13px;font-weight:600;color:var(--ink)}
+.cf i{width:9px;height:9px;border-radius:50%;background:var(--c)}
+.cf button[aria-pressed="true"]{border-color:var(--c);box-shadow:inset 0 0 0 1px var(--c);color:var(--c)}
 .tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(158px,100%),1fr));gap:8px}
 .tile{text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:3px;min-height:88px}
 .tile:hover{border-color:var(--accent)}
 .tile .k{font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;font-weight:700}
 .tile .t{font-family:var(--f-disp);font-weight:700;font-size:17px;line-height:1.15}
 .tile .s{font-size:12.5px;color:var(--muted);line-height:1.3}
-.k.emo{color:var(--accent)}.k.rit{color:#C0561B}.k.inf{color:var(--haus)}.k.neu{color:var(--add)}.k.met{color:var(--warn)}.k.pro{color:var(--muted)}.k.ref{color:var(--renal)}
+.k.emo{color:var(--accent)}.k.rit{color:#C0561B}.k.inf{color:var(--haus)}.k.neu{color:var(--add)}.k.met{color:var(--warn)}.k.pro{color:var(--muted)}.k.ref{color:var(--renal)}.k.res{color:var(--res)}
 .rlink{display:none;margin:0 0 10px;width:100%;text-align:left;background:var(--renal-bg);color:var(--renal);border:1px solid var(--renal);border-radius:10px;padding:10px 12px;font-weight:600}
 body.renal .rlink{display:block}
 .legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12.5px;color:var(--muted);margin-top:14px;align-items:center}
@@ -148,7 +154,7 @@ tr.flr td{border-top:0;padding-top:0}
 
 <!-- ============ HOME ============ -->
 <section class="page" id="home" data-t="Kitteltasche">
-  <div class="search"><input id="q" type="search" placeholder="Cerca: vanco, SAM, K+, adrenalina…" autocomplete="off" aria-label="Cerca scenario o farmaco"></div>
+  <div class="search"><input id="q" type="search" placeholder="Cerca: vanco, SAM, K+, adrenalina…" autocomplete="off" aria-label="Cerca scenario o farmaco"><div class="cf" id="cf" role="group" aria-label="Filtra per colore"><button type="button" data-cf="" aria-pressed="true" style="--c:var(--ink)">Tutti</button><button type="button" data-cf="emo" aria-pressed="false" style="--c:var(--accent)"><i></i>Emergenza</button><button type="button" data-cf="rit" aria-pressed="false" style="--c:#C0561B"><i></i>Ritmo</button><button type="button" data-cf="res" aria-pressed="false" style="--c:var(--res)"><i></i>Respiro</button><button type="button" data-cf="inf" aria-pressed="false" style="--c:var(--haus)"><i></i>Infezione</button><button type="button" data-cf="met" aria-pressed="false" style="--c:var(--warn)"><i></i>Metabolico</button><button type="button" data-cf="neu" aria-pressed="false" style="--c:var(--add)"><i></i>Neuro</button><button type="button" data-cf="pro" aria-pressed="false" style="--c:var(--muted)"><i></i>Procedura</button><button type="button" data-cf="ref" aria-pressed="false" style="--c:var(--renal)"><i></i>A–Z</button></div></div>
   <button class="rlink" type="button" data-go="az">Tutte le dosi per GFR &lt; 30 → Farmaci A–Z</button>
   <div class="tiles" id="tiles">
     <button class="tile" data-go="nk" data-k="notfallkoffer valigetta emergenza rianimazione intubazione rsi adrenalina atropina akrinor suxametonio rocuronio sugammadex bridion esketamina adenosina nitro ass"><span class="k emo">Emergenza</span><span class="t">Notfallkoffer</span><span class="s">Tutti i farmaci · cosa manca</span></button>
@@ -157,23 +163,24 @@ tr.flr td{border-top:0;padding-top:0}
     <button class="tile" data-go="rr" data-k="ipertensione hypertonie pressione urapidil ebrantil clonidina clonidin catapresan clevidipin cleviprex metoprololo perfusor candesartan ramipril amlodipin bisoprolol nebivolol doxazosin spironolacton torasemid hydrochlorothiazid moxonidin nitrendipin bayotensin antidoto ipotensione hypotonie pressione bassa crollo akrinor cafedrin fenilefrina phenylephrin efedrina ephedrin jonosteril betabloccante overdose glucagon glucagen milrinon corotrop adrenalin suprarenin noradrenalin calciumchlorid"><span class="k emo">Emodinamica</span><span class="t">Ipertensione</span><span class="s">Boli · Perfusor · orali · se crolla: antidoti</span></button>
     <button class="tile" data-go="rrc" data-k="ipertensione cause improvvisa secondaria escludere prima urapidil ebrantil nitro nitrolingual infarto nstemi troponina tamponamento polso paradosso giugulari lattato diuresi tee ct ictus cushing dissezione differenza braccia dolore piritramid globo vescicale blasenscan ipossia glicemia astinenza rebound betablocker clonidin ipertiroidismo amiodarone tsh ft3 ft4 thiamazol prednisolon mezzo di contrasto iodio obiettivo 140"><span class="k emo">Emodinamica</span><span class="t">Ipertensione cause</span><span class="s">Escludere prima · Urapidil vs Nitro</span></button>
     <button class="tile" data-go="nitro" data-k="nitro nitrati nitroglicerina glyceroltrinitrat nitrolingual perfusor spray isosorbiddinitrat isoket nitroprussid nipruss no ossido nitrico stickstoffmonoxid inomax edema polmonare lungenödem angina ischemia ipertensione polmonare"><span class="k emo">Emodinamica</span><span class="t">Nitrati · NO</span><span class="s">Glyceroltrinitrat Perfusor · Isoket · nipruss</span></button>
-    <button class="tile" data-go="vhf" data-k="fibrillazione atriale vorhofflimmern amiodarone cordarex anticoagulazione cardioversione landiolol landiololo rapibloc frequenza"><span class="k rit">Ritmo</span><span class="t">Fibrillazione atriale</span><span class="s">Amiodarone · Landiolol · anticoag.</span></button>
-    <button class="tile" data-go="endo" data-k="endocardite vancomicina emocolture tdm livello"><span class="k inf">Infezione</span><span class="t">Endocardite</span><span class="s">Emocolture · vancomicina + livelli</span></button>
-    <button class="tile" data-go="dia" data-k="diarrea clostridium difficile vancomicina loperamide fidaxomicina"><span class="k inf">Infezione</span><span class="t">Diarrea · C. diff</span><span class="s">Vanco p.o. · loperamide</span></button>
-    <button class="tile" data-go="cac" data-k="cacca stipsi stitichezza obstipation verstopfung stuhlgang feci koprostase fecaloma lassativo abführmittel laxans movicol macrogol laxoberal natriumpicosulfat bisacodyl dulcolax lactulose bifiteral glycilax glycerin zäpfchen supposta mikroklist microlax klysma einlauf clistere relistor methylnaltrexon oppioidi ogilvie"><span class="k met">Intestino</span><span class="t">Cacca</span><span class="s">Piano A · B · C · supposte · Relistor</span></button>
-    <button class="tile" data-go="abx" data-k="antibiotici antibiotico antibiose abx schema cefazolin flucloxacillin penicillin ampicillin unacid sulbactam piperacillin tazobac tazobactam meropenem ceftriaxon clarithromycin linezolid rifampicin daptomycin gentamicin metronidazol clindamycin vancomycin profilassi polmonite pneumonia urinario hwi addome sepsi mediastinite sternale mrsa mssa stafilococchi enterococco endocardite"><span class="k inf">Infezione</span><span class="t">Antibiotici</span><span class="s">Schemi per patogeno · dosi · GFR &lt; 30</span></button>
-    <button class="tile" data-go="neuro" data-k="ictus stroke schlaganfall neuro check vorhalteversuch epilessia crisi midazolam levetiracetam lipid"><span class="k neu">Neuro</span><span class="t">Ictus · Crisi epilettica</span><span class="s">Neuro-check · midazolam</span></button>
-    <button class="tile" data-go="delir" data-k="midazolam dormicum sedierung sofort gefährlich perfusor sedazione immediata delir delirium delirio delirante agitiert agitato unruhe psychose psicosi psychotisch panik panico panikattacke beruhigen haloperidol haldol dexmedetomidin dexdor clonidin catapresan quetiapin seroquel melperon olanzapin zyprexa lorazepam tavor flumazenil anexate"><span class="k neu">Psyche</span><span class="t">Delir</span><span class="s">Sofort- und langsame Sedierung · Psychose · Panik</span></button>
-    <button class="tile" data-go="ast" data-k="astinenza entzug alkoholentzug alcol alkohol delirium tremens tremore lorazepam tavor clonidin catapresan thiamin vitamin b1 wernicke haloperidol pipamperon nicotina nikotin nicotinell cerotto pflaster fumo rauchen acamprosat campral naltrexon adepend dipendenza"><span class="k neu">Psyche</span><span class="t">Astinenza</span><span class="s">Alcol · Tavor · nicotina · lungo termine</span></button>
-    <button class="tile" data-go="ana" data-k="anafilassi allergia adrenalina salbutamolo ipratropio cortisone broncospasmo bpco inalatori spiolto trelegy trimbow"><span class="k emo">Emergenza</span><span class="t">Anafilassi · Bronchi</span><span class="s">Adrenalina · salbutamolo · inalatori</span></button>
+    <button class="tile" data-go="ana" data-k="anafilassi allergia adrenalina salbutamolo ipratropio cortisone broncospasmo"><span class="k emo">Emergenza</span><span class="t">Anafilassi</span><span class="s">Adrenalina · cortisone · broncospasmo</span></button>
     <button class="tile" data-go="ips" data-k="ipersensibile allergia allergica reazione cutanea pelle rossa rash esantema exanthem ausschlag orticaria urtikaria prurito juckreiz clemastin tavegil dimetinden fenistil prednisolon famotidin cimetidin antistaminico h2 flebite accesso rosso farmaco sospetto metamizol novaminsulfon paracetamol"><span class="k emo">Emergenza</span><span class="t">Ipersensibile</span><span class="s">Prurito · rash · antistaminici · ogni quanto</span></button>
     <button class="tile" data-go="gib" data-k="sanguinamento gastrointestinale emorragia gastrica stomaco esofago ulcera melena ematemesi forrest clip endoscopia gastroscopia pantoprazol erythromycin protamin konakion ppsb beriplex antagonizzare ripresa anticoagulazione eparina heparin clexane apixaban eliquis marcumar ferinject ferro trasfusione blutung magenblutung gi-blutung"><span class="k emo">Emergenza</span><span class="t">Sanguinamento GI</span><span class="s">Subito · antagonisti · ripresa anticoag.</span></button>
-    <button class="tile" data-go="sed" data-k="analgosedazione sedazione etomidato etomidat propofol midazolam fentanyl esketamin ketanest noradrenalina bolo cardioversione defibrillazione shock pacing esterno transcutaneo schrittmacher digiuno nüchtern tee"><span class="k pro">Procedura</span><span class="t">Analgosedazione</span><span class="s">Pacing · cardioversione · TEE</span></button>
-    <button class="tile" data-go="ak" data-k="anticoagulazione antikoagulation clexane enoxaparin enoxaparina eparina heparin heparin-natrium perfusor profilassi prophylaxe terapeutica therapeutisch ptt anti-xa hit apixaban eliquis rivaroxaban xarelto noak pausa pre operatoria intervento"><span class="k pro">Procedura</span><span class="t">Anticoagulazione</span><span class="s">Profilassi · terapeutica · Perfusor · pausa</span></button>
-    <button class="tile" data-go="ms" data-k="magensonde sondino naso gastrico"><span class="k pro">Procedura</span><span class="t">Sondino gastrico</span><span class="s">Controindicazioni</span></button>
+    <button class="tile" data-go="vhf" data-k="fibrillazione atriale vorhofflimmern amiodarone cordarex anticoagulazione cardioversione landiolol landiololo rapibloc frequenza"><span class="k rit">Ritmo</span><span class="t">Fibrillazione atriale</span><span class="s">Amiodarone · Landiolol · anticoag.</span></button>
+    <button class="tile" data-go="bronchi" data-k="bronchi asma asthma astma copd bpco ostruttiva broncospasmo riacutizzazione exazerbation sibili salbutamol salbutamolo ipratropium ipratropio terbutalin terbutalina bricanyl magnesium magnesio prednisolon cortisone niv ventilazione inalatori spiolto trelegy trimbow symbicort budesonid formoterol amoxicillin clavulansäure"><span class="k res">Respiro</span><span class="t">Bronchi</span><span class="s">Asma · COPD · Terbutalin · NIV</span></button>
+    <button class="tile" data-go="endo" data-k="endocardite vancomicina emocolture tdm livello"><span class="k inf">Infezione</span><span class="t">Endocardite</span><span class="s">Emocolture · vancomicina + livelli</span></button>
+    <button class="tile" data-go="dia" data-k="diarrea clostridium difficile vancomicina loperamide fidaxomicina"><span class="k inf">Infezione</span><span class="t">Diarrea · C. diff</span><span class="s">Vanco p.o. · loperamide</span></button>
+    <button class="tile" data-go="abx" data-k="antibiotici antibiotico antibiose abx schema cefazolin flucloxacillin penicillin ampicillin unacid sulbactam piperacillin tazobac tazobactam meropenem ceftriaxon clarithromycin linezolid rifampicin daptomycin gentamicin metronidazol clindamycin vancomycin profilassi polmonite pneumonia urinario hwi addome sepsi mediastinite sternale mrsa mssa stafilococchi enterococco endocardite"><span class="k inf">Infezione</span><span class="t">Antibiotici</span><span class="s">Schemi per patogeno · dosi · GFR &lt; 30</span></button>
+    <button class="tile" data-go="cac" data-k="cacca stipsi stitichezza obstipation verstopfung stuhlgang feci koprostase fecaloma lassativo abführmittel laxans movicol macrogol laxoberal natriumpicosulfat bisacodyl dulcolax lactulose bifiteral glycilax glycerin zäpfchen supposta mikroklist microlax klysma einlauf clistere relistor methylnaltrexon oppioidi ogilvie"><span class="k met">Intestino</span><span class="t">Cacca</span><span class="s">Piano A · B · C · supposte · Relistor</span></button>
     <button class="tile" data-go="el" data-k="potassio ipokaliemia iperkaliemia ipercaliemia kcl magnesio elettroliti calcio gluconato cloruro bicarbonato insulina glucosio salbutamolo lokelma dialisi"><span class="k met">Metabolico</span><span class="t">Potassio · Magnesio</span><span class="s">Ipo- e iperkaliemia · calcio · bicarbonato</span></button>
     <button class="tile" data-go="ca" data-k="ipocalcemia calcio basso calciumgluconat calciumchlorid calcitriol rocaltrol tetania ipercalcemia calcio alto ca calcemia nacl calcitonina acido zoledronico zoledronato zometa denosumab xgeva prednisolone dialisi qt corto aritmia"><span class="k met">Metabolico</span><span class="t">Calcio: ipo · iper</span><span class="s">Calciumgluconat · NaCl · zoledronato</span></button>
     <button class="tile" data-go="glu" data-k="ipoglicemia iperglicemia glicemia zucchero glucosio glucagone glucagen insulina actrapid lantus glargin novorapid humalog fiasp apidra huminsulin insuman berlinsulin abasaglar toujeo levemir tresiba protaphane actraphane novomix correzione schema chetoacidosi sglt2 metformin"><span class="k met">Metabolico</span><span class="t">Glicemia</span><span class="s">Ipo · iper · Actrapid · Lantus</span></button>
+    <button class="tile" data-go="neuro" data-k="ictus stroke schlaganfall neuro check vorhalteversuch epilessia crisi midazolam levetiracetam lipid"><span class="k neu">Neuro</span><span class="t">Ictus · Crisi epilettica</span><span class="s">Neuro-check · midazolam</span></button>
+    <button class="tile" data-go="delir" data-k="midazolam dormicum sedierung sofort gefährlich perfusor sedazione immediata delir delirium delirio delirante agitiert agitato unruhe psychose psicosi psychotisch panik panico panikattacke beruhigen haloperidol haldol dexmedetomidin dexdor clonidin catapresan quetiapin seroquel melperon olanzapin zyprexa lorazepam tavor flumazenil anexate"><span class="k neu">Psyche</span><span class="t">Delir</span><span class="s">Sofort- und langsame Sedierung · Psychose · Panik</span></button>
+    <button class="tile" data-go="ast" data-k="astinenza entzug alkoholentzug alcol alkohol delirium tremens tremore lorazepam tavor clonidin catapresan thiamin vitamin b1 wernicke haloperidol pipamperon nicotina nikotin nicotinell cerotto pflaster fumo rauchen acamprosat campral naltrexon adepend dipendenza"><span class="k neu">Psyche</span><span class="t">Astinenza</span><span class="s">Alcol · Tavor · nicotina · lungo termine</span></button>
+    <button class="tile" data-go="sed" data-k="analgosedazione sedazione etomidato etomidat propofol midazolam fentanyl esketamin ketanest noradrenalina bolo cardioversione defibrillazione shock pacing esterno transcutaneo schrittmacher digiuno nüchtern tee"><span class="k pro">Procedura</span><span class="t">Analgosedazione</span><span class="s">Pacing · cardioversione · TEE</span></button>
+    <button class="tile" data-go="ak" data-k="anticoagulazione antikoagulation clexane enoxaparin enoxaparina eparina heparin heparin-natrium perfusor profilassi prophylaxe terapeutica therapeutisch ptt anti-xa hit apixaban eliquis rivaroxaban xarelto noak pausa pre operatoria intervento"><span class="k pro">Procedura</span><span class="t">Anticoagulazione</span><span class="s">Profilassi · terapeutica · Perfusor · pausa</span></button>
+    <button class="tile" data-go="ms" data-k="magensonde sondino naso gastrico"><span class="k pro">Procedura</span><span class="t">Sondino gastrico</span><span class="s">Controindicazioni</span></button>
     <button class="tile" data-go="az" data-k="farmaci elenco a-z dosi renale gfr insufficienza"><span class="k ref">Riferimento</span><span class="t">Farmaci A–Z</span><span class="s">Tutte le dosi · GFR &lt; 30</span></button>
   </div>
   <div class="legend">
@@ -670,6 +677,7 @@ tr.flr td{border-top:0;padding-top:0}
       <div class="rx"><div class="nm">Salbutamolo 2,5–5 mg + Ipratropio 0,5 mg</div><div class="prep">nebulizzati insieme, con O₂ 6–8 l/min</div></div>
       <div class="rx"><div class="nm">Salbutamolo spray (100 µg/puff)</div><div class="dose">4–10 puff se instabile · 2 se stabile</div>
         <div class="ren same">invariati</div></div>
+      <p class="prep">Asma, COPD senza allergia → <a class="x" href="#bronchi">Bronchi</a></p>
       <h3 style="margin-top:8px">+ Cortisone</h3>
       <div class="rx"><div class="dose">Prednisolon 250 mg e.v. (fino a 1 g) o Hydrocortison 200 mg e.v.</div>
         <div class="ren same">invariato</div></div>
@@ -680,8 +688,76 @@ tr.flr td{border-top:0;padding-top:0}
         <div class="ren same">invariato</div></div>
       <div class="rx">Cristalloide 500–1000 ml rapido · O₂ · gambe su</div>
     </div>
+  </div>
+</section>
+
+<!-- ============ BRONCHI ============ -->
+<section class="page" id="bronchi" data-t="Bronchi">
+  <div class="ph"><h2>Bronchi · Asma · COPD</h2><span class="cat">Respiro · riacutizzazione</span></div>
+  <div class="grid">
+    <div class="blk alert">
+      <h3>Prima di tutto</h3>
+      <ol class="steps">
+        <li><b>Sibili dopo cardiochirurgia:</b> prima escludi l'edema polmonare (asma cardiaco: eco, RX, bilancio) → <a class="x" href="#nitro">Nitrati</a>. Salbutamol dà tachicardia, VHF e K⁺ basso.</li>
+        <li><b>O₂:</b> asma SpO₂ 93–95 % · COPD SpO₂ 88–92 %, BGA dopo 30 min (pH, pCO₂).</li>
+        <li><b>Grave:</b> non finisce le frasi, FR &gt; 25/min, FC &gt; 110/min, PEF &lt; 50 %.</li>
+        <li><b>Pericolo di vita → Oberarzt + Intensiv:</b> torace silente, cianosi, confusione, esaurimento, SpO₂ &lt; 92 % con O₂, bradicardia · asma con pCO₂ normale o alta = si sta esaurendo.</li>
+      </ol>
+    </div>
+    <div class="blk alert">
+      <h3>Subito · broncodilatatori</h3>
+      <div class="rx"><div class="nm">Salbutamol + Ipratropiumbromid</div>
+        <div class="dose">2,5 mg + 0,5 mg nebulizzati · ogni 20 min × 3 nella 1ª ora · poi ogni 4 h</div>
+        <div class="prep">in 3 ml NaCl 0,9 % · asma: con O₂ 6–8 l/min · COPD con pCO₂ alta: con aria compressa, O₂ dagli occhialini</div>
+        <div class="ren same">invariati</div></div>
+      <div class="rx"><div class="nm">Senza nebulizzatore: Salbutamol Dosieraerosol (100 µg/Hub)</div>
+        <div class="dose">4 Hübe con distanziatore ogni 20 min · grave 8 Hübe</div>
+        <div class="prep">1 Hub alla volta nel distanziatore, poi 5 respiri</div>
+        <div class="ren same">invariato</div></div>
+    </div>
     <div class="blk">
-      <h3>BPCO: terapia a lungo termine</h3>
+      <h3>Cortisone · subito, stop senza scalare</h3>
+      <div class="rx"><div class="nm">Asma: Prednisolon</div>
+        <div class="dose">50 mg p.o. 1-0-0 per 5 Tage</div>
+        <div class="prep">non deglutisce: Prednisolon (Prednisolut) 50 mg e.v. lento, sciolto nel solvente allegato · glicemia, K⁺</div>
+        <div class="ren same">invariato</div></div>
+      <div class="rx"><div class="nm">COPD: Prednisolon</div>
+        <div class="dose">40 mg p.o. 1-0-0 per 5 Tage</div>
+        <div class="prep">non deglutisce: Prednisolon (Prednisolut) 40 mg e.v. lento · glicemia, K⁺</div>
+        <div class="ren same">invariato</div></div>
+    </div>
+    <div class="blk alert">
+      <h3>Asma grave · non migliora dopo 1 h</h3>
+      <div class="rx"><div class="nm">Magnesiumsulfat</div>
+        <div class="dose">2 g e.v. in 20 min, una volta</div>
+        <div class="prep">2 g in 100 ml NaCl 0,9 % = 300 ml/h · ipotensione, flush</div>
+        <div class="ren">1 g, poi Mg sierico</div></div>
+      <div class="rx"><div class="nm">Terbutalin (Bricanyl 0,5 mg/1 ml)</div>
+        <div class="dose">0,25 mg s.c. = 0,5 ml</div>
+        <div class="prep">non diluito, solo s.c. · se non basta 0,5 mg = 1 ml · ripeti dopo 15–20 min · max. 4×/Tag · no con tachiaritmia/VHF, HOCM, ipertiroidismo · cautela dopo infarto recente, vizio mitralico, WPW · K⁺, glicemia, lattato</div>
+        <div class="ren same">invariato</div></div>
+      <p class="fixbox">Theophyllin: non nell'acuto (più effetti collaterali, nessun beneficio) · sedativi solo con l'Anästhesie.</p>
+    </div>
+    <div class="blk">
+      <h3>COPD · in più</h3>
+      <div class="rx"><div class="nm">NIV</div>
+        <div class="prep" style="color:var(--ink)">pH &lt; 7,35 e pCO₂ &gt; 45 mmHg dopo la terapia iniziale → NIV su IMC/Intensiv · pH &lt; 7,25 o confuso → Intensiv</div></div>
+      <div class="rx"><div class="nm">Antibiotico solo con espettorato purulento (o NIV)</div>
+        <div class="dose">Amoxicillin/Clavulansäure 875/125 mg p.o. 1-0-1 per 5 Tage</div>
+        <div class="prep">e.v.: Ampicillin/Sulbactam (Unacid) 3 g in 100 ml NaCl 0,9 % in 30 min = 200 ml/h, ogni 8 h → <a class="x" href="#ab3">Polmonite</a></div>
+        <div class="ren">Amoxicillin/Clavulansäure 500/125 mg p.o. 1-0-1 · Unacid GFR 15–29: 3 g ogni 12 h</div></div>
+      <div class="rx"><div class="nm">Betabloccante</div>
+        <div class="prep" style="color:var(--ink)">cardioselettivo (Bisoprolol, Metoprolol): continua · asma: niente Carvedilol, Propranolol, Sotalol</div></div>
+    </div>
+    <div class="blk">
+      <h3>Asma · alla dimissione</h3>
+      <div class="rx"><div class="nm">Budesonid/Formoterol (Symbicort Turbohaler 160/4,5 µg)</div>
+        <div class="dose">1 inal. 1-0-1 + 1 inal. al bisogno</div>
+        <div class="prep">max. 12 inal./Tag in tutto · mai solo Salbutamol senza cortisone inalatorio · sciacquare la bocca</div>
+        <div class="ren same">invariato</div></div>
+    </div>
+    <div class="blk">
+      <h3>COPD · terapia a lungo termine</h3>
       <div class="rx"><div class="nm">LAMA + LABA</div><div class="dose">Spiolto Respimat 2 puff 1×/d</div>
         <div class="ren">tiotropio: GFR ≤ 50 → monitora (accumulo)</div></div>
       <div class="rx"><div class="nm">Eosinofili &gt; 300/µl → + ICS</div><div class="dose">Trelegy 1 inal. 1×/d · Trimbow 2 puff 2×/d</div>
@@ -2058,8 +2134,15 @@ tr.flr td{border-top:0;padding-top:0}
     ['Prednisolon / Hydrocortison','250 mg (–1 g) / 200 mg e.v.','invariati',0,'ana'],
     ['Propofol','sedazione 10–20 mg ogni 60 s · RSI 2 mg/kg','invariato',0,'sed'],
     ['Salbutamolo','2,5–5 mg neb · spray 4–10 puff (instabile) · iperK 10 mg neb','invariato',0,'ana'],
-    ['Spiolto Respimat','2 puff 1×/d','GFR ≤ 50: monitora',1,'ana'],
-    ['Trelegy / Trimbow','1 inal. 1×/d / 2 puff 2×/d','invariati',0,'ana'],
+    ['Spiolto Respimat','2 puff 1×/d','GFR ≤ 50: monitora',1,'bronchi'],
+    ['Trelegy / Trimbow','1 inal. 1×/d / 2 puff 2×/d','invariati',0,'bronchi'],
+    ['Salbutamol + Ipratropiumbromid (asma, COPD)','2,5 mg + 0,5 mg nebulizzati ogni 20 min × 3, poi ogni 4 h','invariati',0,'bronchi'],
+    ['Terbutalin (Bricanyl)','0,25 mg s.c. (max. 0,5 mg) · ripeti dopo 15–20 min · max. 4×/Tag','invariato',0,'bronchi'],
+    ['Prednisolon (asma)','50 mg p.o. 1-0-0 per 5 Tage, stop senza scalare','invariato',0,'bronchi'],
+    ['Prednisolon (COPD)','40 mg p.o. 1-0-0 per 5 Tage, stop senza scalare','invariato',0,'bronchi'],
+    ['Magnesiumsulfat (asma grave)','2 g in 100 ml NaCl 0,9 % in 20 min, una volta','1 g, poi Mg sierico',1,'bronchi'],
+    ['Amoxicillin/Clavulansäure (COPD)','875/125 mg p.o. 1-0-1 per 5 Tage','500/125 mg 1-0-1',1,'bronchi'],
+    ['Budesonid/Formoterol (Symbicort 160/4,5)','1 inal. 1-0-1 + al bisogno · max. 12/Tag','invariato',0,'bronchi'],
     ['Urapidil','10–25 mg e.v. lento ogni 5 min','invariato',0,'rr'],
     ['Vancomicina e.v.','bolo 30 mg/kg (max 3 g) a 10 mg/min · 30 mg/kg/24 h · target 20–25 mg/l','bolo invariato · ≈ 10 mg/kg/24 h + livelli · HD: 500–1000 mg dopo dialisi',1,'endo','vmaint'],
     ['Vancomicina p.o.','125 mg 4×/d × 10 gg','invariata',0,'dia'],
@@ -2248,10 +2331,17 @@ tr.flr td{border-top:0;padding-top:0}
   document.querySelectorAll('[data-go]').forEach(function(b){b.addEventListener('click',function(){location.hash=b.getAttribute('data-go');});});
 
   var q=document.getElementById('q'), tiles=[].slice.call(document.querySelectorAll('#tiles .tile'));
-  q.addEventListener('input',function(){
+  var cfSel='', cfBtns=[].slice.call(document.querySelectorAll('#cf button'));
+  function filt(){
     var s=q.value.trim().toLowerCase();
-    tiles.forEach(function(t){ t.hidden = s && (t.textContent+' '+t.getAttribute('data-k')).toLowerCase().indexOf(s)<0; });
-  });
+    tiles.forEach(function(t){ t.hidden = (s && (t.textContent+' '+t.getAttribute('data-k')).toLowerCase().indexOf(s)<0) || (cfSel && !t.querySelector('.k.'+cfSel)); });
+  }
+  q.addEventListener('input',filt);
+  cfBtns.forEach(function(b){ b.addEventListener('click',function(){
+    var v=b.getAttribute('data-cf'); cfSel = (v===cfSel) ? '' : v;
+    cfBtns.forEach(function(x){ x.setAttribute('aria-pressed', x.getAttribute('data-cf')===cfSel ? 'true':'false'); });
+    filt();
+  }); });
   q.addEventListener('keydown',function(e){ if(e.key==='Enter'){ var f=tiles.filter(function(t){return !t.hidden;})[0]; if(f) f.click(); } });
 
   try{ var sw=localStorage.getItem('hzv_w'); if(sw){wi.value=sw; W=parseFloat(sw)||75;} if(localStorage.getItem('hzv_r')==='1') setRenal(true); if(localStorage.getItem('hzv_f')==='1') setFlow(true);}catch(e){}
