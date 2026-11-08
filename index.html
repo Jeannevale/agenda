@@ -79,6 +79,12 @@ button{cursor:pointer; background:none; border:none}
   color:var(--ink-2); font-size:20px; line-height:1}
 .iconbtn:hover{background:var(--surface-2)}
 .iconbtn:disabled{opacity:.3; cursor:default}
+/* pallino di assegnazione accanto alla campanella: vuoto -> arancione -> blu */
+.dotbtn{width:34px; height:34px; display:grid; place-items:center; border-radius:8px}
+.dotbtn:hover{background:var(--surface-2)}
+.dotbtn i{display:block; width:15px; height:15px; border-radius:50%; border:1.8px solid var(--line-strong); background:transparent}
+.dotbtn.dot-o i{background:#F08A24; border-color:#F08A24}
+.dotbtn.dot-b i{background:#2F7FE0; border-color:#2F7FE0}
 .chip-today{font-family:"IBM Plex Mono",monospace; font-size:11px; letter-spacing:.06em;
   text-transform:uppercase; padding:6px 9px; border:1px solid var(--line-strong);
   border-radius:999px; color:var(--ink-2)}
@@ -181,7 +187,8 @@ button{cursor:pointer; background:none; border:none}
 .alarmchip.late{background:var(--alert); color:#fff}
 .seenbtn{font-size:11px; font-weight:600; text-decoration:underline; text-underline-offset:2px;
   color:inherit; font-family:"IBM Plex Sans",sans-serif}
-.rowacts{display:flex; flex-direction:column; gap:4px; flex:none; margin:-2px -4px 0 0}
+.rowacts{display:flex; flex-direction:column; align-items:flex-end; gap:4px; flex:none; margin:-2px -4px 0 0}
+.rowacts-top{display:flex; gap:0}
 .rowacts .iconbtn{width:30px; height:30px; font-size:15px; color:var(--ink-3)}
 .rowacts .iconbtn:hover{color:var(--ink); background:var(--surface-2)}
 
@@ -1884,13 +1891,28 @@ function rowNode(it, opts){
   /* right actions */
   var acts = document.createElement("div");
   acts.className = "rowacts";
+  /* pallino: tocco = arancione, poi blu, poi di nuovo vuoto */
+  var dot = document.createElement("button");
+  dot.className = "dotbtn" + (it.dot === "o" ? " dot-o" : it.dot === "b" ? " dot-b" : "");
+  dot.appendChild(document.createElement("i"));
+  dot.setAttribute("aria-label", "colore");
+  dot.onclick = function(e){
+    e.stopPropagation();
+    it.dot = !it.dot ? "o" : it.dot === "o" ? "b" : null;
+    dot.className = "dotbtn" + (it.dot === "o" ? " dot-o" : it.dot === "b" ? " dot-b" : "");
+    save();
+  };
+  /* pallino a sinistra della campanella, sulla stessa riga */
+  var top = document.createElement("div"); top.className = "rowacts-top";
+  top.appendChild(dot);
   if(it.stage !== "done"){
     var bell = document.createElement("button");
     bell.className = "iconbtn"; bell.appendChild(svgIcon("bell", 17));
     bell.setAttribute("aria-label", t("alarm"));
     bell.onclick = function(){ openAlarmSheet(it); };
-    acts.appendChild(bell);
+    top.appendChild(bell);
   }
+  acts.appendChild(top);
   var del = document.createElement("button");
   del.className = "iconbtn"; del.appendChild(svgIcon("trash", 17));
   del.setAttribute("aria-label", t("del"));
